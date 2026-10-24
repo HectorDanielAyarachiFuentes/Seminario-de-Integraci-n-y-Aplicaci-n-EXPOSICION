@@ -1574,10 +1574,23 @@ class Presentation3D {
   }
 
   /* ═══════════════════════════════════════════════════════════════════════════
-     SISTEMA DE INTERACCIÓN 3D: ROTACIÓN 360°, PAN Y ZOOM CON MOUSE / RUEDA
+     SISTEMA DE INTERACCIÓN 3D: ROTACIÓN 360°, PAN Y ZOOM CON MOUSE / RUEDA / TACTIL
      ═══════════════════════════════════════════════════════════════════════════ */
   setupInteractiveControls() {
     this.canvas.style.cursor = "grab";
+    this.activePointers = new Map();
+    this.initialPinchDistance = 0;
+    this.initialPinchZoom = 0;
+
+    // Detectar soporte táctil y adaptar la píldora informativa
+    const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
+    const hint = document.getElementById("canvas-3d-hint");
+    if (hint) {
+      const hintSpan = hint.querySelector("span");
+      if (hintSpan && isTouch) {
+        hintSpan.textContent = "👆 Deslizar: Rotar 360° • Pellizcar: Zoom • Doble toque: Centrar";
+      }
+    }
 
     // 1. Zoom Progresivo con la Rueda del Mouse sobre el lienzo 3D
     this.canvas.addEventListener("wheel", (e) => {
@@ -1587,26 +1600,54 @@ class Presentation3D {
       this.targetUserZoom = Math.max(-4.2, Math.min(6.5, this.targetUserZoom + e.deltaY * zoomSpeed));
     }, { passive: false });
 
-    // 2. Clic y Arrastre con Mouse o Toque (Rotación libre 360° y Desplazamiento Pan)
+    // Función auxiliar para calcular la distancia entre dos toques táctiles
+    const getDistance = (p1, p2) => Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+    // 2. Clic y Arrastre con Mouse o Toque (Rotación libre 360°, Pan y Pellizco)
     this.canvas.addEventListener("pointerdown", (e) => {
-      this.isDragging = true;
-      this.dragButton = e.button;
-      this.previousPointerPos = { x: e.clientX, y: e.clientY };
-      this.canvas.style.cursor = "grabbing";
-      try {
-        this.canvas.setPointerCapture(e.pointerId);
-      } catch (_) {}
+      this.activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (this.activePointers.size === 1) {
+        this.isDragging = true;
+        this.dragButton = e.button;
+        this.previousPointerPos = { x: e.clientX, y: e.clientY };
+        this.canvas.style.cursor = "grabbing";
+        try {
+          this.canvas.setPointerCapture(e.pointerId);
+        } catch (_) {}
+      } else if (this.activePointers.size === 2) {
+        // Inicio de gesto de pellizco multitáctil en celulares y tablets
+        const pts = Array.from(this.activePointers.values());
+        this.initialPinchDistance = getDistance(pts[0], pts[1]);
+        this.initialPinchZoom = this.targetUserZoom;
+      }
     });
 
     window.addEventListener("pointermove", (e) => {
-      if (!this.isDragging) return;
+      if (!this.activePointers.has(e.pointerId)) return;
+      this.activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      // Modo Multitáctil: Zoom con Pellizco (2 dedos)
+      if (this.activePointers.size === 2) {
+        const pts = Array.from(this.activePointers.values());
+        const currentDist = getDistance(pts[0], pts[1]);
+        if (this.initialPinchDistance > 0) {
+          const deltaDist = currentDist - this.initialPinchDistance;
+          // Separar dedos = zoom in (-zoom offset); Juntar dedos = zoom out (+zoom offset)
+          const pinchFactor = 0.015;
+          this.targetUserZoom = Math.max(-4.2, Math.min(6.5, this.initialPinchZoom - deltaDist * pinchFactor));
+        }
+        return;
+      }
+
+      if (!this.isDragging || this.activePointers.size !== 1) return;
 
       const deltaX = e.clientX - this.previousPointerPos.x;
       const deltaY = e.clientY - this.previousPointerPos.y;
       this.previousPointerPos = { x: e.clientX, y: e.clientY };
 
       if (this.dragButton === 0 && !e.shiftKey) {
-        // Clic izquierdo: Rotación orbital del objeto 3D en 360°
+        // Clic izquierdo / Toque único: Rotación orbital del objeto 3D en 360°
         this.targetUserRotation.y += deltaX * 0.009;
         // Inclinación vertical (pitch) suave
         this.targetUserRotation.x = Math.max(-0.85, Math.min(0.85, this.targetUserRotation.x + deltaY * 0.007));
@@ -1618,19 +1659,27 @@ class Presentation3D {
     });
 
     const stopDragging = (e) => {
-      if (this.isDragging) {
+      this.activePointers.delete(e.pointerId);
+
+      if (this.activePointers.size === 0) {
         this.isDragging = false;
+        this.initialPinchDistance = 0;
         this.canvas.style.cursor = "grab";
         try {
           this.canvas.releasePointerCapture(e.pointerId);
         } catch (_) {}
+      } else if (this.activePointers.size === 1) {
+        // Volver a rotación suave con el dedo restante
+        const remaining = Array.from(this.activePointers.values())[0];
+        this.previousPointerPos = { x: remaining.x, y: remaining.y };
+        this.initialPinchDistance = 0;
       }
     };
 
     window.addEventListener("pointerup", stopDragging);
     window.addEventListener("pointercancel", stopDragging);
 
-    // 3. Doble clic en el fondo: recentrar suavemente al ángulo inicial de la filmina
+    // 3. Doble clic / doble toque en el fondo: recentrar suavemente al ángulo inicial de la filmina
     this.canvas.addEventListener("dblclick", () => {
       this.resetUserControls();
     });
@@ -1756,22 +1805,38 @@ class Presentation3D {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.updateCameraViewOffset();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }
 
   /**
-   * Ajusta el centro óptico de la cámara hacia la derecha en pantallas amplias.
-   * Esto desplaza la escultura 3D de modo que se sitúe justo al costado del cuadro
-   * de texto institucional, casi rozándolo armónicamente ("que se toquen sí, pero que no esté tapado"),
-   * impidiendo toda superposición y logrando un centrado visual perfectamente balanceado en pantalla.
+   * Encuadre óptico adaptativo multicompatible (PC Escritorio, Notebooks, Tablets y Celulares).
+   * - En PC de escritorio y pantallas panorámicas: desplaza el centro de cámara armónicamente
+   *   para situar la escultura al 65%-70% del ancho, balanceando la tarjeta institucional a la izquierda.
+   * - En Notebooks (1366x768, 1280x800): encuadre calibrado para no cortar la base ni el remate superior.
+   * - En Tablets en apaisado (Landscape): suave separación lateral.
+   * - En Celulares y Tablets verticales: centrado directo sin desfase artificial.
    */
   updateCameraViewOffset() {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    if (w > 960) {
-      // Desplazamiento óptico del centro al ~66% del ancho de pantalla
-      const shiftX = -Math.round(w * 0.16);
+    const isLandscape = w > h;
+
+    if (w >= 1200) {
+      // 1. PC de Escritorio / 1080p / 2K / 4K / Ultra-Wide
+      // Limitamos el desplazamiento máximo a 290px para evitar que en monitores ultrawide
+      // la escultura se desplace fuera del viewport hacia la derecha.
+      const shiftX = -Math.round(Math.min(w * 0.145, 290));
+      this.camera.setViewOffset(w, h, shiftX, 0, w, h);
+    } else if (w >= 960 && w < 1200) {
+      // 2. Notebooks y Laptops convencionales (1366x768, 1280x800)
+      const shiftX = -Math.round(Math.min(w * 0.12, 160));
+      this.camera.setViewOffset(w, h, shiftX, 0, w, h);
+    } else if (w >= 720 && isLandscape) {
+      // 3. Tablets en modo apaisado (Landscape)
+      const shiftX = -Math.round(Math.min(w * 0.08, 90));
       this.camera.setViewOffset(w, h, shiftX, 0, w, h);
     } else {
+      // 4. Celulares (Smartphones) y Tablets en vertical (Portrait)
       this.camera.clearViewOffset();
       this.camera.updateProjectionMatrix();
     }

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Defensa de Tesina | Héctor Daniel Ayarachi Fuentes | CURZAS - UNCo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +20,9 @@
     <span>🖱️ Arrastrar: Rotar 360° • Rueda: Zoom • Doble clic: Centrar</span>
   </div>
 
+  <!-- Barra de progreso general de la defensa académica (20 filminas) -->
+  <div class="presentation-progress-bar" id="presentation-progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="20" aria-valuenow="1"></div>
+
   <!-- Capa de Interfaz de Usuario (UI Glassmorphism de Alto Contraste) -->
   <div class="ui-layer">
 
@@ -29,7 +32,7 @@
         <img src="assets/CURZAS.png" alt="Logotipo CURZAS - Universidad Nacional del Comahue" class="brand-logo">
         <div class="brand-info">
           <h1>UNCo — CURZAS</h1>
-          <p>Licenciatura en Gestión de RRHH | Seminario de Integración y Aplicación</p>
+          <p class="brand-subtitle">Licenciatura en Gestión de RRHH | SIA</p>
         </div>
       </div>
 
@@ -46,14 +49,14 @@
         <span class="timer-label">DEFENSA</span>
         <span class="timer-display" id="timer-display">30:00</span>
         <div class="timer-actions">
-          <button id="btn-timer-toggle" title="Iniciar / Pausar Cronómetro (T)">▶</button>
-          <button id="btn-timer-reset" title="Reiniciar a 30:00">↺</button>
+          <button id="btn-timer-toggle" title="Iniciar / Pausar Cronómetro (T)" aria-label="Iniciar / Pausar Cronómetro">▶</button>
+          <button id="btn-timer-reset" title="Reiniciar a 30:00" aria-label="Reiniciar Cronómetro">↺</button>
         </div>
       </div>
     </header>
 
     <!-- Escenario Principal: Tarjeta de Texto Prioritaria (Primer Plano) -->
-    <main class="main-stage">
+    <main class="main-stage" id="main-stage">
       <article class="slide-card" id="slide-card">
         <div class="slide-header-tags">
           <span class="slide-badge" id="slide-badge">FILMINA 1</span>
@@ -64,31 +67,47 @@
         <ul class="slide-bullets" id="slide-bullets"></ul>
         <footer class="slide-footer-meta" id="slide-footer-meta"></footer>
       </article>
+
+      <!-- Botón flotante para restaurar filmina en celulares cuando se explora el modelo 3D -->
+      <button class="btn-floating-card-toggle" id="btn-floating-card-toggle" aria-label="Volver a la filmina">
+        📄 Ver Filmina
+      </button>
     </main>
 
     <!-- Barra Inferior: Navegación + Atajos + Herramientas Auxiliares -->
     <footer class="bottom-bar">
       <div class="nav-buttons">
-        <button class="btn-nav" id="btn-prev" title="Filmina Anterior (← / RePág)">
-          ◀ Anterior <span class="shortcut-pill">←</span>
+        <button class="btn-nav" id="btn-prev" title="Filmina Anterior (← / RePág)" aria-label="Filmina Anterior">
+          ◀ <span class="nav-text">Anterior</span> <span class="shortcut-pill">←</span>
         </button>
-        <button class="btn-nav" id="btn-next" title="Filmina Siguiente (→ / Espacio / AvPág)">
-          Siguiente ▶ <span class="shortcut-pill">→</span>
+        <button class="btn-nav" id="btn-next" title="Filmina Siguiente (→ / Espacio / AvPág)" aria-label="Filmina Siguiente">
+          <span class="nav-text">Siguiente</span> ▶ <span class="shortcut-pill">→</span>
         </button>
       </div>
 
       <div class="side-tools">
+        <!-- Toggle específico para celulares: Alternar entre ver texto o explorar 3D full-screen -->
+        <button class="btn-tool btn-mobile-3d-toggle" id="btn-toggle-3d-view" title="Alternar entre filmina y escultura 3D">
+          🧊 <span class="tool-text">Ver 3D</span>
+        </button>
         <button class="btn-tool" id="btn-reset-3d" title="Restablecer Rotación y Zoom 3D (R)">
-          🔄 Centrar 3D <span class="shortcut-pill">R</span>
+          🔄 <span class="tool-text">Centrar</span> <span class="shortcut-pill">R</span>
         </button>
         <button class="btn-tool" id="btn-dim-3d" title="Atenuar Fondo 3D / Enfoque Texto (D)">
-          👁️ Enfoque Texto <span class="shortcut-pill">D</span>
+          👁️ <span class="tool-text">Enfoque</span> <span class="shortcut-pill">D</span>
         </button>
         <button class="btn-tool" id="btn-toggle-notes" title="Guion y Notas del Orador (N)">
-          🎙️ Notas del Orador <span class="shortcut-pill">N</span>
+          🎙️ <span class="tool-text">Notas</span> <span class="shortcut-pill">N</span>
         </button>
         <button class="btn-tool" id="btn-toggle-drawer" title="Respaldo Metodológico y Q&A Jurado (M)">
-          📚 Respaldo Metodológico <span class="shortcut-pill">M</span>
+          📚 <span class="tool-text">Respaldo</span> <span class="shortcut-pill">M</span>
+        </button>
+        <!-- Mejoras Desktop y Auditorio: Pantalla Completa y Atajos -->
+        <button class="btn-tool btn-tool-fullscreen" id="btn-toggle-fullscreen" title="Pantalla Completa (F)">
+          ⛶ <span class="tool-text">Pantalla Completa</span> <span class="shortcut-pill">F</span>
+        </button>
+        <button class="btn-tool btn-tool-shortcuts" id="btn-toggle-shortcuts" title="Atajos de Teclado (?)">
+          ⌨️ <span class="tool-text">Atajos</span> <span class="shortcut-pill">?</span>
         </button>
       </div>
     </footer>
@@ -153,6 +172,28 @@
 
     <!-- Contenedor dinámico de fichas -->
     <div class="drawer-content-box" id="drawer-content"></div>
+  </aside>
+
+  <!-- Modal Flotante: Atajos de Teclado Profesionales (Defensa & Auditorio) -->
+  <div class="shortcuts-backdrop" id="shortcuts-backdrop"></div>
+  <aside class="shortcuts-modal" id="shortcuts-modal" aria-label="Atajos de Teclado">
+    <div class="shortcuts-header">
+      <h3>⌨️ Atajos de Teclado — Modo Defensa</h3>
+      <button class="btn-close" id="btn-close-shortcuts" title="Cerrar panel de atajos (Esc)">✕</button>
+    </div>
+    <div class="shortcuts-body">
+      <div class="shortcut-row"><kbd>→</kbd> <kbd>Espacio</kbd><span>Avanzar filmina</span></div>
+      <div class="shortcut-row"><kbd>←</kbd> <kbd>RePág</kbd><span>Retroceder filmina</span></div>
+      <div class="shortcut-row"><kbd>F</kbd><span>Pantalla Completa</span></div>
+      <div class="shortcut-row"><kbd>T</kbd><span>Iniciar / Pausar Cronómetro</span></div>
+      <div class="shortcut-row"><kbd>N</kbd><span>Guion / Notas del Orador</span></div>
+      <div class="shortcut-row"><kbd>M</kbd><span>Respaldo Metodológico (Jurado)</span></div>
+      <div class="shortcut-row"><kbd>V</kbd><span>Visor de Diagramas SVG</span></div>
+      <div class="shortcut-row"><kbd>D</kbd><span>Enfoque Texto (Atenuar 3D)</span></div>
+      <div class="shortcut-row"><kbd>R</kbd><span>Centrar Escultura 3D</span></div>
+      <div class="shortcut-row"><kbd>?</kbd><span>Ver esta ayuda de atajos</span></div>
+      <div class="shortcut-row"><kbd>Esc</kbd><span>Cerrar paneles y modales</span></div>
+    </div>
   </aside>
 
   <!-- Librerías Externas y Módulos de la Aplicación -->

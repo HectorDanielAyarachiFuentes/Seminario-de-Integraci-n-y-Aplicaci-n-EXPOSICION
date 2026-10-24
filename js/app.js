@@ -104,6 +104,22 @@ class PresentationApp {
     this.btnReset3d = document.getElementById("btn-reset-3d");
     this.canvas = document.getElementById("webgl-canvas");
 
+    // Barra de Progreso Superior
+    this.progressBar = document.getElementById("presentation-progress-bar");
+
+    // Nuevos Controles: Pantalla Completa y Atajos de Teclado
+    this.btnFullscreen = document.getElementById("btn-toggle-fullscreen");
+    this.btnShortcuts = document.getElementById("btn-toggle-shortcuts");
+    this.shortcutsModal = document.getElementById("shortcuts-modal");
+    this.shortcutsBackdrop = document.getElementById("shortcuts-backdrop");
+    this.btnCloseShortcuts = document.getElementById("btn-close-shortcuts");
+
+    // Controles táctiles y móviles: Toggle de Filmina / 3D Full-screen
+    this.btnToggle3dView = document.getElementById("btn-toggle-3d-view");
+    this.btnFloatingCardToggle = document.getElementById("btn-floating-card-toggle");
+    this.mainStage = document.getElementById("main-stage");
+    this.isCardMinimized = false;
+
     // Modal Visor SVG Interactivo con Zoom y Pan
     this.svgModal = document.getElementById("svg-modal");
     this.svgModalBackdrop = document.getElementById("svg-modal-backdrop");
@@ -146,6 +162,72 @@ class PresentationApp {
     this.btnToggleDrawer.addEventListener("click", () => this.toggleDrawer());
     this.btnCloseDrawer.addEventListener("click", () => this.toggleDrawer(false));
     this.drawerBackdrop.addEventListener("click", () => this.toggleDrawer(false));
+
+    // Pantalla Completa
+    if (this.btnFullscreen) {
+      this.btnFullscreen.addEventListener("click", () => this.toggleFullscreen());
+    }
+    document.addEventListener("fullscreenchange", () => {
+      const isFull = !!document.fullscreenElement;
+      if (this.btnFullscreen) {
+        this.btnFullscreen.classList.toggle("active", isFull);
+        const text = this.btnFullscreen.querySelector(".tool-text");
+        if (text) text.textContent = isFull ? "Restaurar" : "Pantalla Completa";
+      }
+    });
+
+    // Modal de Atajos de Teclado
+    if (this.btnShortcuts) {
+      this.btnShortcuts.addEventListener("click", () => this.toggleShortcuts());
+    }
+    if (this.btnCloseShortcuts) {
+      this.btnCloseShortcuts.addEventListener("click", () => this.toggleShortcuts(false));
+    }
+    if (this.shortcutsBackdrop) {
+      this.shortcutsBackdrop.addEventListener("click", () => this.toggleShortcuts(false));
+    }
+
+    // Toggle de filmina / escultura 3D en dispositivos móviles y tablets
+    if (this.btnToggle3dView) {
+      this.btnToggle3dView.addEventListener("click", () => this.toggleMobile3dView());
+    }
+    if (this.btnFloatingCardToggle) {
+      this.btnFloatingCardToggle.addEventListener("click", () => this.toggleMobile3dView(false));
+    }
+
+    // Gestos Táctiles (Swipe Izquierda / Derecha) para Celulares y Tablets
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    if (this.mainStage) {
+      this.mainStage.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+        }
+      }, { passive: true });
+
+      this.mainStage.addEventListener("touchend", (e) => {
+        if (e.changedTouches.length === 1) {
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const diffX = touchEndX - touchStartX;
+          const diffY = touchEndY - touchStartY;
+          const elapsed = Date.now() - touchStartTime;
+
+          // Desplazamiento horizontal claro: más de 45px y al menos 1.3 veces mayor que el vertical
+          if (Math.abs(diffX) > 45 && Math.abs(diffX) > 1.3 * Math.abs(diffY) && elapsed < 650) {
+            if (diffX < 0) {
+              this.nextSlide();
+            } else {
+              this.prevSlide();
+            }
+          }
+        }
+      }, { passive: true });
+    }
 
     // Modal Visor SVG y Controles de Zoom / Desplazamiento
     if (this.btnCloseSvg) {
@@ -286,10 +368,13 @@ class PresentationApp {
         this.toggleTimer();
       } else if (e.key.toLowerCase() === "f") {
         this.toggleFullscreen();
+      } else if (e.key === "?" || (e.shiftKey && e.key === "/")) {
+        this.toggleShortcuts();
       } else if (e.key === "Escape") {
         this.closeSvgModal();
         this.toggleNotes(false);
         this.toggleDrawer(false);
+        this.toggleShortcuts(false);
       }
     });
   }
@@ -300,6 +385,8 @@ class PresentationApp {
       const dot = document.createElement("div");
       dot.className = `station-dot ${i === 0 ? "active" : ""}`;
       dot.title = `Filmina ${i + 1}: ${this.data.slides[i].esquema}`;
+      dot.setAttribute("data-slide-index", i + 1);
+      dot.setAttribute("aria-label", `Ir a filmina ${i + 1}: ${this.data.slides[i].esquema}`);
       dot.addEventListener("click", () => this.goToSlide(i));
       this.stationsContainer.appendChild(dot);
     }
@@ -312,6 +399,13 @@ class PresentationApp {
     }
     this.titleElement.textContent = slide.titulo;
     this.subtitleElement.textContent = slide.subtitulo;
+
+    // Actualizar barra de progreso superior de la presentación
+    if (this.progressBar) {
+      const pct = Math.round(((index + 1) / this.totalSlides) * 100);
+      this.progressBar.style.width = `${pct}%`;
+      this.progressBar.setAttribute("aria-valuenow", index + 1);
+    }
 
     this.bulletsElement.innerHTML = "";
     slide.puntosClave.forEach((punto) => {
@@ -606,6 +700,36 @@ class PresentationApp {
       this.btnDim3d.title = this.is3dDimmed
         ? "Modo Enfoque Texto Activo (D)"
         : "Atenuar Fondo 3D / Enfoque Texto (D)";
+    }
+  }
+
+  toggleShortcuts(forceState) {
+    if (!this.shortcutsModal) return;
+    const isOpen = this.shortcutsModal.classList.contains("open");
+    const newState = forceState !== undefined ? forceState : !isOpen;
+    this.shortcutsModal.classList.toggle("open", newState);
+    if (this.shortcutsBackdrop) {
+      this.shortcutsBackdrop.classList.toggle("open", newState);
+    }
+    if (this.btnShortcuts) {
+      this.btnShortcuts.classList.toggle("active", newState);
+    }
+  }
+
+  toggleMobile3dView(forceState) {
+    if (!this.cardElement) return;
+    const isMin = this.cardElement.classList.contains("minimized");
+    const newState = forceState !== undefined ? forceState : !isMin;
+    this.isCardMinimized = newState;
+    this.cardElement.classList.toggle("minimized", newState);
+
+    if (this.btnFloatingCardToggle) {
+      this.btnFloatingCardToggle.classList.toggle("visible", newState);
+    }
+    if (this.btnToggle3dView) {
+      this.btnToggle3dView.classList.toggle("active", newState);
+      const text = this.btnToggle3dView.querySelector(".tool-text");
+      if (text) text.textContent = newState ? "Ver Texto" : "Ver 3D";
     }
   }
 
