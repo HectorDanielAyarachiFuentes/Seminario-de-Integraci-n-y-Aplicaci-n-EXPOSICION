@@ -583,10 +583,7 @@ const PRESENTACION_DATA = {
   ]
 };
 
-// Exportación compatible tanto con entorno navegador (window) como con módulos ES
+// Exportación global para el navegador
 if (typeof window !== "undefined") {
   window.PRESENTACION_DATA = PRESENTACION_DATA;
-}
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = PRESENTACION_DATA;
 }

@@ -427,37 +427,134 @@ window.Presentation3D_Objects["anim_04"] = {
     paBeacon.add(paLight);
     g.add(paBeacon);
 
-    // Etiqueta Cartográfica de las Islas Malvinas
-    const malvinasLabel = engine.createLabelSprite(
-      "ISLAS MALVINAS",
-      "Soberanía Argentina • Atlántico Sur",
-      "#0f2d59",
-      true,
-      { x: 0.65, y: 0.18 }
-    );
-    malvinasLabel.position.set(0.68, -0.72, 1.22);
-    g.add(malvinasLabel);
+    // ── 1.E. ANTÁRTIDA ARGENTINA (Recuadro Cartográfico Escultórico • Ley 26.651) ──
+    const antartidaGroup = new THREE.Group();
+    antartidaGroup.position.set(0.96, -1.06, 0.78);
 
-    const malvinasLeaderGeo = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(0.575, -0.94, 1.15),
-      new THREE.Vector3(0.68, -0.78, 1.22)
-    ]);
-    const malvinasLeaderLine = new THREE.Line(
-      malvinasLeaderGeo,
-      new THREE.LineBasicMaterial({ color: 0xb8860b, transparent: true, opacity: 0.65 })
+    // 1. Bandeja Cartográfica Rectangular en Granito y Latón Biselado
+    const boxW = 0.52;
+    const boxH = 0.68;
+    const boxBase = new THREE.Mesh(
+      new THREE.BoxGeometry(boxW, 0.026, boxH),
+      engine.graniteMat(0x0a0f1d)
     );
-    g.add(malvinasLeaderLine);
+    antartidaGroup.add(boxBase);
 
-    // Rótulo Mar Argentino
-    const marArgLabel = engine.createLabelSprite(
-      "MAR ARGENTINO",
-      "Océano Atlántico Sur • Plataforma Continental",
-      "#0284c7",
-      false,
-      { x: 0.70, y: 0.17 }
+    // Marco exterior de latón dorado noble
+    const frameGeo = new THREE.BoxGeometry(boxW + 0.024, 0.032, boxH + 0.024);
+    const frameEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(frameGeo),
+      new THREE.LineBasicMaterial({ color: 0xd4af37, linewidth: 2 })
     );
-    marArgLabel.position.set(0.72, -0.90, 0.68);
-    g.add(marArgLabel);
+    antartidaGroup.add(frameEdges);
+
+    const frameRim = new THREE.Mesh(
+      new THREE.BoxGeometry(boxW + 0.016, 0.012, boxH + 0.016),
+      engine.brassMat()
+    );
+    frameRim.position.y = 0.014;
+    antartidaGroup.add(frameRim);
+
+    // Fondo polar de cristal glacial (Mar de Weddell y Bellingshausen)
+    const iceSea = new THREE.Mesh(
+      new THREE.BoxGeometry(boxW - 0.04, 0.010, boxH - 0.04),
+      engine.glassMat(0x0284c7, { roughness: 0.15, transmission: 0.85, opacity: 0.75 })
+    );
+    iceSea.position.set(0, 0.014, 0);
+    antartidaGroup.add(iceSea);
+
+    // 2. Sector Polar Triangular (25° O a 74° O • Del paralelo 60° S al Polo Sur 90° S)
+    const sectorShape = new THREE.Shape();
+    sectorShape.moveTo(-0.16, 0.20); // 74° O en paralelo 60° S (z = -0.20)
+    sectorShape.quadraticCurveTo(0, 0.22, 0.16, 0.20); // 25° O en paralelo 60° S
+    sectorShape.lineTo(0.0, -0.24); // Polo Sur 90° S (z = +0.24)
+    sectorShape.lineTo(-0.16, 0.20);
+    sectorShape.closePath();
+
+    const sectorGeo = new THREE.ExtrudeGeometry(sectorShape, {
+      depth: 0.022,
+      bevelEnabled: true,
+      bevelThickness: 0.007,
+      bevelSize: 0.007,
+      bevelSegments: 2
+    });
+    const sectorMesh = new THREE.Mesh(
+      sectorGeo,
+      new THREE.MeshStandardMaterial({
+        color: 0x93c5fd,
+        roughness: 0.28,
+        metalness: 0.15
+      })
+    );
+    sectorMesh.rotation.x = -Math.PI / 2;
+    sectorMesh.position.y = 0.020;
+    antartidaGroup.add(sectorMesh);
+
+    const sectorEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(sectorGeo, 16),
+      new THREE.LineBasicMaterial({ color: 0xffd700, linewidth: 2 })
+    );
+    sectorMesh.add(sectorEdges);
+
+    // 3. Península Antártica en Alto Relieve de Mármol Blanco (100% Despejada y Escultórica)
+    const penShape = new THREE.Shape();
+    penShape.moveTo(-0.04, -0.09);
+    penShape.lineTo(0.07, -0.09);
+    penShape.lineTo(0.08, -0.01);  // Barrera Filchner-Ronne
+    penShape.lineTo(0.04, 0.05);   // Costa este (Mar de Weddell)
+    penShape.lineTo(0.02, 0.10);   // Barrera Larsen
+    penShape.lineTo(-0.02, 0.15);  // Extremo norte (Tierra de San Martín / Esperanza)
+    penShape.lineTo(-0.04, 0.13);  // Cabo Legoupil
+    penShape.lineTo(-0.02, 0.08);  // Costa oeste
+    penShape.lineTo(-0.05, 0.02);  // Estrecho de Gerlache
+    penShape.lineTo(-0.06, -0.04); // Tierra de Graham
+    penShape.closePath();
+
+    const penGeo = new THREE.ExtrudeGeometry(penShape, {
+      depth: 0.042,
+      bevelEnabled: true,
+      bevelThickness: 0.010,
+      bevelSize: 0.008,
+      bevelSegments: 3
+    });
+    const penMesh = new THREE.Mesh(penGeo, engine.marbleMat(0xffffff));
+    penMesh.rotation.x = -Math.PI / 2;
+    penMesh.position.y = 0.038;
+    antartidaGroup.add(penMesh);
+
+    const penEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(penGeo, 20),
+      new THREE.LineBasicMaterial({ color: 0xd4af37, linewidth: 2 })
+    );
+    penMesh.add(penEdges);
+
+    // Isla Marambio e Islas Shetland del Sur
+    const marambioGeo = new THREE.CylinderGeometry(0.012, 0.014, 0.018, 16);
+    const marambioMesh = new THREE.Mesh(marambioGeo, engine.marbleMat(0xfdfbf7));
+    marambioMesh.position.set(-0.01, 0.055, -0.13);
+    antartidaGroup.add(marambioMesh);
+
+    // Baliza permanente de la Base Marambio
+    const marambioPin = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.0035, 0.0045, 0.030, 12),
+      engine.brassMat(0xffd700)
+    );
+    marambioPin.position.set(-0.01, 0.072, -0.13);
+    antartidaGroup.add(marambioPin);
+
+    const marambioLight = new THREE.PointLight(0xffd700, 0.85, 0.7);
+    marambioLight.position.set(-0.01, 0.088, -0.13);
+    antartidaGroup.add(marambioLight);
+
+    // Vértice del Polo Sur (90° S) con remate cónico dorado
+    const southPoleMarker = new THREE.Mesh(
+      new THREE.ConeGeometry(0.016, 0.042, 8),
+      engine.brassMat(0xffd700)
+    );
+    southPoleMarker.position.set(0, 0.05, 0.24);
+    antartidaGroup.add(southPoleMarker);
+
+    g.add(antartidaGroup);
 
     // Aro exterior náutico de latón
     const oceanRim = new THREE.Mesh(
@@ -525,63 +622,103 @@ window.Presentation3D_Objects["anim_04"] = {
     const routeMesh = new THREE.Mesh(routeGeo, engine.brassMat(0xb8860b));
     g.add(routeMesh);
 
-    // ── 3. LAS SEDES Y NODOS DEL CURZAS ──
+    // ── 3. RED TERRITORIAL INTELIGENTE DE NODOS CURZAS (10 SEDES REGIONALES) ──
     const sedesData = [
       {
         nombre: "VIEDMA",
-        tipo: "★ SEDE CENTRAL",
-        subtitulo: "CURZAS-UNCo • Rectorado",
+        tipo: "★ SEDE CENTRAL Y RECTORADO",
+        subtitulo: "Sede Cabecera • Servidores Centrales Moodle",
         x: 0.36, z: 0.25,
         isCabecera: true,
-        colorGem: 0xffd700,
-        labelPos: { x: 0.44, y: -0.36, z: 0.14 }
+        colorGem: 0xffd700
       },
       {
-        nombre: "Nodo Valcheta",
+        nombre: "SAN ANTONIO OESTE",
+        tipo: "Nodo Costa Atlántica",
+        subtitulo: "Sede Marítima • Aula Híbrida y Tutorías",
+        x: 0.25, z: 0.33,
+        isCabecera: false,
+        colorGem: 0x0ea5e9
+      },
+      {
+        nombre: "SIERRA GRANDE",
+        tipo: "Nodo Costa Sur",
+        subtitulo: "Extensión Universitaria • Enlace Satelital",
+        x: 0.23, z: 0.42,
+        isCabecera: false,
+        colorGem: 0xf59e0b
+      },
+      {
+        nombre: "VALCHETA",
         tipo: "Portal Línea Sur",
-        subtitulo: "Aula Híbrida",
+        subtitulo: "Aula Híbrida Sincrónica • Res. 196/2022",
         x: 0.14, z: 0.31,
         isCabecera: false,
-        colorGem: 0x0284c7,
-        labelPos: { x: 0.14, y: -0.46, z: 0.15 }
+        colorGem: 0x0284c7
       },
       {
-        nombre: "Nodo Ramos Mexía",
-        tipo: "Línea Sur Alta",
-        subtitulo: "Sincronía Digital",
+        nombre: "GENERAL CONESA",
+        tipo: "Valle Inferior",
+        subtitulo: "Punto de Articulación • Tele-tutorías",
+        x: 0.20, z: 0.21,
+        isCabecera: false,
+        colorGem: 0x14b8a6
+      },
+      {
+        nombre: "CHOELE CHOEL",
+        tipo: "Valle Medio",
+        subtitulo: "Comunidades de Aprendizaje • Aula Híbrida",
+        x: 0.04, z: 0.16,
+        isCabecera: false,
+        colorGem: 0x6366f1
+      },
+      {
+        nombre: "RAMOS MEXÍA",
+        tipo: "Meseta de Somuncurá",
+        subtitulo: "Línea Sur Alta • Sincronía Digital Docente",
         x: 0.00, z: 0.32,
         isCabecera: false,
-        colorGem: 0x38bdf8,
-        labelPos: { x: -0.02, y: -0.62, z: 0.48 }
+        colorGem: 0x38bdf8
       },
       {
-        nombre: "Nodo Los Menucos",
+        nombre: "LOS MENUCOS",
         tipo: "Sur Central",
-        subtitulo: "Entornos Moodle",
+        subtitulo: "Hub Regional Patagónico • Acompañamiento",
         x: -0.14, z: 0.33,
         isCabecera: false,
-        colorGem: 0x10b981,
-        labelPos: { x: -0.28, y: -0.44, z: 0.20 }
+        colorGem: 0x10b981
       },
       {
-        nombre: "Nodo Sierra Grande",
-        tipo: "Costa Atlántica",
-        subtitulo: "Tutorías Remotas",
-        x: 0.23, z: 0.41,
+        nombre: "ING. JACOBACCI",
+        tipo: "Línea Sur Andina",
+        subtitulo: "Nodo Estratégico • Conectividad Rural",
+        x: -0.25, z: 0.32,
         isCabecera: false,
-        colorGem: 0xf59e0b,
-        labelPos: { x: 0.35, y: -0.58, z: 0.52 }
+        colorGem: 0xec4899
+      },
+      {
+        nombre: "BARILOCHE",
+        tipo: "Zona Andina",
+        subtitulo: "Enlace Cordillerano • Articulación UNCo",
+        x: -0.34, z: 0.28,
+        isCabecera: false,
+        colorGem: 0xa855f7
       }
     ];
 
-    const viedmaBeaconPos = new THREE.Vector3(0.36, -0.58, 0.25);
-    engine.nodeCurves04 = [];
+    engine.sedes04 = sedesData;
+    engine.nodeArcs04 = [];
     engine.nodePulses04 = [];
+    engine.nodeGems04 = [];
+    engine.activeNodeIndex04 = 0;
+
+    const viedmaBeaconPos = new THREE.Vector3(0.36, -0.58, 0.25);
 
     sedesData.forEach((sede) => {
       const pinGroup = new THREE.Group();
 
       if (sede.isCabecera) {
+        // Monumento Viedma
         const step1 = new THREE.Mesh(
           new THREE.CylinderGeometry(0.07, 0.09, 0.022, 24),
           engine.brassMat()
@@ -638,110 +775,102 @@ window.Presentation3D_Objects["anim_04"] = {
         beaconLight.position.y = -0.56;
         pinGroup.add(beaconLight);
 
+        engine.nodeGems04.push({ light: beaconLight, mesh: orb });
+
       } else {
+        // Balizas Geodésicas de Nodos
         const base = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.038, 0.046, 0.016, 20),
+          new THREE.CylinderGeometry(0.032, 0.040, 0.015, 20),
           engine.brassMat(0xd4af37)
         );
         base.position.y = -0.87;
         pinGroup.add(base);
 
         const mast = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.006, 0.006, 0.14, 12),
+          new THREE.CylinderGeometry(0.005, 0.005, 0.12, 12),
           engine.brassMat()
         );
-        mast.position.y = -0.79;
+        mast.position.y = -0.80;
         pinGroup.add(mast);
 
         const gem = new THREE.Mesh(
-          new THREE.SphereGeometry(0.026, 20, 20),
+          new THREE.SphereGeometry(0.024, 20, 20),
           engine.glassMat(sede.colorGem, { roughness: 0.08, transmission: 0.85 })
         );
-        gem.position.y = -0.71;
+        gem.position.y = -0.72;
         pinGroup.add(gem);
 
         const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(0.036, 0.0035, 12, 24),
+          new THREE.TorusGeometry(0.032, 0.003, 12, 24),
           engine.brassMat()
         );
         ring.rotation.x = Math.PI / 2;
-        ring.position.y = -0.71;
+        ring.position.y = -0.72;
         pinGroup.add(ring);
 
-        const nodeLight = new THREE.PointLight(sede.colorGem, 0.7, 1.2);
-        nodeLight.position.y = -0.70;
+        const nodeLight = new THREE.PointLight(sede.colorGem, 0.4, 1.0);
+        nodeLight.position.y = -0.71;
         pinGroup.add(nodeLight);
 
-        // Arcos parabólicos de transmisión
-        const nodeTarget = new THREE.Vector3(sede.x, -0.71, sede.z);
+        engine.nodeGems04.push({ light: nodeLight, mesh: gem });
+
+        // Arco parabólico de transmisión desde Viedma
+        const nodeTarget = new THREE.Vector3(sede.x, -0.72, sede.z);
         const dist = viedmaBeaconPos.distanceTo(nodeTarget);
         const midPoint = new THREE.Vector3().addVectors(viedmaBeaconPos, nodeTarget).multiplyScalar(0.5);
-        midPoint.y = -0.58 + dist * 0.72;
+        midPoint.y = -0.58 + dist * 0.65;
 
-        const arcCurve = new THREE.QuadraticBezierCurve3(
-          viedmaBeaconPos,
-          midPoint,
-          nodeTarget
-        );
-        const arcGeo = new THREE.TubeGeometry(arcCurve, 36, 0.0042, 8, false);
-        const arcMesh = new THREE.Mesh(
-          arcGeo,
-          new THREE.MeshStandardMaterial({
-            color: 0xe6b800,
-            roughness: 0.15,
-            metalness: 0.85,
-            emissive: 0x996515,
-            emissiveIntensity: 0.25
-          })
-        );
+        const arcCurve = new THREE.QuadraticBezierCurve3(viedmaBeaconPos, midPoint, nodeTarget);
+        const arcGeo = new THREE.TubeGeometry(arcCurve, 32, 0.0035, 8, false);
+        const arcMat = new THREE.MeshStandardMaterial({
+          color: 0xe6b800,
+          roughness: 0.2,
+          metalness: 0.85,
+          emissive: 0x996515,
+          emissiveIntensity: 0.12,
+          transparent: true,
+          opacity: 0.75
+        });
+        const arcMesh = new THREE.Mesh(arcGeo, arcMat);
         g.add(arcMesh);
 
+        // Pulso fotónico
         const pulse = new THREE.Mesh(
-          new THREE.SphereGeometry(0.014, 16, 16),
+          new THREE.SphereGeometry(0.013, 16, 16),
           new THREE.MeshBasicMaterial({ color: 0xfffad0 })
         );
         pulse.position.copy(nodeTarget);
         g.add(pulse);
 
-        engine.nodeCurves04.push(arcCurve);
-        engine.nodePulses04.push(pulse);
+        engine.nodeArcs04.push({ mesh: arcMesh, mat: arcMat, curve: arcCurve, pulse: pulse, target: nodeTarget });
       }
 
       pinGroup.position.set(sede.x, 0, sede.z);
       g.add(pinGroup);
-
-      const label = engine.createLabelSprite(
-        sede.nombre,
-        sede.tipo,
-        sede.isCabecera ? "#996515" : "#0f2d59",
-        sede.isCabecera,
-        sede.isCabecera ? { x: 0.65, y: 0.20 } : { x: 0.48, y: 0.15 }
-      );
-      label.position.set(sede.labelPos.x, sede.labelPos.y, sede.labelPos.z);
-      g.add(label);
-
-      const pinTop = new THREE.Vector3(sede.x, sede.isCabecera ? -0.54 : -0.68, sede.z);
-      const labelAnchor = new THREE.Vector3(sede.labelPos.x, sede.labelPos.y - 0.06, sede.labelPos.z);
-      const leaderGeo = new THREE.BufferGeometry().setFromPoints([pinTop, labelAnchor]);
-      const leaderLine = new THREE.Line(
-        leaderGeo,
-        new THREE.LineBasicMaterial({ color: 0xb8860b, transparent: true, opacity: 0.55 })
-      );
-      g.add(leaderLine);
     });
 
-    // Rosa de los vientos
+    // Halo luminoso expansivo sobre el mapa para el nodo activo
+    const activeHalo = new THREE.Mesh(
+      new THREE.RingGeometry(0.018, 0.036, 32),
+      new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.85, side: THREE.DoubleSide })
+    );
+    activeHalo.rotation.x = -Math.PI / 2;
+    activeHalo.position.set(0.36, -0.865, 0.25);
+    g.add(activeHalo);
+    engine.nodeActiveHalo04 = activeHalo;
+
+    // Rosa de los vientos sobria y estilizada
     const compassGroup = new THREE.Group();
-    compassGroup.position.set(0.78, -1.07, 0.28);
+    compassGroup.position.set(0.68, -1.07, 0.12);
 
     const compRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.16, 0.19, 32),
+      new THREE.RingGeometry(0.14, 0.17, 32),
       engine.brassMat()
     );
     compRing.rotation.x = -Math.PI / 2;
     compassGroup.add(compRing);
 
-    const starGeom = new THREE.ConeGeometry(0.05, 0.22, 4);
+    const starGeom = new THREE.ConeGeometry(0.045, 0.20, 4);
     const needleN = new THREE.Mesh(starGeom, engine.brassMat(0xd4af37));
     needleN.rotation.x = Math.PI / 2;
     compassGroup.add(needleN);
@@ -752,17 +881,6 @@ window.Presentation3D_Objects["anim_04"] = {
     compassGroup.add(needleS);
 
     g.add(compassGroup);
-
-    // Cartela institucional
-    const cartela = engine.createLabelSprite(
-      "RED DE NODOS CURZAS",
-      "Res. CD-CURZA N° 196/2022 • Docencia Híbrida",
-      "#0f2d59",
-      false,
-      { x: 0.62, y: 0.18 }
-    );
-    cartela.position.set(0.10, -1.02, 1.68);
-    g.add(cartela);
   },
 
   animate(engine, t) {
@@ -770,15 +888,58 @@ window.Presentation3D_Objects["anim_04"] = {
       engine.viedmaRing04.rotation.y = t * 0.45;
       engine.viedmaRing04.rotation.x = Math.sin(t * 0.3) * 0.2;
     }
-    if (engine.nodePulses04 && engine.nodeCurves04) {
-      engine.nodePulses04.forEach((pulse, idx) => {
-        const curve = engine.nodeCurves04[idx];
-        if (curve) {
-          const prog = (t * 0.35 + idx * 0.25) % 1.0;
-          pulse.position.copy(curve.getPoint(prog));
+
+    // ── SISTEMA DINÁMICO DE ILUMINACIÓN Y TRANSMISIÓN REGIONAL (CICLO RADAR) ──
+    if (engine.sedes04 && engine.sedes04.length > 0) {
+      const cycleDuration = 3.8; // Segundos por nodo
+      const activeIdx = Math.floor(t / cycleDuration) % engine.sedes04.length;
+
+      if (activeIdx !== engine.activeNodeIndex04) {
+        engine.activeNodeIndex04 = activeIdx;
+        const activeNode = engine.sedes04[activeIdx];
+        if (window.updateNodeHUD) {
+          window.updateNodeHUD(activeNode);
         }
-      });
+      }
+
+      const activeNode = engine.sedes04[activeIdx];
+
+      // Actualizar halo expansivo sobre la superficie del nodo activo
+      if (engine.nodeActiveHalo04) {
+        engine.nodeActiveHalo04.position.set(activeNode.x, -0.865, activeNode.z);
+        const s = 1.0 + Math.sin(t * 5) * 0.22;
+        engine.nodeActiveHalo04.scale.set(s, s, s);
+      }
+
+      // Modular intensidad de arcos y flujo de pulsos fotónicos
+      if (engine.nodeArcs04) {
+        engine.nodeArcs04.forEach((item, arcIdx) => {
+          const isCurrentTarget = (arcIdx + 1) === activeIdx;
+
+          const prog = (t * 0.45 + arcIdx * 0.15) % 1.0;
+          if (item.curve && item.pulse) {
+            item.pulse.position.copy(item.curve.getPoint(prog));
+          }
+
+          if (item.mat) {
+            item.mat.emissiveIntensity = isCurrentTarget ? 0.85 : 0.08;
+            item.mat.opacity = isCurrentTarget ? 0.95 : 0.35;
+          }
+        });
+      }
+
+      // Luces de nodos: resplandecen al ser el foco activo de la red
+      if (engine.nodeGems04) {
+        engine.nodeGems04.forEach((gemItem, gIdx) => {
+          const isCurrent = gIdx === activeIdx;
+          if (gemItem.light) {
+            const baseInt = gIdx === 0 ? 1.4 : 0.4;
+            gemItem.light.intensity = isCurrent ? (baseInt * 1.8 + Math.sin(t * 6) * 0.2) : baseInt;
+          }
+        });
+      }
     }
+
     if (engine.compassNeedle04) {
       engine.compassNeedle04.rotation.z = Math.sin(t * 0.5) * 0.04;
     }

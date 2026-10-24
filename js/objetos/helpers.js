@@ -94,5 +94,93 @@ window.Scene3DHelpers = {
       sprite.scale.set(isMain ? 0.72 : 0.22, isMain ? 0.22 : 0.16, 1);
     }
     return sprite;
+  },
+
+  /** Placa cartográfica 3D de museo biselada en latón y granito con remaches y tipografía de precisión */
+  createPlaqueMesh(width, height, title, subtitle = "", opts = {}) {
+    const group = new THREE.Group();
+
+    // 1. Placa base sólida de latón dorado biselado
+    const baseGeo = new THREE.BoxGeometry(width, height, 0.012);
+    const baseMat = opts.baseMat || this.brassMat(opts.brassColor || 0xd4af37);
+    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+    group.add(baseMesh);
+
+    // Borde biselado resaltado en oro
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(baseGeo),
+      new THREE.LineBasicMaterial({ color: 0xffe082, linewidth: 2 })
+    );
+    baseMesh.add(edges);
+
+    // 2. Cara frontal grabada en alta resolución
+    const canvas = document.createElement("canvas");
+    canvas.width = 1024;
+    canvas.height = Math.round(1024 * (height / width));
+    if (canvas.height < 256) canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    const cw = canvas.width;
+    const ch = canvas.height;
+
+    const bg = opts.bgColor || "#0f172a";
+    const border = opts.borderColor || "#d4af37";
+    const textColor = opts.textColor || "#fdfbf7";
+    const subColor = opts.subColor || "#c5a059";
+
+    // Fondo noble
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, cw, ch);
+
+    // Doble filete perimetral de latón
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 12;
+    ctx.strokeRect(8, 8, cw - 16, ch - 16);
+
+    ctx.lineWidth = 3;
+    ctx.strokeRect(22, 22, cw - 44, ch - 44);
+
+    // Cuatro remaches esquineros dorados
+    const rivetRadius = 7;
+    const rivetOffset = 18;
+    ctx.fillStyle = border;
+    [
+      [rivetOffset, rivetOffset],
+      [cw - rivetOffset, rivetOffset],
+      [rivetOffset, ch - rivetOffset],
+      [cw - rivetOffset, ch - rivetOffset]
+    ].forEach(([rx, ry]) => {
+      ctx.beginPath();
+      ctx.arc(rx, ry, rivetRadius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Tipografía académica
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = "bold 44px 'Cinzel', Georgia, serif";
+    ctx.fillStyle = textColor;
+    ctx.fillText(title, cw / 2, subtitle ? ch * 0.40 : ch * 0.50);
+
+    if (subtitle) {
+      ctx.font = "600 24px 'Inter', Arial, sans-serif";
+      ctx.fillStyle = subColor;
+      ctx.fillText(subtitle, cw / 2, ch * 0.72);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const faceMat = new THREE.MeshStandardMaterial({
+      map: texture,
+      roughness: 0.28,
+      metalness: 0.35
+    });
+
+    const faceMesh = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.96, height * 0.94), faceMat);
+    faceMesh.position.z = 0.007; // apenas sobresaliendo de la base
+    group.add(faceMesh);
+
+    return group;
   }
 };
+

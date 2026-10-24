@@ -448,6 +448,12 @@ class PresentationApp {
     const slide = this.data.slides[index];
     if (!slide) return;
 
+    // Actualizar visibilidad de HUD de red territorial (solo visible en filmina 4)
+    const nodePill = document.getElementById("node-radar-pill");
+    if (nodePill && index !== 3) {
+      nodePill.style.display = "none";
+    }
+
     // Actualizar botones de navegación
     this.btnPrev.disabled = index === 0;
     this.btnNext.disabled = index === this.totalSlides - 1;
@@ -916,3 +922,19 @@ window.addEventListener("DOMContentLoaded", () => {
     console.error("No se encontraron los metadatos de PRESENTACION_DATA.");
   }
 });
+
+// Actualizador de HUD sobrio para el radar de la Red Territorial (Filmina 4)
+window.updateNodeHUD = function(node) {
+  const pill = document.getElementById("node-radar-pill");
+  const title = document.getElementById("node-radar-title");
+  const desc = document.getElementById("node-radar-desc");
+  if (!pill) return;
+
+  if (window.app && window.app.currentSlideIndex === 3) {
+    pill.style.display = "inline-flex";
+    if (title) title.textContent = node.nombre;
+    if (desc) desc.textContent = `${node.tipo} • ${node.subtitulo}`;
+  } else {
+    pill.style.display = "none";
+  }
+};
