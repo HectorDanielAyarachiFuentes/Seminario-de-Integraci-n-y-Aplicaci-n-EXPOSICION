@@ -1392,7 +1392,10 @@ body {
     display: none;
   }
   .btn-tool-shortcuts {
-    display: none;
+    display: none !important;
+  }
+  .btn-tool-fullscreen {
+    display: none !important;
   }
   .canvas-3d-hint {
     display: none;
@@ -1422,11 +1425,12 @@ body {
 
   /* Barra Superior Compacta de 1 sola fila sin desbordamiento */
   .top-bar {
-    padding: 0.45rem 0.65rem;
+    padding: max(0.45rem, env(safe-area-inset-top)) 0.65rem 0.45rem 0.65rem;
     gap: 0.35rem;
     justify-content: space-between;
     overflow: hidden;
     min-height: 48px;
+    flex-shrink: 0;
   }
   .brand {
     gap: 0.4rem;
@@ -1483,42 +1487,56 @@ body {
 
   /* Escenario Principal y Tarjeta de Texto para Celular */
   .main-stage {
-    padding: 0.4rem 0.6rem;
+    padding: 0.35rem 0.55rem;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .slide-card {
     width: 100%;
     max-width: 100%;
-    max-height: calc(100vh - 134px);
+    max-height: 100%;
     padding: 0.85rem 0.95rem;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+    border-radius: 9px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
   .slide-header-tags {
     gap: 0.35rem;
     margin-bottom: 0.35rem;
+    flex-shrink: 0;
   }
   .slide-badge, .slide-bloque-badge {
     font-size: 0.58rem;
     padding: 0.15rem 0.45rem;
+    line-height: 1.2;
+    white-space: normal;
   }
   .slide-title {
     font-size: 1.15rem;
-    line-height: 1.24;
-    margin-bottom: 0.3rem;
+    line-height: 1.22;
+    margin-bottom: 0.25rem;
+    flex-shrink: 0;
   }
   .slide-subtitle {
     font-size: 0.78rem;
     line-height: 1.35;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.35rem;
+    flex-shrink: 0;
   }
   .slide-bullets {
-    gap: 0.4rem;
-    margin-bottom: 0.45rem;
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
     padding-right: 0.25rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
   .slide-bullets li {
@@ -1538,42 +1556,79 @@ body {
     font-size: 0.64rem;
     flex-direction: column;
     gap: 0.15rem;
+    flex-shrink: 0;
+    margin-top: auto;
   }
 
   /* Barra Inferior en 2 Filas Ergonómicas para el Pulgar */
   .bottom-bar {
-    padding: 0.4rem 0.6rem;
+    padding: 0.42rem 0.65rem max(0.65rem, env(safe-area-inset-bottom)) 0.65rem;
     flex-direction: column;
     gap: 0.35rem;
-    border-top: 1px solid rgba(180, 131, 36, 0.2);
+    border-top: 1px solid rgba(180, 131, 36, 0.22);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%);
+    box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.05);
+    flex-shrink: 0;
   }
   .nav-buttons {
     width: 100%;
-    gap: 0.35rem;
+    display: flex;
+    gap: 0.4rem;
   }
   .btn-nav {
     flex: 1;
-    padding: 0.48rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.76rem;
+    font-weight: 700;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 7px;
+    background: #ffffff;
+    border: 1px solid rgba(180, 131, 36, 0.3);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   }
   .side-tools {
     width: 100%;
-    gap: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
     justify-content: space-between;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 1px 0;
+  }
+  .side-tools::-webkit-scrollbar {
+    display: none;
   }
   .btn-tool {
-    flex: 1;
-    padding: 0.38rem 0.2rem;
-    font-size: 0.68rem;
-    justify-content: center;
+    flex: 1 1 0;
     min-width: 0;
-    border-radius: 5px;
-    gap: 0.2rem;
+    padding: 0.44rem 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    background: #ffffff;
+    border: 1px solid rgba(180, 131, 36, 0.22);
+    color: var(--oxford-blue);
+    gap: 0.22rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-tool .tool-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.67rem;
+    letter-spacing: 0.01em;
   }
   .shortcut-pill {
-    display: none;
+    display: none !important;
   }
   .btn-mobile-3d-toggle {
     display: inline-flex;
@@ -1583,26 +1638,31 @@ body {
     font-weight: 700;
   }
   .btn-tool-shortcuts {
-    display: none;
+    display: none !important;
+  }
+  .btn-tool-fullscreen {
+    display: none !important;
   }
   .canvas-3d-hint {
-    display: none;
+    display: none !important;
   }
 
   /* Modales y Paneles Adaptados a Pantalla Móvil Completa */
   .drawer-panel {
     width: 100vw;
+    width: 100dvw;
     height: 100vh;
+    height: 100dvh;
     right: -100vw;
-    padding: 1.2rem 1rem;
+    padding: max(1.2rem, env(safe-area-inset-top)) 1rem max(1.2rem, env(safe-area-inset-bottom)) 1rem;
     border-left: none;
   }
   .drawer-panel.open {
     right: 0;
   }
   .drawer-header {
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 0.85rem;
   }
   .drawer-header h2 {
     font-size: 0.95rem;
@@ -1612,8 +1672,8 @@ body {
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 0.35rem;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.85rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
@@ -1629,9 +1689,9 @@ body {
   .notes-modal {
     left: 0.5rem;
     right: 0.5rem;
-    bottom: 5.6rem;
+    bottom: calc(5.4rem + env(safe-area-inset-bottom));
     width: auto;
-    max-height: 52vh;
+    max-height: min(340px, calc(100dvh - 120px));
     padding: 0.9rem 1rem;
     border-radius: 12px;
   }
@@ -1645,11 +1705,13 @@ body {
 
   .svg-modal {
     width: 100vw;
+    width: 100dvw;
     max-width: 100vw;
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
     border-radius: 0;
-    padding: 0.6rem 0.75rem;
+    padding: max(0.6rem, env(safe-area-inset-top)) max(0.65rem, env(safe-area-inset-right)) max(0.6rem, env(safe-area-inset-bottom)) max(0.65rem, env(safe-area-inset-left));
     top: 0;
     left: 0;
     transform: none !important;
@@ -1664,6 +1726,8 @@ body {
   }
   .svg-modal-toolbar {
     gap: 0.2rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .btn-svg-tool {
     padding: 0.22rem 0.45rem;
@@ -1671,6 +1735,37 @@ body {
   }
   .svg-modal-footer {
     display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .top-bar {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+  }
+  .brand-logo {
+    height: 24px;
+  }
+  .brand-info h1 {
+    font-size: 0.7rem;
+  }
+  .slide-counter-badge {
+    padding: 0.18rem 0.4rem;
+    font-size: 0.6rem;
+  }
+  .timer-container {
+    padding: 0.18rem 0.45rem;
+  }
+  .timer-display {
+    font-size: 0.82rem;
+    min-width: 38px;
+  }
+  .btn-tool {
+    padding: 0.4rem 0.15rem;
+    gap: 0.15rem;
+  }
+  .btn-tool .tool-text {
+    font-size: 0.62rem;
   }
 }
 
