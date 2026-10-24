@@ -594,9 +594,10 @@ body {
 .drawer-panel {
   position: fixed;
   top: 0;
-  right: -620px;
+  right: 0;
   width: 580px;
   height: 100vh;
+  height: 100dvh;
   background: #ffffff;
   border-left: 1px solid var(--card-border);
   box-shadow: -15px 0 45px rgba(15, 23, 42, 0.12);
@@ -604,12 +605,17 @@ body {
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
   overflow-y: auto;
 }
 
 .drawer-panel.open {
-  right: 0;
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .drawer-header {
@@ -1313,8 +1319,8 @@ body {
   }
 }
 
-/* ─── 3. TABLETS (601px a 960px — iPads, Galaxy Tabs, Surface) ──────────── */
-@media (min-width: 601px) and (max-width: 960px) {
+/* ─── 3. TABLETS EN APAISADO (769px a 960px — iPads, Galaxy Tabs) ──────────── */
+@media (min-width: 769px) and (max-width: 960px) {
   .top-bar {
     padding: 0.5rem 1.2rem;
     gap: 0.8rem;
@@ -1402,7 +1408,6 @@ body {
   }
   .drawer-panel {
     width: min(520px, 92vw);
-    right: -540px;
     padding: 1.8rem;
   }
   .notes-modal {
@@ -1413,8 +1418,8 @@ body {
   }
 }
 
-/* ─── 4. CELULARES Y SMARTPHONES (≤ 600px — iPhone, Android) ────────────── */
-@media (max-width: 600px) {
+/* ─── 4. CELULARES Y SMARTPHONES (≤ 768px — iPhone, Android, iPad vertical) ── */
+@media (max-width: 768px) {
   body {
     overflow: hidden;
   }
@@ -1653,12 +1658,8 @@ body {
     width: 100dvw;
     height: 100vh;
     height: 100dvh;
-    right: -100vw;
     padding: max(1.2rem, env(safe-area-inset-top)) 1rem max(1.2rem, env(safe-area-inset-bottom)) 1rem;
     border-left: none;
-  }
-  .drawer-panel.open {
-    right: 0;
   }
   .drawer-header {
     padding-bottom: 0.85rem;
