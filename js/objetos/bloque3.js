@@ -88,6 +88,9 @@ window.Presentation3D_Objects["anim_11"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_12"] = {
   build(engine, g) {
+    // Pedestal clásico de museo de doble nivel unificado con toda la presentación
+    engine.createMuseumPlinth(g, 1.75);
+
     const longoGroup = new THREE.Group();
     longoGroup.position.set(0, -0.05, 0);
 
@@ -127,15 +130,24 @@ window.Presentation3D_Objects["anim_12"] = {
       return panelGroup;
     };
 
-    // ── 0. SOMBRA SUAVE DE CONTACTO BAJO LA ESTRUCTURA FLOTANTE (SIN PEANA TOSCA) ──
-    const shadowMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(fullW * 1.15, 0.55),
-      new THREE.MeshBasicMaterial({ color: 0x0f172a, transparent: true, opacity: 0.07, depthWrite: false })
-    );
-    shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.set(0, -0.74, 0);
-    longoGroup.add(shadowMesh);
+    // ── 0. VARILLAS Y PEANAS DE MONTAJE DE LATÓN PULIDO AL PEDESTAL DE MUSEO ──
+    [-0.85, -0.28, 0.28, 0.85].forEach(sx => {
+      // Varilla esbelta vertical
+      const pinRod = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.012, 0.012, 0.34, 16),
+        engine.brassMat(0xd4af37)
+      );
+      pinRod.position.set(sx, -0.82, 0);
+      longoGroup.add(pinRod);
 
+      // Collar / anclaje de latón torneado sobre la meseta del pedestal
+      const pinCollar = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.038, 0.048, 0.03, 16),
+        engine.brassMat(0xffd700)
+      );
+      pinCollar.position.set(sx, -0.98, 0);
+      longoGroup.add(pinCollar);
+    });
 
     // ── 1. BASAMENTO INFERIOR: SUBSISTEMA 7 (RELACIONES HUMANAS Y SOCIALES) ──
     const baseY = -0.58;
