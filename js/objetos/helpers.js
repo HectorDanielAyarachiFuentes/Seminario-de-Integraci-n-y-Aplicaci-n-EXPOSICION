@@ -134,42 +134,50 @@ window.Scene3DHelpers = {
   },
 
   /**
-   * Etiqueta 3D tipo Sprite vectorial nítida en Alta Resolución (Retina 2X)
-   * Auto-ajusta el ancho y el tamaño de fuente para que NINGÚN texto quede truncado
+   * Cartela de Museo de Alta Distinción en 3D (Ultra-HD Retina con Filete de Oro y Remaches)
+   * Autoajuste milimétrico, tipografía institucional Cinzel/Inter y protección contra clipping
    */
-  createLabelSprite(title, subtitle = "", color = "#0f2d59", isMain = false, customScale = null) {
+  createLabelSprite(title, subtitle = "", color = "#0f2d59", isMain = false, customScale = null, opts = {}) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Medición previa para autoajuste de ancho y evitar cualquier desborde
-    ctx.font = isMain ? "bold 38px 'Cinzel', Georgia, serif" : "bold 32px 'Inter', Arial, sans-serif";
+    // Factor de super-muestreo Retina para nitidez cristalina en proyectores y pantallas 4K
+    const retina = 2;
+
+    // Medición base de textos
+    ctx.font = isMain ? "bold 38px 'Cinzel', Georgia, serif" : "bold 30px 'Inter', Arial, sans-serif";
     const titleWidth = ctx.measureText(title).width;
-    ctx.font = "600 24px 'Inter', Arial, sans-serif";
+    ctx.font = "600 22px 'Inter', Arial, sans-serif";
     const subWidth = subtitle ? ctx.measureText(subtitle).width : 0;
 
     const maxTextWidth = Math.max(titleWidth, subWidth);
-    // Ancho dinámico con generoso margen de seguridad (mínimo 640px, hasta 1150px)
-    const canvasWidth = Math.min(1200, Math.max(680, Math.round(maxTextWidth + 140)));
-    const canvasHeight = subtitle ? 210 : 160;
+    const logicalWidth = Math.min(1300, Math.max(680, Math.round(maxTextWidth + 140)));
+    const logicalHeight = subtitle ? 210 : 150;
 
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    canvas.width = logicalWidth * retina;
+    canvas.height = logicalHeight * retina;
+    ctx.scale(retina, retina);
 
-    // Redibujar con el canvas ajustado
-    const paddingX = 16, paddingY = 16;
-    const w = canvasWidth - paddingX * 2;
-    const h = canvasHeight - paddingY * 2;
-    const r = 26;
+    const paddingX = 14, paddingY = 14;
+    const w = logicalWidth - paddingX * 2;
+    const h = logicalHeight - paddingY * 2;
+    const r = 18;
 
-    // Sombra suave en el canvas
+    // 1. Sombra volumétrica de placa de galería
     ctx.shadowColor = "rgba(15, 23, 42, 0.28)";
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = 20;
     ctx.shadowOffsetY = 8;
 
-    // Fondo pill académico blanco marfil traslúcido
-    ctx.fillStyle = "rgba(255, 255, 255, 0.98)";
-    ctx.strokeStyle = "#c5a059"; // Borde dorado
-    ctx.lineWidth = 5;
+    // 2. Fondo de Mármol Marfil Cálido y Traslúcido con degradado sutil
+    const gradBg = ctx.createLinearGradient(0, paddingY, 0, paddingY + h);
+    gradBg.addColorStop(0, "rgba(255, 255, 255, 0.99)");
+    gradBg.addColorStop(0.5, "rgba(253, 251, 247, 0.98)");
+    gradBg.addColorStop(1, "rgba(247, 243, 235, 0.97)");
+    ctx.fillStyle = gradBg;
+
+    // Borde exterior de oro envejecido labrado
+    ctx.strokeStyle = "#c5a059";
+    ctx.lineWidth = 4;
 
     ctx.beginPath();
     ctx.moveTo(paddingX + r, paddingY);
@@ -185,53 +193,132 @@ window.Scene3DHelpers = {
     ctx.fill();
     ctx.stroke();
 
-    // Línea interior sutil dorada
+    // 3. Filete interior refinado de latón
     ctx.shadowColor = "transparent";
-    ctx.strokeStyle = "rgba(180, 131, 36, 0.35)";
+    ctx.strokeStyle = "rgba(180, 131, 36, 0.45)";
     ctx.lineWidth = 1.5;
-    ctx.stroke();
+    const innerOffset = 6;
+    ctx.strokeRect(paddingX + innerOffset, paddingY + innerOffset, w - innerOffset * 2, h - innerOffset * 2);
 
-    // Texto Principal
-    const fontTitleSize = isMain ? (canvasWidth > 900 ? 34 : 38) : (canvasWidth > 900 ? 28 : 32);
+    // 4. Remaches ornamentales de orfebrería en las 4 esquinas de la placa
+    const rivetDist = 16;
+    const corners = [
+      { x: paddingX + rivetDist, y: paddingY + rivetDist },
+      { x: paddingX + w - rivetDist, y: paddingY + rivetDist },
+      { x: paddingX + rivetDist, y: paddingY + h - rivetDist },
+      { x: paddingX + w - rivetDist, y: paddingY + h - rivetDist }
+    ];
+    corners.forEach(c => {
+      // Borde del remache
+      ctx.fillStyle = "#b48324";
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+      // Reflejo central brillante
+      ctx.fillStyle = "#fff8db";
+      ctx.beginPath();
+      ctx.arc(c.x - 1, c.y - 1, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 5. Título Institucional Grabado
+    const fontTitleSize = isMain ? (logicalWidth > 900 ? 34 : 38) : (logicalWidth > 900 ? 28 : 31);
     ctx.font = isMain ? `bold ${fontTitleSize}px 'Cinzel', Georgia, serif` : `bold ${fontTitleSize}px 'Inter', Arial, sans-serif`;
     ctx.fillStyle = color;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(title, canvasWidth / 2, subtitle ? (paddingY + h * 0.38) : (canvasHeight / 2));
 
-    // Subtítulo
+    const titleY = subtitle ? (paddingY + h * 0.35) : (logicalHeight / 2);
+    ctx.fillText(title, logicalWidth / 2, titleY);
+
+    // 6. Línea divisoria de filigrana con rombo central y subtítulo
     if (subtitle) {
-      const fontSubSize = isMain ? 23 : 21;
+      const lineY = paddingY + h * 0.56;
+      ctx.strokeStyle = "rgba(180, 131, 36, 0.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(logicalWidth / 2 - 85, lineY);
+      ctx.lineTo(logicalWidth / 2 - 12, lineY);
+      ctx.moveTo(logicalWidth / 2 + 12, lineY);
+      ctx.lineTo(logicalWidth / 2 + 85, lineY);
+      ctx.stroke();
+
+      // Rombo de latón central
+      ctx.fillStyle = "#d4af37";
+      ctx.beginPath();
+      ctx.moveTo(logicalWidth / 2, lineY - 3.5);
+      ctx.lineTo(logicalWidth / 2 + 4, lineY);
+      ctx.lineTo(logicalWidth / 2, lineY + 3.5);
+      ctx.lineTo(logicalWidth / 2 - 4, lineY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Subtítulo
+      const fontSubSize = isMain ? 21 : 19;
       ctx.font = `600 ${fontSubSize}px 'Inter', Arial, sans-serif`;
-      ctx.fillStyle = isMain ? "#b8860b" : "#475569";
-      ctx.fillText(subtitle, canvasWidth / 2, paddingY + h * 0.72);
+      ctx.fillStyle = isMain ? "#996515" : "#475569";
+      ctx.fillText(subtitle, logicalWidth / 2, paddingY + h * 0.76);
     }
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
+
+    // Desactivar depthTest por defecto en rótulos flotantes para erradicar el clipping con geometrías
+    const depthTestVal = opts?.depthTest !== undefined ? opts.depthTest : false;
 
     const spriteMat = new THREE.SpriteMaterial({
       map: texture,
       transparent: true,
-      depthTest: true,
+      depthTest: depthTestVal,
       depthWrite: false
     });
     const sprite = new THREE.Sprite(spriteMat);
+    sprite.renderOrder = opts?.renderOrder || (isMain ? 150 : 120);
 
-    // Relación de aspecto natural en 3D para evitar distorsiones
-    const aspect = canvasWidth / canvasHeight;
-
+    const aspect = logicalWidth / logicalHeight;
     if (customScale) {
-      // Si nos dieron escala personalizada, respetamos las proporciones ampliadas
       const scaleMultiplier = 1.35;
       sprite.scale.set(customScale.x * scaleMultiplier, (customScale.x * scaleMultiplier) / aspect, 1);
     } else {
-      // Escalas nítidas y generosas para lectura cómoda en la defensa
       const targetWidth = isMain ? 1.55 : 1.15;
       sprite.scale.set(targetWidth, targetWidth / aspect, 1);
     }
 
     return sprite;
+  },
+
+  /**
+   * Generador de Atril / Peana de Museo Físico 3D para Cartelas
+   * Ancla la cartela al suelo o a un peldaño con una elegante varilla de latón torneado y base biselada
+   */
+  createMuseumPlaqueStand(title, subtitle = "", color = "#0f2d59", standHeight = 0.35, customScale = null) {
+    const standGroup = new THREE.Group();
+
+    // 1. Zócalo circular inferior de latón dorado
+    const baseGeo = new THREE.CylinderGeometry(0.08, 0.10, 0.03, 24);
+    const baseMesh = new THREE.Mesh(baseGeo, this.brassMat(0xd4af37));
+    baseMesh.position.y = 0.015;
+    standGroup.add(baseMesh);
+
+    // 2. Varilla / Pie de apoyo torneado
+    const rodGeo = new THREE.CylinderGeometry(0.014, 0.014, standHeight, 16);
+    const rodMesh = new THREE.Mesh(rodGeo, this.brassMat(0xd4af37));
+    rodMesh.position.y = standHeight / 2;
+    standGroup.add(rodMesh);
+
+    // 3. Cabezal articulado con rótula
+    const jointGeo = new THREE.SphereGeometry(0.024, 16, 16);
+    const jointMesh = new THREE.Mesh(jointGeo, this.brassMat(0xffd700));
+    jointMesh.position.y = standHeight;
+    standGroup.add(jointMesh);
+
+    // 4. Cartela Sprite montada sobre la rótula
+    const plaqueSprite = this.createLabelSprite(title, subtitle, color, false, customScale, { depthTest: false, renderOrder: 130 });
+    plaqueSprite.position.y = standHeight + 0.16;
+    standGroup.add(plaqueSprite);
+
+    return standGroup;
   }
 };
