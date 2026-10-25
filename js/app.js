@@ -504,11 +504,11 @@ class PresentationApp {
 
     gsap.killTweensOf(exitTargets);
 
-    // FASE 1: Salida suave y rápida (0.15s)
+    // FASE 1: Salida suave y rápida (0.10s)
     gsap.to(exitTargets, {
       x: outX,
       opacity: 0,
-      duration: 0.15,
+      duration: 0.10,
       ease: "power2.in",
       onComplete: () => {
         // FASE 2: Inyectar nuevo contenido DOM en el punto neutro

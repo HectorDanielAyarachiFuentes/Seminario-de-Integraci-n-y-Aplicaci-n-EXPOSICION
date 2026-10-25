@@ -197,29 +197,55 @@ class Presentation3D {
   }
 
   /**
-   * Precompila todos los programas de shader WebGL y fuerza la subida de buffers/texturas a la VRAM
-   * para eliminar por completo el freeze/lag durante la primera transición a cualquier filmina.
+   * Precompila exhaustivamente los shaders, texturas y geometrías en la GPU
+   * de forma individual por escena, garantizando 0ms de stutter en primera transición.
    */
   precompileAllScenes() {
     try {
-      const visStates = {};
+      // 1. Ocultar todas las escenas inicialmente
       Object.keys(this.scenes).forEach((k) => {
-        visStates[k] = this.scenes[k].visible;
-        this.scenes[k].visible = true;
+        this.scenes[k].visible = false;
       });
 
-      // Compilación GPU explícita de shaders para todos los materiales y luces
-      this.renderer.compile(this.scene, this.camera);
+      // 2. Calentar y compilar cada una de las 25 escenas individualmente
+      // Esto fuerza a Three.js y al driver GPU a:
+      // a) Compilar el shader exacto correspondiente a las luces propias de cada escena
+      // b) Subir las geometrías complejas (Extrude/Tube) y CanvasTextures a la VRAM
+      for (let i = 1; i <= 25; i++) {
+        const id = `anim_${String(i).padStart(2, "0")}`;
+        const grp = this.scenes[id];
+        if (!grp) continue;
 
-      // Render pass inicial para alojar geometrías y texturas procedimentales en VRAM
+        grp.visible = true;
+
+        const camCfg = this.cameraTargets[id] || { pos: [2.3, 1.4, 6.8], lookAt: [1.4, 0.2, 0] };
+        this.camera.position.set(camCfg.pos[0], camCfg.pos[1], camCfg.pos[2]);
+        this.camera.lookAt(camCfg.lookAt[0], camCfg.lookAt[1], camCfg.lookAt[2]);
+        this.camera.updateMatrixWorld();
+
+        this.renderer.compile(this.scene, this.camera);
+        this.renderer.render(this.scene, this.camera);
+
+        grp.visible = false;
+      }
+
+      // 3. Restaurar escena canónica inicial (anim_01)
+      const firstId = "anim_01";
+      this.currentSceneId = firstId;
+      if (this.scenes[firstId]) {
+        this.scenes[firstId].visible = true;
+      }
+      const firstCam = this.cameraTargets[firstId] || { pos: [2.3, 1.4, 6.8], lookAt: [1.4, 0.2, 0] };
+      this.targetCamPos.set(...firstCam.pos);
+      this.targetLookAt.set(...firstCam.lookAt);
+      this.currentCamPos.copy(this.targetCamPos);
+      this.currentLookAt.copy(this.targetLookAt);
+      this.camera.position.copy(this.currentCamPos);
+      this.camera.lookAt(this.currentLookAt);
+      this.camera.updateMatrixWorld();
       this.renderer.render(this.scene, this.camera);
-
-      // Restaurar visibilidad canónica (solo el slide 1 activo)
-      Object.keys(this.scenes).forEach((k) => {
-        this.scenes[k].visible = visStates[k];
-      });
     } catch (err) {
-      console.warn("Warmup WebGL no bloqueante:", err);
+      console.warn("Warmup WebGL individual:", err);
     }
   }
 
@@ -336,15 +362,15 @@ class Presentation3D {
         x: camTarget.pos[0],
         y: camTarget.pos[1],
         z: camTarget.pos[2],
-        duration: 0.95,
-        ease: "power2.inOut"
+        duration: 0.75,
+        ease: "power2.out"
       });
       gsap.to(this.targetLookAt, {
         x: camTarget.lookAt[0],
         y: camTarget.lookAt[1],
         z: camTarget.lookAt[2],
-        duration: 0.95,
-        ease: "power2.inOut"
+        duration: 0.75,
+        ease: "power2.out"
       });
     } else {
       this.targetCamPos.set(...camTarget.pos);
@@ -396,8 +422,7 @@ class Presentation3D {
       z: 0,
       scale: 1,
       rotY: 0,
-      duration: 0.85,
-      delay: 0.12,
+      duration: 0.65,
       ease: "power2.out"
     });
   }
@@ -433,8 +458,8 @@ class Presentation3D {
       .copy(this.targetLookAt)
       .add(new THREE.Vector3(this.userPan.x, this.userPan.y, 0));
 
-    this.currentCamPos.lerp(desiredCamPos, 0.045);
-    this.currentLookAt.lerp(desiredLookAt, 0.045);
+    this.currentCamPos.lerp(desiredCamPos, 0.095);
+    this.currentLookAt.lerp(desiredLookAt, 0.095);
     this.camera.position.copy(this.currentCamPos);
     this.camera.lookAt(this.currentLookAt);
 

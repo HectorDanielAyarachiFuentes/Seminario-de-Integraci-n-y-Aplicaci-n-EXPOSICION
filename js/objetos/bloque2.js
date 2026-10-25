@@ -31,7 +31,13 @@ window.Presentation3D_Objects["anim_06"] = {
 
     const seaWater = new THREE.Mesh(
       new THREE.CylinderGeometry(1.88, 1.88, 0.02, 64),
-      engine.glassMat(0x0369a1, { roughness: 0.15, transmission: 0.85, opacity: 0.8 })
+      new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        roughness: 0.12,
+        metalness: 0.15,
+        transparent: true,
+        opacity: 0.75
+      })
     );
     seaWater.position.y = -1.08;
     g.add(seaWater);
@@ -68,7 +74,7 @@ window.Presentation3D_Objects["anim_06"] = {
       bevelEnabled: true,
       bevelThickness: 0.012,
       bevelSize: 0.010,
-      bevelSegments: 2
+      bevelSegments: 1
     };
     const argGeo = new THREE.ExtrudeGeometry(argShape, argExtrudeOpts);
     const argMesh = new THREE.Mesh(argGeo, engine.marbleMat(0x2d3748));
@@ -126,7 +132,7 @@ window.Presentation3D_Objects["anim_06"] = {
     rnShape.lineTo(-0.24, -0.19);
     rnShape.closePath();
 
-    const rnGeo = new THREE.ExtrudeGeometry(rnShape, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.015, bevelSegments: 3 });
+    const rnGeo = new THREE.ExtrudeGeometry(rnShape, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.015, bevelSegments: 1 });
     const rnMesh = new THREE.Mesh(rnGeo, engine.brassMat(0xd4af37));
     rnMesh.rotation.x = -Math.PI / 2;
     rnMesh.position.set(0, -1.00, 0);
@@ -170,7 +176,18 @@ window.Presentation3D_Objects["anim_06"] = {
         col.position.y = -0.72;
         pinGroup.add(col);
 
-        const orb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 24, 24), engine.glassMat(0xffd700, { roughness: 0.05, transmission: 0.9 }));
+        const orb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.06, 20, 20),
+          new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            roughness: 0.08,
+            metalness: 0.35,
+            emissive: 0xb45309,
+            emissiveIntensity: 0.35,
+            transparent: true,
+            opacity: 0.90
+          })
+        );
         orb.position.y = -0.48;
         pinGroup.add(orb);
         engine.nodeGems06.push({ mesh: orb, sede });
@@ -301,8 +318,16 @@ window.Presentation3D_Objects["anim_07"] = {
 
     // Núcleo holográfico luminoso del servidor Moodle / Videoconferencias
     const serverGlobe = new THREE.Mesh(
-      new THREE.SphereGeometry(0.09, 24, 24),
-      engine.glassMat(0xffd700, { roughness: 0.08, transmission: 0.92 })
+      new THREE.SphereGeometry(0.09, 20, 20),
+      new THREE.MeshStandardMaterial({
+        color: 0xffd700,
+        emissive: 0xd97706,
+        emissiveIntensity: 0.45,
+        roughness: 0.10,
+        metalness: 0.25,
+        transparent: true,
+        opacity: 0.92
+      })
     );
     serverGlobe.position.set(0, 0.18, 0);
     netGroup.add(serverGlobe);
