@@ -59,8 +59,8 @@ class Presentation3D {
      ═══════════════════════════════════════════════════════════════════════════ */
   init() {
     this.scene = new THREE.Scene();
-    // Atmósfera de galería clásica en blanco marfil / luz de día
-    this.scene.fog = new THREE.FogExp2(0xf4f6f9, 0.038);
+    // Atmósfera de galería clásica en blanco marfil con contraste suave
+    this.scene.fog = new THREE.FogExp2(0xf4f6f9, 0.022);
 
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.copy(this.currentCamPos);
@@ -86,8 +86,11 @@ class Presentation3D {
     // Motes sutiles de polvo dorado de biblioteca bajo la luz del sol
     this.createAtmosphericMotes();
 
-    // Construcción de las 20 esculturas académicas desde los módulos en js/objetos/
+    // Construcción de las 25 esculturas académicas desde los módulos en js/objetos/
     this.buildAllScenes();
+
+    // Pre-calentamiento y compilación GPU anticipada de shaders (elimina stutter en primera transición)
+    this.precompileAllScenes();
 
     // Controles interactivos de rotación 360°, pan y zoom con ratón o táctil
     this.setupInteractiveControls();
@@ -98,13 +101,17 @@ class Presentation3D {
   }
 
   setupMuseumLighting() {
-    // 1. Luz Ambiental clara y envolvente de galería
-    const amb = new THREE.AmbientLight(0xffffff, 0.95);
+    // 1. Luz Ambiental suave para contraste PBR profundo
+    const amb = new THREE.AmbientLight(0xffffff, 0.42);
     this.scene.add(amb);
 
-    // 2. Lucarna Cenital Superior (Simula el tragaluz de una rotonda clásica de museo)
-    const skylight = new THREE.DirectionalLight(0xfffaed, 1.45);
-    skylight.position.set(4, 8, 5);
+    // 1b. Luz de Hemisferio para gradiente natural entre cielo cálido y suelo pizarra
+    const hemi = new THREE.HemisphereLight(0xfffbf2, 0x334155, 0.45);
+    this.scene.add(hemi);
+
+    // 2. Lucarna Cenital Principal con sombras suaves
+    const skylight = new THREE.DirectionalLight(0xfff8ee, 1.35);
+    skylight.position.set(4.5, 9.0, 5.5);
     skylight.castShadow = true;
     skylight.shadow.mapSize.width = 2048;
     skylight.shadow.mapSize.height = 2048;
@@ -112,14 +119,19 @@ class Presentation3D {
     this.scene.add(skylight);
 
     // 3. Luz de Relleno Lateral Suave (Elimina sombras duras en el lado sombrío)
-    const fillLight = new THREE.DirectionalLight(0xe8f0fe, 0.75);
-    fillLight.position.set(-5, 3, 2);
+    const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.55);
+    fillLight.position.set(-5, 4, 3);
     this.scene.add(fillLight);
 
-    // 4. Luz de Recorte Inferior Cálida (Realza los contornos de bronce y mármol)
-    const rimLight = new THREE.PointLight(0xffeedd, 1.1, 14);
-    rimLight.position.set(1.6, -1.8, 3.5);
+    // 4. Luz de Recorte (Rim Light) posterior para destacar siluetas
+    const rimLight = new THREE.DirectionalLight(0xffedd5, 0.75);
+    rimLight.position.set(-2, 3, -4);
     this.scene.add(rimLight);
+
+    // 5. Foco cálido inferior para realzar relieves dorados y basamentos
+    const bottomLight = new THREE.PointLight(0xffd700, 0.5, 12);
+    bottomLight.position.set(1.6, -1.5, 3.8);
+    this.scene.add(bottomLight);
   }
 
   createAtmosphericMotes() {
@@ -169,7 +181,7 @@ class Presentation3D {
      CONSTRUCCIÓN MODULAR DE LAS 20 ESCULTURAS ACADÉMICAS
      ═══════════════════════════════════════════════════════════════════════════ */
   buildAllScenes() {
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 25; i++) {
       const id = `anim_${String(i).padStart(2, "0")}`;
       const group = new THREE.Group();
       group.position.set(1.6, 0, 0);
@@ -181,6 +193,33 @@ class Presentation3D {
       if (objDef && typeof objDef.build === "function") {
         objDef.build(this, group);
       }
+    }
+  }
+
+  /**
+   * Precompila todos los programas de shader WebGL y fuerza la subida de buffers/texturas a la VRAM
+   * para eliminar por completo el freeze/lag durante la primera transición a cualquier filmina.
+   */
+  precompileAllScenes() {
+    try {
+      const visStates = {};
+      Object.keys(this.scenes).forEach((k) => {
+        visStates[k] = this.scenes[k].visible;
+        this.scenes[k].visible = true;
+      });
+
+      // Compilación GPU explícita de shaders para todos los materiales y luces
+      this.renderer.compile(this.scene, this.camera);
+
+      // Render pass inicial para alojar geometrías y texturas procedimentales en VRAM
+      this.renderer.render(this.scene, this.camera);
+
+      // Restaurar visibilidad canónica (solo el slide 1 activo)
+      Object.keys(this.scenes).forEach((k) => {
+        this.scenes[k].visible = visStates[k];
+      });
+    } catch (err) {
+      console.warn("Warmup WebGL no bloqueante:", err);
     }
   }
 

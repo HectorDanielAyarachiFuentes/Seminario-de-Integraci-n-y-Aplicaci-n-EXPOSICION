@@ -448,9 +448,9 @@ class PresentationApp {
     const slide = this.data.slides[index];
     if (!slide) return;
 
-    // Actualizar visibilidad de HUD de red territorial (solo visible cuando la escena 3D es anim_05)
+    // Actualizar visibilidad de HUD de red territorial (visible en mapa de territorio y red híbrida anim_06 / anim_07)
     const nodePill = document.getElementById("node-radar-pill");
-    if (nodePill && slide.escena3D !== "anim_05") {
+    if (nodePill && slide.escena3D !== "anim_06" && slide.escena3D !== "anim_07") {
       nodePill.style.display = "none";
     }
 
@@ -923,7 +923,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Actualizador de HUD sobrio para el radar de la Red Territorial (escena anim_05)
+// Actualizador de HUD sobrio para el radar de la Red Territorial (escenas anim_06 y anim_07)
 window.updateNodeHUD = function(node) {
   const pill = document.getElementById("node-radar-pill");
   const title = document.getElementById("node-radar-title");
@@ -931,7 +931,7 @@ window.updateNodeHUD = function(node) {
   if (!pill) return;
 
   const currentSlide = window.app?.data.slides[window.app.currentSlideIndex];
-  if (currentSlide && currentSlide.escena3D === "anim_05") {
+  if (currentSlide && (currentSlide.escena3D === "anim_06" || currentSlide.escena3D === "anim_07")) {
     pill.style.display = "inline-flex";
     if (title) title.textContent = node.nombre;
     if (desc) desc.textContent = `${node.tipo} • ${node.subtitulo}`;

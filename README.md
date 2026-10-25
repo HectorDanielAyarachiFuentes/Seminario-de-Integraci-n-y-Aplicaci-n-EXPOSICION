@@ -82,29 +82,44 @@ Los diagramas pueden observarse de forma interactiva en pantalla completa median
 
 ---
 
-## 🏛️ Catálogo de las 20 Esculturas Académicas 3D (Galería Institucional)
+## 🏛️ Catálogo de las 25 Esculturas Académicas 3D (Organizadas en 5 Bloques)
 
-Cada filmina posee una pieza escultórica tridimensional inspirada en la tradición universitaria y las artes plásticas clásicas (mármol de Carrara, latón dorado cepillado, bronce escultórico, cristal esmerilado y plintos de granito pulido bajo iluminación de museo):
-1. **Filmina 1:** *Esfera Armilar Renacentista*: base clásica con tres aros meridiano y eclíptica graduados de latón girando en torno al orbe universitario de marfil.
-2. **Filmina 2:** *Monumento al Valor Social*: pedestal de mármol con tres anillos horizontales concéntricos de bronce ascendiendo armónicamente y gema de cristal.
-3. **Filmina 3:** *Frontispicio Normativo (Res. 266/23)*: estilóbato de granito con 3 columnas jónicas de mármol, arquitrabe y frontón clásico de latón.
-4. **Filmina 4:** *Maqueta Geodésica de Río Negro*: plinto de bronce patinado con 5 obeliscos geodésicos monumentales en mármol y piramidones dorados (Viedma y Nodos).
-5. **Filmina 5:** *Red Tensada de Nodos Territoriales*: esferas perladas de alabastro unidas por finos filamentos tensores de latón (Res. CD-CURZA N° 196/2022).
-6. **Filmina 6:** *Escultura Cinética de Péndulos Armónicos*: 7 esferas de mármol y bronce suspendidas que transitan del desorden a la alineación epistemológica (Wainerman & Sautu).
-7. **Filmina 7:** *Balanza de la Justicia Universitaria*: fuste de mármol con balancín de latón y dos platillos en solemne equilibrio (Art. 75 vs. Art. 76 Estatuto UNCo).
-8. **Filmina 8:** *Astrolabio Geodésico de Precisión*: limbo graduado de bronce con disco de cristal y alidada rotatoria para la delimitación del problema.
-9. **Filmina 9:** *Tétrada Monumental de Placas*: cuatro placas de bronce con pátina y biseles dorados que se abren en compás ordenado (Objetivo General + 3 Específicos).
-10. **Filmina 10:** *Heptágono Escultórico de los 7 Subsistemas*: prisma regular de 7 caras de mármol blanco de Carrara coronado por estrella heptagonal y anillo orbital (Francisco Longo).
-11. **Filmina 11:** *Atril de Honor Académico*: marco ceremonial de bronce y columna de mármol que enmarca el diagrama oficial SVG de Longo.
-12. **Filmina 12:** *Escalera Monumental de la Carrera Docente*: cuatro pedestales de mármol ascendentes con molduras de latón (Planificación, Organización, Rendimiento, Desarrollo).
-13. **Filmina 13:** *Giroscopio Cuádruple de Bronce y Alabastro*: cuatro aros cardinales girando en rotación solemne con las 4 esferas de los claustros evaluativos (Modelo 360°).
-14. **Filmina 14:** *Cúpula Geodésica de Cristal y Tracería de Bronce*: cúpula protectora arquitectónica de cristal esmerilado cobijando la libertad de cátedra y confidencialidad.
-15. **Filmina 15:** *Triángulo de Matus en Granito y Latón*: tríada monumental conectada por barras de tensión (Proyecto, Capacidad y Gobernabilidad).
-16. **Filmina 16:** *Estructura Tensada de Tensegridad*: barras de latón suspendidas en equilibrio flotante sin tocarse, metáfora de la poligobernanza (Cao & Blutman).
-17. **Filmina 17:** *Teodolito y Prisma Óptico de Triangulación*: prisma de cristal puro tallado sobre montura clásica de latón y trípode geodésico.
-18. **Filmina 18:** *Pentagrama Armónico de Vitral y Latón*: escultura pentagonal con 5 radios de latón sosteniendo cristales biselados para las 5 dimensiones de factibilidad.
-19. **Filmina 19:** *Linterna de la Biblioteca del Saber*: faro cilíndrico de mampostería clásica y cúpula de bronce con celosía renacentista.
-20. **Filmina 20:** *Gran Medallón de Honor CURZAS - UNCo*: medalla conmemorativa de bronce patinado y oro con corona de laureles sobre plinto de mármol blanco.
+Cada filmina posee un objeto tridimensional representativo y pertinente con el contenido temático, organizado en 5 bloques modulares (`js/objetos/bloque1.js` a `bloque5.js`) para facilitar el mantenimiento:
+
+### Bloque I (`bloque1.js`): Apertura, Perfil y Esquema de la Cátedra (Filminas 1 a 5)
+1. **`anim_01` (Filmina 1):** *El Gran Tomo Encuadernado de Tesina*: atril ceremonial de mármol y latón con el libro abierto de la carátula oficial CURZAS-UNCo.
+2. **`anim_02` (Filmina 2):** *Credencial Profesional & Monolito de Carrera*: monolito de mármol con la insignia técnica de RRHH de Héctor Ayarachi.
+3. **`anim_03` (Filmina 3):** *Podio Cúbico de los 4 Cimientos del TFG*: estructura cuádruple de la Primera Parte canónica (TP N° 2).
+4. **`anim_04` (Filmina 4):** *Díptico Epistemológico de 2 Columnas*: pilares de sustentación de la Segunda Parte (Teoría y Antecedentes).
+5. **`anim_05` (Filmina 5):** *Tríptico de Ingeniería Metodológica Integral*: tres frontispicios de la Tercera Parte (Metodología, Cronograma, Recursos).
+
+### Bloque II (`bloque2.js`): Tiempo 1 — Territorio, Ruptura y Tensión (Filminas 6 a 10)
+6. **`anim_06` (Filmina 6):** *Maqueta Geodésica de la República Argentina y Río Negro*: territorio continental en alto relieve, Océano Atlántico, Malvinas, Antártida, y relieve de Río Negro con balizas de Viedma y los Nodos Territoriales.
+7. **`anim_07` (Filmina 7):** *Red de Aulas Híbridas y Terminales Conectadas*: servidor central de Viedma enlazado por arcos luminosos con terminales remotas (Res. CD-CURZA N° 196/2022).
+8. **`anim_08` (Filmina 8):** *Prisma de Ruptura Epistemológica*: bloque de carbón burocrático refractado en haz de luz científico (Wainerman & Sautu, 2011).
+9. **`anim_09` (Filmina 9):** *Balanza Dual de Tensión Normativa*: balancín de latón contrastando el Art. 75 (Pérdida de cargo) frente al Art. 76 (Capacitación continua).
+10. **`anim_10` (Filmina 10):** *Pentágono Orbital de Factibilidad*: núcleo central de la pregunta rectora rodeado por 5 sellos de viabilidad dimensional.
+
+### Bloque III (`bloque3.js`): Tiempo 2 — Objetivos, Modelo Sistémico y 360° (Filminas 11 a 15)
+11. **`anim_11` (Filmina 11):** *Diana de Coherencia de Objetivos*: núcleo dorado del Objetivo General con 4 ejes cardinales para los 4 Objetivos Específicos.
+12. **`anim_12` (Filmina 12):** *Prisma Heptagonal de los 7 Subsistemas*: prisma regular con los subsistemas de gestión pública (Francisco Longo, 2006).
+13. **`anim_13` (Filmina 13):** *Mecanismo de Engranajes Sistémicos de RRHH*: engranajes acoplados entre Rendimiento, Desarrollo, Organización del Trabajo y Relaciones Sociales.
+14. **`anim_14` (Filmina 14):** *Escáner Radar Circular 360°*: radar multiactoral que neutraliza sesgos unilaterales triangulando 4 cuadrantes.
+15. **`anim_15` (Filmina 15):** *Cúpula Geodésica de los 4 Cuadrantes del CURZAS*: cúpula protectora con los 4 estamentos universitarios convergiendo hacia el núcleo formativo del Art. 76.
+
+### Bloque IV (`bloque4.js`): Tiempo 2 y Tiempo 3 — Gobernanza y Metodología (Filminas 16 a 20)
+16. **`anim_16` (Filmina 16):** *Mesa Redonda de Cogobierno Paritario y Servidor Criptográfico*: mesa circular con los 4 escaños de representación (ADUNC, Claustros, Autoridades) y servidor con candado de anonimato (Carlos Matus + Oscar Oszlak).
+17. **`anim_17` (Filmina 17):** *Muro Escalonado de Antecedentes y Gema Patagónica*: 3 niveles concéntricos (Internacional, Nacional, Regional) coronados por el diamante de la vacancia disciplinar.
+18. **`anim_18` (Filmina 18):** *Probeta Doble de Triangulación Mixta ($CUAL \rightarrow cuan$)*: probeta cualitativa prioritaria conectada por serpentín de transferencia con la probeta cuantitativa y bitácora de caso.
+19. **`anim_19` (Filmina 19):** *Muestrario de Informantes Clave e Instrumentos*: semicírculo con 8 bustos de informantes clave (docentes, autoridades, ADUNC, alumnos) y panel de 45 esferas del sondeo Likert con atril de grabación.
+20. **`anim_20` (Filmina 20):** *Ábaco Matricial de las 5 Dimensiones*: pórtico neoclásico de 5 columnas con discos graduados que representan variables e indicadores empíricos de factibilidad.
+
+### Bloque V (`bloque5.js`): Tiempo 3, Conclusiones y Cierre (Filminas 21 a 25)
+21. **`anim_21` (Filmina 21):** *Espiral Temporal de 7 Meses y 6 Hitos de Campo*: espiral helicoidal ascendente de latón con balizas luminosas para las 6 fases de trabajo de campo durante 2027.
+22. **`anim_22` (Filmina 22):** *Trípode Dórico de Viabilidad de Recursos*: 3 pilares maestros (Humanos, Técnicos Moodle/SIU, Económicos Costo Cero) bajo el tablero con el sello de aval departamental (Apartado 9 del TP4).
+23. **`anim_23` (Filmina 23):** *Cofre Blindado Ley 25.326 y Pergamino de Inmunidad*: caja fuerte acorazada con candado criptográfico (disociación de IPs) y pergamino con sello lacrado de no afectación laboral.
+24. **`anim_24` (Filmina 24):** *Faro Monumental de Valor Público Universitario*: torre de mármol con doble haz giratorio sobre el horizonte patagónico y 4 estelas de síntesis de factibilidad.
+25. **`anim_25` (Filmina 25):** *Gran Medallón Laureado UNCo y Atril al Tribunal*: medalla conmemorativa de graduación de la Universidad Nacional del Comahue, flanqueada por pebeteros votivos de educación pública y atril de honor abierto al tribunal evaluador (Dra. Deborah Noguera, Esp. Federico Abeiro, Esp. María Cecilia Aguirre).
 
 ---
 

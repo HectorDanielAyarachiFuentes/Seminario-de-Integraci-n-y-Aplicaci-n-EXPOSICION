@@ -159,16 +159,44 @@ const PRESENTACION_DATA = {
         detalle: "Sede central académica y administrativa del CURZAS. Concentra los claustros docentes, la dirección departamental y los órganos colegiados de cogobierno."
       },
       {
-        sede: "Nodo Territorial: Sierra Grande (Costa Atlántica)",
-        detalle: "Población vinculada a la costa y minería. Cursadas sincrónicas mediadas por tecnología con fuerte demanda de tutoría virtual continua."
+        sede: "Nodo 1: San Antonio Oeste (Golfo San Matías)",
+        detalle: "Nodo estratégico en la costa atlántica rionegrina, nexo pesquero y portuario con cursadas híbridas mediadas por tecnología."
       },
       {
-        sede: "Nodo Territorial: Valcheta (Portal de la Línea Sur)",
-        detalle: "Aulas híbridas equipadas bajo Res. CD-CURZA N° 196/2022 que integran a estudiantes de la estepa rionegrina."
+        sede: "Nodo 2: Sierra Grande (Costa Atlántica Sur)",
+        detalle: "Población vinculada a la costa y minería en el límite sur de la provincia, con alta demanda de tutoría virtual continua."
       },
       {
-        sede: "Nodos Territoriales: Los Menucos y Ramos Mexía",
-        detalle: "Estepa profunda patagónica a más de 400 km de Viedma. Exige competencias docentes de acompañamiento pedagógico digital que hoy no se evalúan formativamente."
+        sede: "Nodo 3: General Conesa (Valle Inferior / Nexo)",
+        detalle: "Punto de confluencia vial y productivo sobre el Río Negro que articula el Valle Inferior con el Valle Medio."
+      },
+      {
+        sede: "Nodo 4: Lamarque (Valle Medio)",
+        detalle: "Inserción territorial en la región productiva del Valle Medio y la isla de Choele Choel."
+      },
+      {
+        sede: "Nodo 5: Valcheta (Portal de la Línea Sur)",
+        detalle: "Puerta de entrada a la estepa rionegrina; aulas híbridas formalizadas bajo Res. CD-CURZA N° 196/2022."
+      },
+      {
+        sede: "Nodo 6: Ramos Mexía (Meseta de Somuncura)",
+        detalle: "Comunidad de la estepa profunda patagónica a más de 400 km de Viedma con cursadas híbridas sincrónicas y asincrónicas."
+      },
+      {
+        sede: "Nodo 7: Sierra Colorada (Centro Geográfico Provincial)",
+        detalle: "Centro geográfico exacto de la Provincia de Río Negro; articulación clave sobre la Ruta Nacional 23."
+      },
+      {
+        sede: "Nodo 8: Los Menucos (Región Sur Central)",
+        detalle: "Cruce neurálgico de las Rutas Provincial 6 y Nacional 23 en la estepa central patagónica."
+      },
+      {
+        sede: "Nodo 9: Maquinchao (Estepa Sur)",
+        detalle: "Localidad con rigurosas condiciones climáticas y distancias geográficas que exigen acompañamiento tutorial a distancia."
+      },
+      {
+        sede: "Nodo 10: Comallo (Precordillera Andina)",
+        detalle: "Nodo situado en el extremo occidental de la Línea Sur, antesala del corredor andino de Bariloche."
       }
     ],
 
@@ -273,7 +301,7 @@ const PRESENTACION_DATA = {
         "6. Antecedentes (Estado del Arte): Relevamiento en tres escalas (Internacional, Nacional y Regional/UNCo) y delimitación de la Vacancia de investigación."
       ],
       metadatosFooter: "Consigna Oficial Cátedra SIA • Segunda Parte Estructural • Teoría y Antecedentes",
-      escena3D: "anim_10",
+      escena3D: "anim_04",
       guionOrador: "Siguiendo el esquema de la cátedra, la Segunda Parte expande la investigación incorporando dos componentes cardinales: el Marco Teórico en el apartado 5, donde fundamentamos el posicionamiento epistemológico, los subsistemas de Francisco Longo, el dispositivo 360° y la poligobernanza universitaria; y en el apartado 6, el relevamiento de Antecedentes y Estado del Arte en tres escalas espaciales para demostrar la vacancia de conocimiento."
     },
 
@@ -292,7 +320,7 @@ const PRESENTACION_DATA = {
         "9. Viabilidad del Proyecto: Especificación pormenorizada de recursos económicos, humanos y técnicos, avales institucionales y ética (Ley 25.326)."
       ],
       metadatosFooter: "Consigna Oficial Cátedra SIA • TP N° 4 • Proyecto Integral Completo",
-      escena3D: "anim_17",
+      escena3D: "anim_05",
       guionOrador: "Llegamos al Trabajo Práctico N° 4, que consolida la Tercera Parte y conforma el Proyecto Integral de Tesina. Aquí se incorporan los tres apartados metodológicos finales: el Apartado 7, con la definición de la estrategia metodológica mixta y la matriz de operacionalización; el Apartado 8, con el cronograma de 7 meses para 2027; y el Apartado 9, que exige especificar la viabilidad de recursos humanos, técnicos y económicos, junto con las autorizaciones institucionales."
     },
 
@@ -304,19 +332,19 @@ const PRESENTACION_DATA = {
       numero: 6,
       bloque: "TIEMPO 1: EL OBJETO PROBLEMA",
       esquema: "Territorio Situado y Descentralización",
-      badge: "Primera Parte • Contexto",
-      titulo: "El CURZAS en el Territorio: Sede Viedma y Nodos",
-      subtitulo: "Inserción Regional en la Comarca Viedma-Patagones, Costa Atlántica y Línea Sur",
+      badge: "Res. CD N° 135/2022 • Contexto",
+      titulo: "El CURZAS en el Territorio: Sede Viedma y los 10 Nodos",
+      subtitulo: "Estructura Real Emergente: Despliegue Descentralizado de Nodos Regionales en Río Negro",
       puntosClave: [
-        "Sede Central Viedma: Cabecera administrativa y académica donde convergen las carreras de Administración Pública y RRHH.",
-        "Despliegue Territorial Patagónico: Red de Nodos que democratiza el acceso a la educación superior en localidades dispersas.",
-        "Población Estudiantil Situada: Jóvenes comarcales, empleados públicos provinciales/municipales y estudiantes de la estepa.",
-        "Desafío de Recursos Humanos: Gestionar el desempeño de un cuerpo docente con diversas realidades de conectividad y presencialidad."
+        "Sede Central Viedma: Cabecera administrativa y académica en el Valle Inferior donde convergen las carreras de Administración Pública y RRHH.",
+        "Red Territorial de 10 Nodos: Los Menucos, Sierra Colorada, Valcheta, Ramos Mexía, San Antonio Oeste, General Conesa, Lamarque, Maquinchao, Comallo y Sierra Grande.",
+        "Convenios de Cogestión (Hintze, 2001): Operatoria articulada mediante convenios con Municipios y Comisiones de Fomento que democratiza el acceso universitario.",
+        "Desafío Situado de Recursos Humanos: Gestionar y evaluar formativamente a un cuerpo docente que articula con realidades geográficas dispersas a más de 500 km."
       ],
-      metadatosFooter: "Territorialidad • Patagonia Norte • Democratización del Acceso",
-      escena3D: "anim_04",
+      metadatosFooter: "10 Nodos Regionales • Res. CD N° 135/2022 • Democratización del Acceso",
+      escena3D: "anim_06",
       diagramaSVG: "assets/red_territorial.svg",
-      guionOrador: "Pasando al desarrollo de la Primera Parte, nuestro objeto de estudio no se sitúa en un campus universitario tradicional ni en una metrópoli. El CURZAS tiene un despliegue territorial extenso y singular en la Patagonia Norte. Desde su sede central en Viedma articula trayectos formativos hacia localidades costeras y de la estepa rionegrina. Gestionar los recursos humanos en este escenario exige comprender que la labor docente no puede medirse con los criterios homogéneos de las universidades tradicionales."
+      guionOrador: "Pasando al desarrollo de la Primera Parte, nuestro objeto de estudio no se sitúa en un campus universitario tradicional ni en una metrópoli. El CURZAS cuenta con una estructura territorial emergente formalizada por la Resolución 135/2022: una red que articula desde su sede cabecera en Viedma hacia 10 nodos regionales en toda la geografía rionegrina: Los Menucos, Sierra Colorada, Valcheta, Ramos Mexía, San Antonio Oeste, General Conesa, Lamarque, Maquinchao, Comallo y Sierra Grande. Esta red opera mediante convenios de cogestión municipal y democratiza el acceso a la educación superior pública en parajes patagónicos."
     },
 
     {
@@ -326,17 +354,17 @@ const PRESENTACION_DATA = {
       esquema: "Docencia Híbrida y Mediaciones",
       badge: "Res. CD-CURZA N° 196/2022",
       titulo: "Mapeo Territorial y Mediaciones Tecnológicas",
-      subtitulo: "La Transformación del Trabajo Docente en la Red de Nodos Territoriales",
+      subtitulo: "La Transformación del Trabajo Docente en la Red de 10 Aulas Híbridas Conectadas",
       puntosClave: [
-        "Red de Nodos Territoriales: Sierra Grande, Valcheta, Los Menucos y Ramos Mexía a más de 400 km de la sede central.",
-        "Institucionalización Normativa: La Res. CD-CURZA N° 196/2022 formalizó las aulas híbridas con presencialidad remota sincrónica y asincrónica.",
-        "Mutación del Rol Docente: La enseñanza trasciende el aula física para incorporar diseño en Moodle, videoconferencias y tutoría virtual.",
-        "Obsolescencia Instrumental: Las encuestas tradicionales en papel son totalmente ciegas ante las competencias didáctico-digitales que demanda el territorio."
+        "Red de 10 Aulas Híbridas: Localidades de Costa, Valle Medio y Línea Sur con presencialidad remota sincrónica y asincrónica formalizada por Res. 196/2022.",
+        "Mutación del Rol Docente: La enseñanza trasciende el aula presencial física para incorporar diseño en Moodle, clases sincrónicas y tutoría virtual a distancia.",
+        "Obsolescencia Instrumental: Las encuestas tradicionales en papel de fin de cursada son completamente ciegas ante las competencias didáctico-digitales que demanda el territorio.",
+        "Necesidad del Modelo 360°: La complejidad de la docencia híbrida requiere triangular la mirada del propio docente, sus pares de cátedra y los estudiantes en territorio."
       ],
-      metadatosFooter: "Mapa Vectorial Territorial • Aulas Híbridas • Competencias Digitales",
-      escena3D: "anim_05",
+      metadatosFooter: "Mapa Vectorial Territorial • 10 Nodos Conectados • Competencias Digitales",
+      escena3D: "anim_07",
       diagramaSVG: "assets/red_territorial.svg",
-      guionOrador: "En el diagrama vectorial de la Red Territorial observamos cómo la Resolución 196/2022 formalizó la cursada híbrida en los nodos de Sierra Grande, Valcheta, Los Menucos y Ramos Mexía. Esto transformó radicalmente la jornada de trabajo del docente: preparar materiales digitales, coordinar clases remotas y sostener tutorías a la distancia. Los instrumentos evaluativos tradicionales en papel quedan obsoletos porque no ponderan el esfuerzo pedagógico que exige este despliegue territorial."
+      guionOrador: "En el diagrama vectorial de la Red Territorial observamos cómo la Resolución 196/2022 formalizó la docencia híbrida en los 10 nodos. Para un profesor de Administración Pública o de Recursos Humanos, su aula física ya no termina en Viedma: atiende en simultáneo a estudiantes en la costa atlántica, en el valle medio y en plena estepa de la Línea Sur. Esto transformó radicalmente las competencias docentes requeridas: diseño de entornos virtuales, mediaciones sincrónicas y acompañamiento tutorial. Una simple encuesta burocrática en papel es totalmente incapaz de registrar este esfuerzo pedagógico situado."
     },
 
     {
@@ -354,7 +382,7 @@ const PRESENTACION_DATA = {
         "Vigilancia Epistemológica: Articular la sociología del trabajo público, la teoría de las capacidades estatales y el derecho universitario."
       ],
       metadatosFooter: "Wainerman & Sautu (2011) • Ruptura Epistemológica • Ciencias Sociales",
-      escena3D: "anim_06",
+      escena3D: "anim_08",
       guionOrador: "Construir este problema exigió aplicar lo que Catalina Wainerman y Ruth Sautu denominan la desnaturalización de lo cotidiano. En la rutina universitaria se asume que evaluar al docente es repartir una encuesta rápida al final de la cursada. Desnaturalizar esa práctica significó preguntarnos: ¿esa encuesta mejora la enseñanza o es solo un trámite administrativo? Así transformamos un déficit de gestión en un genuino problema de investigación científica sobre la factibilidad institucional de un cambio."
     },
 
@@ -373,7 +401,7 @@ const PRESENTACION_DATA = {
         "La Solución Propuesta: Desacoplar el modelo 360° del Art. 75 y anclarlo de forma 100% confidencial y formativa en el Art. 76."
       ],
       metadatosFooter: "Art. 75 (Control de Permanencia) vs. Art. 76 (Capacitación Formativa)",
-      escena3D: "anim_07",
+      escena3D: "anim_09",
       guionOrador: "Aquí llegamos al nudo crítico del problema. El Estatuto de la UNCo establece en su Artículo 75 que dos evaluaciones cuatrienales desfavorables provocan la pérdida del cargo. En consecuencia, cualquier evaluación despierta prevención gremial si se presume sancionatoria. La clave de nuestra propuesta es desacoplar de raíz la retroalimentación 360° del Artículo 75 y anclarla exclusivamente en el Artículo 76, que regula los programas de formación docente continua."
     },
 
@@ -392,7 +420,7 @@ const PRESENTACION_DATA = {
         "3. Dimensiones Organizacional, Cultural y Gobernanza: Capacidad administrativa, clima de confianza y acuerdos paritarios."
       ],
       metadatosFooter: "Pregunta Central • 5 Dimensiones Analíticas • Res. CD-CURZAS N° 266/23",
-      escena3D: "anim_08",
+      escena3D: "anim_10",
       guionOrador: "De esta tensión surge la pregunta rectora: ¿Cuáles son las condiciones de factibilidad organizacional, técnica, normativa y de gobernanza multinivel para implementar un modelo de retroalimentación multiactoral 360° en el Departamento de Administración Pública del CURZAS durante 2027? Esta pregunta desglosa la viabilidad en cinco dimensiones analíticas concretas: legalidad normativa, soporte técnico, capacidad organizativa, confianza cultural y legitimidad política en cogobierno."
     },
 
@@ -412,7 +440,7 @@ const PRESENTACION_DATA = {
         "Obj. Específico 4 (Propositivo): Proponer lineamientos orientativos para una eventual aplicación formativa adaptada al caso."
       ],
       metadatosFooter: "Objetivo General • 4 Objetivos Específicos • Res. CD-CURZAS N° 266/23",
-      escena3D: "anim_09",
+      escena3D: "anim_11",
       guionOrador: "Para cerrar la Primera Parte, presentamos la matriz de objetivos. Nuestro Objetivo General determina la factibilidad integral. Los cuatro objetivos específicos ordenan el plan de trabajo: primero, caracterizar la normativa vigente; segundo, explorar las percepciones y temores de los actores; tercero, identificar los cuellos de botella técnicos y gremiales; y cuarto, diseñar lineamientos orientativos viables para la conducción del Departamento."
     },
 
@@ -434,7 +462,7 @@ const PRESENTACION_DATA = {
         "Postulado Central de Longo: 'Evaluar el rendimiento sin conectarlo con el desarrollo y la capacitación constituye un ejercicio burocrático estéril'."
       ],
       metadatosFooter: "De la Garza (2001) • Francisco Longo (2006) • Gestión de Personas en el Estado",
-      escena3D: "anim_10",
+      escena3D: "anim_12",
       guionOrador: "Iniciamos el desarrollo del Marco Teórico. Epistemológicamente asumimos la teoría como una configuración abierta, según Enrique de la Garza: la universidad no es una máquina rígida, sino una trama de sujetos en constante deliberación. Sobre esta base, adoptamos el modelo de gestión estratégica de recursos humanos en el sector público de Francisco Longo (2006). Longo advierte con contundencia que evaluar el rendimiento sin conectarlo con la capacitación despoja al proceso de sentido formativo y lo reduce a un trámite estéril."
     },
 
@@ -453,7 +481,7 @@ const PRESENTACION_DATA = {
         "Gestión de las Relaciones Humanas y Sociales: Resguardo del clima institucional, diálogo paritario (CCT Dec. 1246/2015) y confianza ética."
       ],
       metadatosFooter: "Diagrama SVG Oficial • 4 Subsistemas Clave • Longo (2006)",
-      escena3D: "anim_11",
+      escena3D: "anim_13",
       diagramaSVG: "assets/Sistemas-longo.svg",
       guionOrador: "En pantalla proyectamos el diagrama SVG oficial del modelo de Longo. La investigación focaliza en cuatro subsistemas interconectados: Rendimiento, que aporta la información evaluativa; Organización del Trabajo, que reconoce las exigencias de la docencia híbrida en los Nodos; Desarrollo, que canaliza los diagnósticos hacia talleres pedagógicos; y Relaciones Humanas, que convoca a la representación paritaria para garantizar que el proceso no vulnere derechos laborales."
     },
@@ -473,7 +501,7 @@ const PRESENTACION_DATA = {
         "Condición Indispensable: Anonimato técnico estricto, reportes individuales de uso exclusivo del docente y ausencia de consecuencias punitivas."
       ],
       metadatosFooter: "Evaluación 360° • Lógica Formativa • Obando Freire & Sifuentes",
-      escena3D: "anim_13",
+      escena3D: "anim_14",
       guionOrador: "En la literatura sobre rendimiento distinguimos dos orientaciones: la lógica sumativa, orientada al control procesal, y la lógica formativa, orientada al aprendizaje reflexivo. Para operativizar esta última en la universidad, adoptamos el modelo de retroalimentación 360 grados. Investigaciones de Obando Freire y Sifuentes evidencian que triangular múltiples miradas neutraliza la subjetividad de las encuestas tradicionales, generando reportes cualitativos de gran valor pedagógico."
     },
 
@@ -493,7 +521,7 @@ const PRESENTACION_DATA = {
         "Núcleo y Blindajes: Canalización exclusiva al Art. 76 (Capacitación) con anonimato auditado por comisiones paritarias."
       ],
       metadatosFooter: "Diagrama SVG Modelo 360° • 4 Cuadrantes • Núcleo Formativo Art. 76",
-      escena3D: "anim_14",
+      escena3D: "anim_15",
       diagramaSVG: "assets/modelo_360.svg",
       guionOrador: "En el diagrama vectorial del modelo 360° vemos la convergencia de los cuatro cuadrantes: el docente que reflexiona sobre su práctica; los pares de cátedra que evalúan la coherencia disciplinar; los estudiantes que valoran el acompañamiento; y la Dirección Departamental que aporta la visión institucional. Todo el flujo confluye hacia el núcleo: el Programa de Capacitación del Artículo 76, blindado por el anonimato técnico y la desvinculación de los jurados de permanencia."
     },
@@ -513,7 +541,7 @@ const PRESENTACION_DATA = {
         "Distinción Categorial Clave: 'Claustro' como estamento jurídico de cogobierno frente a 'Actores situados' como sujetos concretos de la práctica educativa."
       ],
       metadatosFooter: "Matus (1993) • Cao & Blutman (2023) • Oszlak (2020) • Poligobernanza",
-      escena3D: "anim_15",
+      escena3D: "anim_16",
       guionOrador: "Para evitar la ingenuidad de creer que un formulario se aprueba de forma automática, recurrimos a tres autores fundamentales. Carlos Matus nos enseña que en organizaciones complejas nadie monopoliza el poder; la viabilidad exige negociar con el sindicato docente ADUNC y los claustros. Horacio Cao y Gustavo Blutman conceptualizan la poligobernanza patagónica entre la sede central y los nodos. Y Oscar Oszlak fundamenta cómo usar el software institucional con estricto resguardo del anonimato."
     },
 
@@ -532,7 +560,7 @@ const PRESENTACION_DATA = {
         "Vacancia Científica: Inexistencia de estudios empíricos de factibilidad integral 360° en universidades públicas cogobernadas con redes territoriales híbridas en la Patagonia."
       ],
       metadatosFooter: "Estado del Arte • Vacancia de Investigación • Aporte Original al CURZAS",
-      escena3D: "anim_19",
+      escena3D: "anim_17",
       guionOrador: "La revisión del estado del arte en tres escalas —internacional, nacional y regional— nos confirmó una clara vacancia de conocimiento: no se registran en la literatura científica estudios sobre la factibilidad integral (normativa, técnica, organizativa y de gobernanza) de un circuito formativo 360° en una universidad pública descentralizada, con cogobierno colegiado y docencia híbrida en territorio patagónico. En esa vacancia radica la originalidad y el valor público de este proyecto."
     },
 
@@ -554,7 +582,7 @@ const PRESENTACION_DATA = {
         "Unidad de Análisis: El Departamento de Administración Pública en su doble dimensión: Sede Central Viedma y Nodos Territoriales."
       ],
       metadatosFooter: "Diseño Mixto (Sampieri) • Estudio de Caso (Flyvbjerg) • Ciclo Lectivo 2027",
-      escena3D: "anim_17",
+      escena3D: "anim_18",
       guionOrador: "Ingresamos al desarrollo metodológico de la Tercera Parte. Adoptamos un enfoque mixto con predominio cualitativo ($CUAL \\rightarrow cuan$). La prioridad cualitativa permite comprender las percepciones, temores y condiciones de acuerdo de la comunidad universitaria, mientras que el componente cuantitativo aporta frecuencias descriptivas sobre la factibilidad. El diseño corresponde a un estudio de caso situado, no experimental y transversal, delimitado al ciclo lectivo 2027."
     },
 
@@ -573,7 +601,7 @@ const PRESENTACION_DATA = {
         "Técnicas 2 y 3: Entrevistas semiestructuradas con guía temática y cuestionario digital estructurado en escala Likert."
       ],
       metadatosFooter: "Muestra Intencional • 8 Entrevistas • 45 Cuestionarios • Triangulación",
-      escena3D: "anim_03",
+      escena3D: "anim_19",
       guionOrador: "Dado que el proyecto es ejecutado por un único investigador, el muestreo se diseñó bajo criterios de viabilidad operativa y rigor científico. La muestra cualitativa abarca 8 entrevistas a informantes clave: docentes de distintas categorías, autoridades departamentales, dirigentes gremiales de ADUNC y estudiantes avanzados. Esto se triangula con un sondeo exploratorio a 45 respondientes y el análisis exhaustivo de la normativa universitaria y paritaria."
     },
 
@@ -593,7 +621,7 @@ const PRESENTACION_DATA = {
         "5. Gobernanza Multinivel: Tratamiento colegiado en Consejo Departamental y Directivo, y concertación paritaria con ADUNC."
       ],
       metadatosFooter: "Matriz de Operacionalización • 5 Dimensiones de Factibilidad • Longo & Matus",
-      escena3D: "anim_18",
+      escena3D: "anim_20",
       guionOrador: "La factibilidad se operacionaliza a través de una matriz rigurosa dividida en cinco dimensiones: la normativa, que garantiza el apego al Estatuto y al CCT; la técnica, que asegura el software y el anonimato; la organizacional, que mide la capacidad de gestión del Departamento; la cultural, que evalúa el clima de confianza; y la gobernanza, que asegura el tratamiento en cogobierno y la concertación paritaria."
     },
 
@@ -612,7 +640,7 @@ const PRESENTACION_DATA = {
         "Fases 4 a 6 (Meses 4 a 7 / Ago-Nov): Procesamiento analítico y triangulación, redacción de lineamientos de TFG, supervisión final y defensa oral."
       ],
       metadatosFooter: "Cronograma 7 Meses • Mayo a Noviembre 2027 • 6 Fases Secuenciales",
-      escena3D: "anim_12",
+      escena3D: "anim_21",
       guionOrador: "El trabajo de campo se organiza en un cronograma intensivo y viable de 7 meses durante 2027. Comienza en mayo con los avales y la prueba piloto; continúa en junio con las entrevistas y el análisis normativo; en julio se aplica el sondeo digital; en agosto se realiza la triangulación analítica; en septiembre y octubre se redactan los lineamientos y el borrador de tesina; y en noviembre se proyecta la entrega final y defensa oral."
     },
 
@@ -631,7 +659,7 @@ const PRESENTACION_DATA = {
         "Autorizaciones y Avales Institucionales: Solicitud formal de aval académico ante la Dirección del Departamento y el Decanato del CURZAS."
       ],
       metadatosFooter: "Apartado 9 Oficial • Recursos Humanos, Técnicos y Financieros • Costo Marginal Cero",
-      escena3D: "anim_15",
+      escena3D: "anim_22",
       guionOrador: "En estricto cumplimiento del Apartado 9 de la consigna del TP N° 4, especificamos la viabilidad integral de recursos. En lo humano, el tesista cuenta con base técnica previa y acompañamiento docente; en lo técnico, se aprovecha la infraestructura tecnológica ya instalada en el CURZAS sin necesidad de licencias comerciales; y en lo económico, el proyecto es de costo marginal cero para la universidad pública, garantizando su plena viabilidad operativa."
     },
 
@@ -650,7 +678,7 @@ const PRESENTACION_DATA = {
         "Garantía de No Afectación Laboral: En sintonía con el CCT Docente, los datos se reservan a fines académicos del TFG, sin acceso para jurados de permanencia."
       ],
       metadatosFooter: "Ley 25.326 • Consentimiento Informado • Blindaje Ético de No Afectación",
-      escena3D: "anim_16",
+      escena3D: "anim_23",
       guionOrador: "El proyecto asume un compromiso ético irrestricto. Conforme a la Ley Nacional 25.326, se garantiza la total disociación de datos: los formularios no registran correos ni IPs. En cátedras unipersonales o con pocos docentes se agrupan variables para impedir la deducción de identidades. Y fundamentalmente, se suscribe el compromiso de no afectación laboral: la información nunca integrará expedientes de permanencia o sumarios."
     },
 
@@ -672,7 +700,7 @@ const PRESENTACION_DATA = {
         "Autonomía y Desarrollo: Brindar herramientas diagnósticas propias a las autoridades universitarias para una toma de decisiones informada."
       ],
       metadatosFooter: "Factibilidad Integral • Valor Público Universitario • CURZAS-UNCo",
-      escena3D: "anim_20",
+      escena3D: "anim_24",
       guionOrador: "A modo de síntesis, las conclusiones preliminares demuestran que la factibilidad de un modelo 360° en el CURZAS es plenamente alcanzable si se respetan las dos condiciones de borde: el desacoplamiento del Artículo 75 punitivo y el blindaje de anonimato técnico. Este TFG aporta evidencia empírica situada para que nuestra universidad fortalezca su docencia híbrida con herramientas propias, generando valor público real en toda la región."
     },
 
@@ -691,7 +719,7 @@ const PRESENTACION_DATA = {
         "Apertura al Intercambio: Quedo a entera disposición de los profesores para sus preguntas, observaciones y sugerencias orientadoras."
       ],
       metadatosFooter: "Fin de Exposición • 30 Minutos • Espacio de Intercambio con el Tribunal",
-      escena3D: "anim_01",
+      escena3D: "anim_25",
       guionOrador: "Concluyo esta defensa oral agradeciendo profundamente a los docentes del Seminario de Integración y Aplicación, Dra. Deborah Noguera, Esp. Federico Abeiro y Esp. María Cecilia Aguirre, cuyas devoluciones en cada entrega guiaron con rigor este proyecto. También agradezco al CURZAS y a la Universidad Nacional del Comahue por permitirme transitar este camino de formación. Quedo a entera disposición del tribunal para responder a sus preguntas y recibir sus valiosas devoluciones. Muchas gracias."
     }
   ]
