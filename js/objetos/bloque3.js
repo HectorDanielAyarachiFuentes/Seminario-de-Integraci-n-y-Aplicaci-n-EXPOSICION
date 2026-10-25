@@ -84,83 +84,316 @@ window.Presentation3D_Objects["anim_11"] = {
 };
 
 // ──────────────────────────────────────────────────────────────────────────
-// 12. FRANCISCO LONGO: Prisma Heptagonal de los 7 Subsistemas de Empleo Público
+// 12. LOS 7 SUBSISTEMAS DE RRHH: Catedral Sistémica Monumental de Francisco Longo
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_12"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    // Pedestal de museo amplio de doble nivel con base de granito y mármol
+    engine.createMuseumPlinth(g, 1.85);
 
     const longoGroup = new THREE.Group();
-    longoGroup.position.set(0, -0.12, 0);
+    longoGroup.position.set(0, -0.05, 0);
 
-    // Prisma regular de 7 caras (Heptágono) en mármol Carrara puro
-    // Representa los 7 subsistemas interdependientes del modelo de Longo (2006)
-    const heptShape = new THREE.Shape();
-    const sides = 7;
-    const r = 0.55;
-    for (let i = 0; i < sides; i++) {
-      const a = (i / sides) * Math.PI * 2;
-      const x = Math.cos(a) * r;
-      const y = Math.sin(a) * r;
-      if (i === 0) heptShape.moveTo(x, y);
-      else heptShape.lineTo(x, y);
-    }
-    heptShape.closePath();
+    const fullWidth = 2.40;
 
-    const heptGeo = new THREE.ExtrudeGeometry(heptShape, {
-      depth: 1.15,
-      bevelEnabled: true,
-      bevelThickness: 0.04,
-      bevelSize: 0.03,
-      bevelSegments: 3
+    // ── NIVEL 0: BASAMENTO INFERIOR — RELACIONES HUMANAS Y SOCIALES (SUBSISTEMA 7) ──
+    const baseBlock = new THREE.Mesh(
+      new THREE.BoxGeometry(fullWidth, 0.16, 0.65),
+      engine.graniteMat(0x1e293b)
+    );
+    baseBlock.position.y = -0.78;
+    longoGroup.add(baseBlock);
+
+    // Moldura dorada en el borde superior del basamento
+    const baseMolding = new THREE.Mesh(
+      new THREE.BoxGeometry(fullWidth * 1.02, 0.024, 0.68),
+      engine.brassMat(0xd4af37)
+    );
+    baseMolding.position.y = -0.69;
+    longoGroup.add(baseMolding);
+
+    // Placa monumental del subsistema base
+    const labelRelSoc = engine.createLabelSprite(
+      "7. RELACIONES HUMANAS Y SOCIALES",
+      "Clima Laboral • Diálogo Gremial (CCT) • Políticas Sociales",
+      "#0f2d59",
+      false,
+      { x: 0.82, y: 0.16 }
+    );
+    labelRelSoc.position.set(0, -0.78, 0.42);
+    longoGroup.add(labelRelSoc);
+
+
+    // ── NIVEL 1: CUERPO CENTRAL — LOS 5 SUBSISTEMAS OPERATIVOS INTERCONECTADOS ──
+    const colY = -0.10;
+    const colH = 0.88;
+
+    // 1. Columna 1: Organización del Trabajo (x = -0.84)
+    const col1 = new THREE.Mesh(
+      new THREE.BoxGeometry(0.38, colH, 0.38),
+      engine.marbleMat(0xf8fafc)
+    );
+    col1.position.set(-0.84, colY, 0);
+    longoGroup.add(col1);
+
+    // Capiteles y basas doradas de orfebrería
+    [-0.84, -0.28, 0.28, 0.84].forEach(cx => {
+      const bRing = new THREE.Mesh(
+        new THREE.BoxGeometry(0.42, 0.03, 0.42),
+        engine.brassMat(0xd4af37)
+      );
+      bRing.position.set(cx, colY - colH / 2, 0);
+      longoGroup.add(bRing);
+
+      const cRing = new THREE.Mesh(
+        new THREE.BoxGeometry(0.42, 0.03, 0.42),
+        engine.brassMat(0xd4af37)
+      );
+      cRing.position.set(cx, colY + colH / 2, 0);
+      longoGroup.add(cRing);
     });
 
-    const heptMesh = new THREE.Mesh(heptGeo, engine.marbleMat(0xfdfbf7));
-    heptMesh.rotation.x = -Math.PI / 2;
-    heptMesh.position.y = -0.65;
-    longoGroup.add(heptMesh);
-
-    // Bordes dorados refinados
-    const heptEdges = new THREE.LineSegments(
-      new THREE.EdgesGeometry(heptGeo, 15),
-      new THREE.LineBasicMaterial({ color: 0xd4af37, linewidth: 2 })
+    const labelOrg = engine.createLabelSprite(
+      "ORGANIZACIÓN DEL TRABAJO",
+      "Diseño de Puestos • Perfiles",
+      "#0369a1",
+      false,
+      { x: 0.40, y: 0.15 }
     );
-    heptMesh.add(heptEdges);
+    labelOrg.position.set(-0.84, 0.14, 0.26);
+    longoGroup.add(labelOrg);
 
-    // Cúpula superior de Valor Social Público
-    const crownGroup = new THREE.Group();
-    crownGroup.position.set(0, 0.65, 0);
 
-    const crownRing = engine.createBrassArmillaryRing(0.42, 0.016);
-    crownGroup.add(crownRing);
-
-    const publicValueOrb = new THREE.Mesh(
-      new THREE.SphereGeometry(0.24, 32, 32),
-      engine.glassMat(0x38bdf8, { roughness: 0.08, transmission: 0.92 })
+    // 2. Columna 2: Gestión del Empleo (x = -0.28)
+    const col2 = new THREE.Mesh(
+      new THREE.BoxGeometry(0.38, colH, 0.38),
+      engine.marbleMat(0xf1f5f9)
     );
-    crownGroup.add(publicValueOrb);
+    col2.position.set(-0.28, colY, 0);
+    longoGroup.add(col2);
 
-    const orbLight = new THREE.PointLight(0x38bdf8, 1.4, 1.8);
-    crownGroup.add(orbLight);
+    const labelEmp = engine.createLabelSprite(
+      "GESTIÓN DEL EMPLEO",
+      "Ingreso • Movilidad • Retiro",
+      "#1d4ed8",
+      false,
+      { x: 0.40, y: 0.15 }
+    );
+    labelEmp.position.set(-0.28, 0.14, 0.26);
+    longoGroup.add(labelEmp);
 
-    longoGroup.add(crownGroup);
-    engine.anim12_crown = crownGroup;
 
-    // Cartela superior explicativa
-    const label = engine.createLabelSprite("7 SUBSISTEMAS DE RRHH", "Francisco Longo (2006) • Empleo Público", "#0f2d59", true);
-    label.position.set(0, 1.05, 0);
-    longoGroup.add(label);
+    // 3. Columna 3 (Centro de Honor): Gestión del Rendimiento (x = +0.28)
+    // El núcleo formativo evaluativo 360° destacado en orfebrería y cristal óptico
+    const col3 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.20, 0.22, colH, 32),
+      engine.brassMat(0xffd700)
+    );
+    col3.position.set(0.28, colY, 0);
+    longoGroup.add(col3);
+
+    // Gema de Evaluación 360° en el santuario central
+    const orb360 = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.18, 0),
+      engine.glassMat(0x38bdf8, { roughness: 0.04, transmission: 0.95, opacity: 0.95 })
+    );
+    orb360.position.set(0.28, colY + 0.08, 0.24);
+    longoGroup.add(orb360);
+    engine.anim12_gem = orb360;
+
+    // Anillo armilar giratorio de latón alrededor de la gema
+    const gemRing = engine.createBrassArmillaryRing(0.26, 0.010);
+    gemRing.position.set(0.28, colY + 0.08, 0.24);
+    longoGroup.add(gemRing);
+    engine.anim12_gemRing = gemRing;
+
+    // Luz focal que baña la gema
+    const coreLight = new THREE.PointLight(0x38bdf8, 2.0, 1.8);
+    coreLight.position.set(0.28, colY + 0.08, 0.25);
+    longoGroup.add(coreLight);
+
+    const labelRend = engine.createLabelSprite(
+      "GESTIÓN DEL RENDIMIENTO",
+      "★ EJE CENTRAL: EVALUACIÓN 360°",
+      "#996515",
+      false,
+      { x: 0.46, y: 0.17 }
+    );
+    labelRend.position.set(0.28, -0.22, 0.32);
+    longoGroup.add(labelRend);
+
+
+    // 4. Columna 4 (Doble Nivel Vertical): Compensación y Desarrollo (x = +0.84)
+    // Bloque Superior: Compensación
+    const compBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.38, 0.40, 0.38),
+      engine.marbleMat(0xf8fafc)
+    );
+    compBox.position.set(0.84, colY + 0.22, 0);
+    longoGroup.add(compBox);
+
+    const labelComp = engine.createLabelSprite(
+      "COMPENSACIÓN",
+      "Retribución Monetaria y No Monetaria",
+      "#059669",
+      false,
+      { x: 0.44, y: 0.14 }
+    );
+    labelComp.position.set(0.84, colY + 0.22, 0.26);
+    longoGroup.add(labelComp);
+
+    // Bloque Inferior: Desarrollo (Capacitación Art. 76)
+    const desBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.38, 0.40, 0.38),
+      engine.marbleMat(0xf8fafc)
+    );
+    desBox.position.set(0.84, colY - 0.22, 0);
+    longoGroup.add(desBox);
+
+    const labelDes = engine.createLabelSprite(
+      "DESARROLLO (ART. 76)",
+      "Carrera • Capacitación Docente",
+      "#7c3aed",
+      false,
+      { x: 0.44, y: 0.14 }
+    );
+    labelDes.position.set(0.84, colY - 0.22, 0.26);
+    longoGroup.add(labelDes);
+
+
+    // ── CONDUCTOS / ARCOS DE ENLACE DINÁMICOS DE LATÓN (FLUJO SISTÉMICO) ──
+    // Flujo 1: Organización -> Empleo
+    const flow1 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12),
+      engine.brassMat(0xd4af37)
+    );
+    flow1.rotation.z = Math.PI / 2;
+    flow1.position.set(-0.56, colY + 0.14, 0);
+    longoGroup.add(flow1);
+
+    // Flujo 2: Empleo -> Rendimiento
+    const flow2 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12),
+      engine.brassMat(0xd4af37)
+    );
+    flow2.rotation.z = Math.PI / 2;
+    flow2.position.set(0.0, colY + 0.14, 0);
+    longoGroup.add(flow2);
+
+    // Flujo 3: Rendimiento <-> Compensación / Desarrollo (Bidireccional)
+    const flow3 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12),
+      engine.brassMat(0xd4af37)
+    );
+    flow3.rotation.z = Math.PI / 2;
+    flow3.position.set(0.56, colY + 0.22, 0);
+    longoGroup.add(flow3);
+
+    const flow4 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12),
+      engine.brassMat(0xd4af37)
+    );
+    flow4.rotation.z = Math.PI / 2;
+    flow4.position.set(0.56, colY - 0.22, 0);
+    longoGroup.add(flow4);
+
+    // Varillas verticales que anclan las columnas a la base social inferior
+    [-0.84, -0.28, 0.28, 0.84].forEach(vx => {
+      const vRod = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.010, 0.010, 0.16, 12),
+        engine.brassMat(0xd4af37)
+      );
+      vRod.position.set(vx, -0.62, 0);
+      longoGroup.add(vRod);
+    });
+
+
+    // ── NIVEL 2: DINTEL SUPERIOR — PLANIFICACIÓN DE RECURSOS HUMANOS ──
+    const dintelMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(fullWidth * 0.95, 0.14, 0.46),
+      engine.marbleMat(0xfdfbf7)
+    );
+    dintelMesh.position.y = 0.48;
+    longoGroup.add(dintelMesh);
+
+    const dintelMolding = new THREE.Mesh(
+      new THREE.BoxGeometry(fullWidth * 0.97, 0.024, 0.48),
+      engine.brassMat(0xd4af37)
+    );
+    dintelMolding.position.y = 0.41;
+    longoGroup.add(dintelMolding);
+
+    const labelPlan = engine.createLabelSprite(
+      "PLANIFICACIÓN DE RECURSOS HUMANOS",
+      "Estimación de Necesidades • Prioridades Cualitativas y Cuantitativas",
+      "#0f2d59",
+      false,
+      { x: 0.76, y: 0.16 }
+    );
+    labelPlan.position.set(0, 0.48, 0.28);
+    longoGroup.add(labelPlan);
+
+
+    // ── NIVEL 3: CÚSPIDE — ESTRATEGIA INSTITUCIONAL (ORIGEN DEL FLUJO) ──
+    const stratMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(0.95, 0.12, 0.34),
+      engine.graniteMat(0x1e293b)
+    );
+    stratMesh.position.y = 0.90;
+    longoGroup.add(stratMesh);
+
+    // Flecha volumétrica de latón azul que conecta Estrategia -> Planificación
+    const arrowStem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.025, 0.025, 0.20, 16),
+      engine.brassMat(0x003399)
+    );
+    arrowStem.position.set(0, 0.72, 0.08);
+    longoGroup.add(arrowStem);
+
+    const arrowHead = new THREE.Mesh(
+      new THREE.ConeGeometry(0.08, 0.12, 16),
+      engine.brassMat(0x003399)
+    );
+    arrowHead.rotation.x = Math.PI;
+    arrowHead.position.set(0, 0.59, 0.08);
+    longoGroup.add(arrowHead);
+
+    const labelStrat = engine.createLabelSprite(
+      "ESTRATEGIA INSTITUCIONAL",
+      "Misión • Visión • Mandato Universitario",
+      "#b91c1c",
+      true,
+      { x: 0.65, y: 0.17 }
+    );
+    labelStrat.position.set(0, 0.94, 0.24);
+    longoGroup.add(labelStrat);
+
+
+    // ── TÍTULO MAGISTRAL FLOTANTE DE CORONACIÓN ──
+    const mainTitle = engine.createLabelSprite(
+      "7 SUBSISTEMAS DE RRHH",
+      "Francisco Longo (2006) • Modelo de Empleo Público",
+      "#0f2d59",
+      true
+    );
+    mainTitle.position.set(0, 1.42, 0.10);
+    longoGroup.add(mainTitle);
 
     g.add(longoGroup);
     engine.anim12_group = longoGroup;
   },
 
   animate(engine, t) {
-    if (engine.anim12_group) {
-      engine.anim12_group.rotation.y = t * 0.22;
+    if (engine.anim12_gem) {
+      engine.anim12_gem.rotation.y = t * 0.5;
+      engine.anim12_gem.rotation.x = Math.sin(t * 0.7) * 0.15;
     }
-    if (engine.anim12_crown) {
-      engine.anim12_crown.position.y = 0.65 + Math.sin(t * 1.6) * 0.02;
+    if (engine.anim12_gemRing) {
+      engine.anim12_gemRing.rotation.x = t * 0.4;
+      engine.anim12_gemRing.rotation.y = t * 0.3;
+    }
+    if (engine.anim12_group) {
+      engine.anim12_group.position.y = -0.05 + Math.sin(t * 0.9) * 0.015;
     }
   }
 };
