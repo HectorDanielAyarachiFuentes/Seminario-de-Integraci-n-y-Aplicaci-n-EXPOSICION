@@ -101,6 +101,7 @@ class Presentation3D {
     this.setupInteractiveControls();
 
     window.addEventListener("resize", () => this.onWindowResize());
+    this.onWindowResize();
     this.clock = new THREE.Clock();
     this.animate();
   }
@@ -165,18 +166,34 @@ class Presentation3D {
   }
 
   onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    this.camera.aspect = w / h;
     this.updateCameraViewOffset();
+
+    // Adaptación responsiva inteligente: evita recortes en pantallas de notebook, proyectores o ventanas estrechas
+    const baseFov = 40;
+    if (w < 1200 || h < 820) {
+      const factorW = w < 1200 ? (1200 / w) : 1.0;
+      const factorH = h < 820 ? (820 / h) : 1.0;
+      this.camera.fov = Math.min(52, baseFov * Math.max(factorW * 0.92, factorH));
+    } else {
+      this.camera.fov = baseFov;
+    }
+
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(w, h);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   }
 
   updateCameraViewOffset() {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    if (w > 960) {
+    if (w > 1024) {
       const offsetX = -w * 0.16;
+      this.camera.setViewOffset(w, h, offsetX, 0, w, h);
+    } else if (w > 768) {
+      const offsetX = -w * 0.08;
       this.camera.setViewOffset(w, h, offsetX, 0, w, h);
     } else {
       this.camera.clearViewOffset();

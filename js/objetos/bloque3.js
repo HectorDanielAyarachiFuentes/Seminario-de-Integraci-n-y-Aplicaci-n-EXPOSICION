@@ -88,11 +88,11 @@ window.Presentation3D_Objects["anim_11"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_12"] = {
   build(engine, g) {
-    // Pedestal clásico de museo de doble nivel unificado con toda la presentación
-    engine.createMuseumPlinth(g, 1.75);
+    // Pedestal de museo elevado y centrado para visualización completa sin recortes inferiores
+    engine.createMuseumPlinth(g, 1.45, 0.18, -0.60);
 
     const longoGroup = new THREE.Group();
-    longoGroup.position.set(0, -0.05, 0);
+    longoGroup.position.set(0, 0.38, 0); // Estructura elevada que descansa firmemente sobre el pedestal
 
     const fullW = 2.34;
     const colY = 0.0;
@@ -130,27 +130,27 @@ window.Presentation3D_Objects["anim_12"] = {
       return panelGroup;
     };
 
-    // ── 0. VARILLAS Y PEANAS DE MONTAJE DE LATÓN PULIDO AL PEDESTAL DE MUSEO ──
+    // ── 0. VARILLAS Y PEANAS DE MONTAJE DE LATÓN PULIDO AL PEDESTAL ELEVADO ──
     [-0.85, -0.28, 0.28, 0.85].forEach(sx => {
       // Varilla esbelta vertical
       const pinRod = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.012, 0.012, 0.34, 16),
+        new THREE.CylinderGeometry(0.012, 0.012, 0.33, 16),
         engine.brassMat(0xd4af37)
       );
-      pinRod.position.set(sx, -0.82, 0);
+      pinRod.position.set(sx, -0.715, 0);
       longoGroup.add(pinRod);
 
       // Collar / anclaje de latón torneado sobre la meseta del pedestal
       const pinCollar = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.038, 0.048, 0.03, 16),
+        new THREE.CylinderGeometry(0.038, 0.048, 0.025, 16),
         engine.brassMat(0xffd700)
       );
-      pinCollar.position.set(sx, -0.98, 0);
+      pinCollar.position.set(sx, -0.87, 0);
       longoGroup.add(pinCollar);
     });
 
     // ── 1. BASAMENTO INFERIOR: SUBSISTEMA 7 (RELACIONES HUMANAS Y SOCIALES) ──
-    const baseY = -0.58;
+    const baseY = -0.48;
     const basePanel = createArchPanel(fullW, 0.14, panelDepth * 2, 0, baseY, 0);
     longoGroup.add(basePanel);
 
@@ -159,7 +159,7 @@ window.Presentation3D_Objects["anim_12"] = {
       "Clima Laboral • Diálogo Gremial (CCT) • Políticas Sociales",
       "#0a2540",
       false,
-      { x: 0.86, y: 0.16 }
+      { x: 1.05, y: 0.19 }
     );
     labelBase.position.set(0, baseY, panelDepth + 0.03);
     longoGroup.add(labelBase);
@@ -178,7 +178,7 @@ window.Presentation3D_Objects["anim_12"] = {
       "Diseño de Puestos • Perfiles de Competencia",
       "#0369a1",
       false,
-      { x: 0.44, y: 0.15 }
+      { x: 0.54, y: 0.18 }
     );
     labelOrg.position.set(colX[0], colY, panelDepth + 0.03);
     longoGroup.add(labelOrg);
@@ -192,7 +192,7 @@ window.Presentation3D_Objects["anim_12"] = {
       "Incorporación • Movilidad • Desvinculación",
       "#1d4ed8",
       false,
-      { x: 0.44, y: 0.15 }
+      { x: 0.54, y: 0.18 }
     );
     labelEmp.position.set(colX[1], colY, panelDepth + 0.03);
     longoGroup.add(labelEmp);
@@ -228,7 +228,7 @@ window.Presentation3D_Objects["anim_12"] = {
       "Planificación y Evaluación Formativa 360°",
       "#b45309",
       false,
-      { x: 0.45, y: 0.15 }
+      { x: 0.56, y: 0.20 }
     );
     labelRend.position.set(colX[2], colY - 0.18, panelDepth + 0.03);
     longoGroup.add(labelRend);
@@ -243,7 +243,7 @@ window.Presentation3D_Objects["anim_12"] = {
       "Retribución Monetaria y No Monetaria",
       "#059669",
       false,
-      { x: 0.44, y: 0.13 }
+      { x: 0.52, y: 0.16 }
     );
     labelComp.position.set(colX[3], colY + colH * 0.27, panelDepth + 0.03);
     longoGroup.add(labelComp);
@@ -257,14 +257,14 @@ window.Presentation3D_Objects["anim_12"] = {
       "Carrera • Capacitación y Aprendizaje",
       "#7c3aed",
       false,
-      { x: 0.44, y: 0.13 }
+      { x: 0.52, y: 0.16 }
     );
     labelDes.position.set(colX[3], colY - colH * 0.27, panelDepth + 0.03);
     longoGroup.add(labelDes);
 
 
     // ── 3. DINTEL SUPERIOR: PLANIFICACIÓN DE RECURSOS HUMANOS ──
-    const dintelY = 0.58;
+    const dintelY = 0.52;
     const dintelPanel = createArchPanel(fullW, 0.14, panelDepth * 2, 0, dintelY, 0);
     longoGroup.add(dintelPanel);
 
@@ -273,20 +273,20 @@ window.Presentation3D_Objects["anim_12"] = {
       "Estimación de Necesidades y Escenarios Cuanti/Cualitativos",
       "#0a2540",
       false,
-      { x: 0.86, y: 0.16 }
+      { x: 1.05, y: 0.19 }
     );
     labelPlan.position.set(0, dintelY, panelDepth + 0.03);
     longoGroup.add(labelPlan);
 
 
     // ── 4. CÚSPIDE: ESTRATEGIA INSTITUCIONAL Y CONECTOR MINIMALISTA ──
-    const stratY = 0.95;
+    const stratY = 0.88;
     const labelStrat = engine.createLabelSprite(
       "ESTRATEGIA INSTITUCIONAL",
       "Misión • Visión • Mandato Universitario",
       "#b91c1c",
       false,
-      { x: 0.62, y: 0.15 }
+      { x: 0.76, y: 0.19 }
     );
     labelStrat.position.set(0, stratY, panelDepth + 0.03);
     longoGroup.add(labelStrat);
@@ -355,9 +355,10 @@ window.Presentation3D_Objects["anim_12"] = {
       "7 SUBSISTEMAS DE RECURSOS HUMANOS",
       "Francisco Longo (2006) • Marco Teórico Canónico de Empleo Público",
       "#0a2540",
-      true
+      true,
+      { x: 1.80, y: 0.26 }
     );
-    mainTitle.position.set(0, 1.28, 0.08);
+    mainTitle.position.set(0, 1.20, 0.08);
     longoGroup.add(mainTitle);
 
     g.add(longoGroup);

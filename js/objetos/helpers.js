@@ -9,20 +9,20 @@
 
 window.Scene3DHelpers = {
   /** Pedestal clásico de museo de doble nivel para soportar cada escultura con máxima distinción */
-  createMuseumPlinth(parent, radius = 1.45, height = 0.22) {
+  createMuseumPlinth(parent, radius = 1.45, height = 0.22, posY = -1.22) {
     const plinth = new THREE.Group();
 
     // 1. Zócalo inferior de granito negro pulido con chaflán
     const baseGeo = new THREE.CylinderGeometry(radius * 1.06, radius * 1.12, height * 0.65, 48);
     const baseMesh = new THREE.Mesh(baseGeo, this.graniteMat(0x0f172a, 0.35, 0.25));
-    baseMesh.position.y = -1.22;
+    baseMesh.position.y = posY;
     baseMesh.receiveShadow = true;
     plinth.add(baseMesh);
 
     // 2. Meseta superior de mármol marfil o granito noble
     const topGeo = new THREE.CylinderGeometry(radius, radius * 1.04, height * 0.55, 48);
     const topMesh = new THREE.Mesh(topGeo, this.marbleMat(0xf8fafc, 0.25));
-    topMesh.position.y = -1.22 + height * 0.55;
+    topMesh.position.y = posY + height * 0.55;
     topMesh.receiveShadow = true;
     plinth.add(topMesh);
 
@@ -30,7 +30,7 @@ window.Scene3DHelpers = {
     const rimGeo = new THREE.TorusGeometry(radius * 1.02, 0.018, 16, 64);
     const rimMesh = new THREE.Mesh(rimGeo, this.brassMat(0xd4af37));
     rimMesh.rotation.x = Math.PI / 2;
-    rimMesh.position.y = -1.22 + height * 0.28;
+    rimMesh.position.y = posY + height * 0.28;
     plinth.add(rimMesh);
 
     // 4. Disco de sombra de contacto suave bajo el pedestal
@@ -43,7 +43,7 @@ window.Scene3DHelpers = {
     });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.y = -1.22 - height * 0.33;
+    shadowMesh.position.y = posY - height * 0.33;
     plinth.add(shadowMesh);
 
     parent.add(plinth);
@@ -144,19 +144,19 @@ window.Scene3DHelpers = {
     // Super-muestreo Retina 2X para máxima nitidez vectorial
     const retina = 2;
 
-    // Medición tipográfica limpia
-    const fontTitleSize = isMain ? 34 : 26;
-    const fontSubSize = isMain ? 20 : 16;
+    // Medición tipográfica limpia y generosa para legibilidad inmediata
+    const fontTitleSize = isMain ? 44 : 36;
+    const fontSubSize = isMain ? 26 : 22;
 
-    ctx.font = `600 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+    ctx.font = `700 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
     const titleWidth = ctx.measureText(title).width;
 
-    ctx.font = `500 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+    ctx.font = `600 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
     const subWidth = subtitle ? ctx.measureText(subtitle).width : 0;
 
     const maxTextWidth = Math.max(titleWidth, subWidth);
-    const logicalWidth = Math.max(isMain ? 520 : 420, Math.round(maxTextWidth + 56));
-    const logicalHeight = subtitle ? (isMain ? 124 : 106) : (isMain ? 78 : 64);
+    const logicalWidth = Math.max(isMain ? 620 : 480, Math.round(maxTextWidth + 72));
+    const logicalHeight = subtitle ? (isMain ? 148 : 126) : (isMain ? 94 : 78);
 
     canvas.width = logicalWidth * retina;
     canvas.height = logicalHeight * retina;
@@ -168,12 +168,12 @@ window.Scene3DHelpers = {
     const r = 8; // Esquinas redondeadas minimalistas
 
     // 1. Sombra sutil de elevación suave (sin manchas oscuras toscas)
-    ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
-    ctx.shadowBlur = 12;
+    ctx.shadowColor = "rgba(15, 23, 42, 0.12)";
+    ctx.shadowBlur = 14;
     ctx.shadowOffsetY = 4;
 
-    // 2. Fondo de cristal blanco puro translúcido (Glassmorphism minimalista)
-    ctx.fillStyle = opts?.bg || "rgba(255, 255, 255, 0.95)";
+    // 2. Fondo de cristal blanco puro con alta opacidad (Máximo contraste de lectura)
+    ctx.fillStyle = opts?.bg || "rgba(255, 255, 255, 0.98)";
 
     ctx.beginPath();
     ctx.moveTo(pad + r, pad);
@@ -188,35 +188,35 @@ window.Scene3DHelpers = {
     ctx.closePath();
     ctx.fill();
 
-    // 3. Borde fino y elegante de 1px (Hairline stroke)
+    // 3. Borde fino y definido de 1.5px
     ctx.shadowColor = "transparent";
-    ctx.strokeStyle = opts?.borderColor || (isMain ? "rgba(197, 160, 89, 0.45)" : "rgba(15, 23, 42, 0.12)");
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = opts?.borderColor || (isMain ? "rgba(197, 160, 89, 0.65)" : "rgba(15, 23, 42, 0.20)");
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // 4. Tipografía: Título
+    // 4. Tipografía: Título de alto impacto
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     const titleY = subtitle ? (pad + h * 0.38) : (logicalHeight / 2);
-    ctx.font = `600 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+    ctx.font = `700 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
     ctx.fillStyle = color;
     ctx.fillText(title, logicalWidth / 2, titleY);
 
-    // 5. Tipografía: Subtítulo y fino separador minimalista
+    // 5. Tipografía: Subtítulo con peso 600 y contraste oscuro
     if (subtitle) {
       // Línea divisoria sutil
       const lineY = pad + h * 0.58;
-      ctx.strokeStyle = "rgba(15, 23, 42, 0.07)";
+      ctx.strokeStyle = "rgba(15, 23, 42, 0.10)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(pad + 24, lineY);
       ctx.lineTo(pad + w - 24, lineY);
       ctx.stroke();
 
-      // Subtítulo
-      ctx.font = `500 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
-      ctx.fillStyle = opts?.subColor || "#64748b";
+      // Subtítulo en gris pizarra oscuro de alta legibilidad
+      ctx.font = `600 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+      ctx.fillStyle = opts?.subColor || "#1e293b";
       ctx.fillText(subtitle, logicalWidth / 2, pad + h * 0.78);
     }
 
@@ -238,7 +238,7 @@ window.Scene3DHelpers = {
     if (customScale) {
       sprite.scale.set(customScale.x, customScale.x / aspect, 1);
     } else {
-      const targetWidth = isMain ? 1.45 : 1.05;
+      const targetWidth = isMain ? 1.65 : 1.25;
       sprite.scale.set(targetWidth, targetWidth / aspect, 1);
     }
 
