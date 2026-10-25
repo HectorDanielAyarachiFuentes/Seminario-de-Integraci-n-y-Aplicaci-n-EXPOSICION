@@ -402,9 +402,10 @@ class PresentationApp {
     for (let i = 0; i < this.totalSlides; i++) {
       const dot = document.createElement("div");
       dot.className = `station-dot ${i === 0 ? "active" : ""}`;
-      dot.title = `Filmina ${i + 1}: ${this.data.slides[i].esquema}`;
+      const tooltipText = `Filmina ${i + 1}: ${this.data.slides[i].esquema}`;
+      dot.setAttribute("data-tooltip", tooltipText);
       dot.setAttribute("data-slide-index", i + 1);
-      dot.setAttribute("aria-label", `Ir a filmina ${i + 1}: ${this.data.slides[i].esquema}`);
+      dot.setAttribute("aria-label", `Ir a ${tooltipText}`);
       dot.addEventListener("click", () => this.goToSlide(i));
       this.stationsContainer.appendChild(dot);
     }

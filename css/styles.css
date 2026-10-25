@@ -1229,35 +1229,78 @@ body {
   color: #334155;
 }
 
-/* Tooltip elegante en las estaciones para monitores y laptops */
+/* Tooltip elegante en las estaciones para monitores y laptops (despliegue inferior sin descuadre) */
 @media (min-width: 961px) {
   .station-dot {
     position: relative;
   }
-  .station-dot::after {
-    content: attr(title);
+
+  /* Flecha indicadora superior apuntando al punto */
+  .station-dot::before {
+    content: "";
     position: absolute;
-    bottom: calc(100% + 9px);
+    top: calc(100% + 4px);
     left: 50%;
-    transform: translateX(-50%) translateY(5px);
+    transform: translateX(-50%) translateY(-4px);
+    border-width: 4px;
+    border-style: solid;
+    border-color: transparent transparent var(--oxford-blue) transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 101;
+  }
+
+  /* Caja del Tooltip (hacia abajo, visible dentro de la pantalla) */
+  .station-dot::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 11px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
     background: var(--oxford-blue);
     color: #ffffff;
     font-family: var(--font-body);
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 500;
-    padding: 0.35rem 0.7rem;
-    border-radius: 4px;
+    padding: 0.38rem 0.78rem;
+    border-radius: 6px;
     border: 1px solid var(--gold-border);
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.15);
+    transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22), 0 2px 6px rgba(0, 0, 0, 0.08);
     z-index: 100;
   }
+
+  .station-dot:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   .station-dot:hover::after {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+
+  /* Evitar descuadre en los primeros puntos */
+  .station-dot:nth-child(-n+4)::after {
+    left: 0;
+    transform: translateX(-12%) translateY(-5px);
+  }
+  .station-dot:nth-child(-n+4):hover::after {
+    transform: translateX(-12%) translateY(0);
+  }
+
+  /* Evitar descuadre en los últimos puntos */
+  .station-dot:nth-last-child(-n+4)::after {
+    left: auto;
+    right: 0;
+    transform: translateX(12%) translateY(-5px);
+  }
+  .station-dot:nth-last-child(-n+4):hover::after {
+    transform: translateX(12%) translateY(0);
   }
 }
 
