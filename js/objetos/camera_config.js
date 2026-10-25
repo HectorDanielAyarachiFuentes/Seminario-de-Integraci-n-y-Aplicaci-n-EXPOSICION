@@ -20,7 +20,7 @@ window.Scene3DCameraConfig = {
   anim_09: { pos: [2.1, 1.4, 6.2], lookAt: [1.2, 0.0, 0] },
   anim_10: { pos: [2.2, 1.6, 6.0], lookAt: [1.3, 0.1, 0] },
   anim_11: { pos: [2.6, 1.3, 7.2], lookAt: [1.6, 0.0, 0] },
-  anim_12: { pos: [2.2, 1.6, 6.7], lookAt: [1.3, 0.15, 0] },
+  anim_12: { pos: [2.2, 1.3, 6.2], lookAt: [1.2, 0.22, 0] },
   anim_13: { pos: [2.2, 1.8, 6.4], lookAt: [1.3, 0.1, 0] },
   anim_14: { pos: [2.4, 1.5, 6.8], lookAt: [1.4, 0.0, 0] },
   anim_15: { pos: [2.1, 1.6, 6.2], lookAt: [1.2, 0.1, 0] },

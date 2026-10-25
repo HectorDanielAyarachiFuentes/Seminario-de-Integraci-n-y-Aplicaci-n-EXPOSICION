@@ -134,130 +134,90 @@ window.Scene3DHelpers = {
   },
 
   /**
-   * Cartela de Museo de Alta Distinción en 3D (Ultra-HD Retina con Filete de Oro y Remaches)
-   * Autoajuste milimétrico, tipografía institucional Cinzel/Inter y protección contra clipping
+   * Cartela Minimalista de Alta Precisión en 3D (Estilo Arquitectónico Suizo / Apple)
+   * Panel translúcido limpio, tipografía nítida Inter/SF-Pro, filete sutil de 1px y cero elementos recargados.
    */
-  createLabelSprite(title, subtitle = "", color = "#0f2d59", isMain = false, customScale = null, opts = {}) {
+  createLabelSprite(title, subtitle = "", color = "#0a2540", isMain = false, customScale = null, opts = {}) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Factor de super-muestreo Retina para nitidez cristalina en proyectores y pantallas 4K
+    // Super-muestreo Retina 2X para máxima nitidez vectorial
     const retina = 2;
 
-    // Medición base de textos
-    ctx.font = isMain ? "bold 38px 'Cinzel', Georgia, serif" : "bold 30px 'Inter', Arial, sans-serif";
+    // Medición tipográfica limpia
+    const fontTitleSize = isMain ? 34 : 26;
+    const fontSubSize = isMain ? 20 : 16;
+
+    ctx.font = `600 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
     const titleWidth = ctx.measureText(title).width;
-    ctx.font = "600 22px 'Inter', Arial, sans-serif";
+
+    ctx.font = `500 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
     const subWidth = subtitle ? ctx.measureText(subtitle).width : 0;
 
     const maxTextWidth = Math.max(titleWidth, subWidth);
-    const logicalWidth = Math.min(1300, Math.max(680, Math.round(maxTextWidth + 140)));
-    const logicalHeight = subtitle ? 210 : 150;
+    const logicalWidth = Math.max(isMain ? 520 : 420, Math.round(maxTextWidth + 56));
+    const logicalHeight = subtitle ? (isMain ? 124 : 106) : (isMain ? 78 : 64);
 
     canvas.width = logicalWidth * retina;
     canvas.height = logicalHeight * retina;
     ctx.scale(retina, retina);
 
-    const paddingX = 14, paddingY = 14;
-    const w = logicalWidth - paddingX * 2;
-    const h = logicalHeight - paddingY * 2;
-    const r = 18;
+    const pad = 6;
+    const w = logicalWidth - pad * 2;
+    const h = logicalHeight - pad * 2;
+    const r = 8; // Esquinas redondeadas minimalistas
 
-    // 1. Sombra volumétrica de placa de galería
-    ctx.shadowColor = "rgba(15, 23, 42, 0.28)";
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 8;
+    // 1. Sombra sutil de elevación suave (sin manchas oscuras toscas)
+    ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 4;
 
-    // 2. Fondo de Mármol Marfil Cálido y Traslúcido con degradado sutil
-    const gradBg = ctx.createLinearGradient(0, paddingY, 0, paddingY + h);
-    gradBg.addColorStop(0, "rgba(255, 255, 255, 0.99)");
-    gradBg.addColorStop(0.5, "rgba(253, 251, 247, 0.98)");
-    gradBg.addColorStop(1, "rgba(247, 243, 235, 0.97)");
-    ctx.fillStyle = gradBg;
-
-    // Borde exterior de oro envejecido labrado
-    ctx.strokeStyle = "#c5a059";
-    ctx.lineWidth = 4;
+    // 2. Fondo de cristal blanco puro translúcido (Glassmorphism minimalista)
+    ctx.fillStyle = opts?.bg || "rgba(255, 255, 255, 0.95)";
 
     ctx.beginPath();
-    ctx.moveTo(paddingX + r, paddingY);
-    ctx.lineTo(paddingX + w - r, paddingY);
-    ctx.quadraticCurveTo(paddingX + w, paddingY, paddingX + w, paddingY + r);
-    ctx.lineTo(paddingX + w, paddingY + h - r);
-    ctx.quadraticCurveTo(paddingX + w, paddingY + h, paddingX + w - r, paddingY + h);
-    ctx.lineTo(paddingX + r, paddingY + h);
-    ctx.quadraticCurveTo(paddingX, paddingY + h, paddingX, paddingY + h - r);
-    ctx.lineTo(paddingX, paddingY + r);
-    ctx.quadraticCurveTo(paddingX, paddingY, paddingX + r, paddingY);
+    ctx.moveTo(pad + r, pad);
+    ctx.lineTo(pad + w - r, pad);
+    ctx.quadraticCurveTo(pad + w, pad, pad + w, pad + r);
+    ctx.lineTo(pad + w, pad + h - r);
+    ctx.quadraticCurveTo(pad + w, pad + h, pad + w - r, pad + h);
+    ctx.lineTo(pad + r, pad + h);
+    ctx.quadraticCurveTo(pad, pad + h, pad, pad + h - r);
+    ctx.lineTo(pad, pad + r);
+    ctx.quadraticCurveTo(pad, pad, pad + r, pad);
     ctx.closePath();
     ctx.fill();
+
+    // 3. Borde fino y elegante de 1px (Hairline stroke)
+    ctx.shadowColor = "transparent";
+    ctx.strokeStyle = opts?.borderColor || (isMain ? "rgba(197, 160, 89, 0.45)" : "rgba(15, 23, 42, 0.12)");
+    ctx.lineWidth = 1;
     ctx.stroke();
 
-    // 3. Filete interior refinado de latón
-    ctx.shadowColor = "transparent";
-    ctx.strokeStyle = "rgba(180, 131, 36, 0.45)";
-    ctx.lineWidth = 1.5;
-    const innerOffset = 6;
-    ctx.strokeRect(paddingX + innerOffset, paddingY + innerOffset, w - innerOffset * 2, h - innerOffset * 2);
-
-    // 4. Remaches ornamentales de orfebrería en las 4 esquinas de la placa
-    const rivetDist = 16;
-    const corners = [
-      { x: paddingX + rivetDist, y: paddingY + rivetDist },
-      { x: paddingX + w - rivetDist, y: paddingY + rivetDist },
-      { x: paddingX + rivetDist, y: paddingY + h - rivetDist },
-      { x: paddingX + w - rivetDist, y: paddingY + h - rivetDist }
-    ];
-    corners.forEach(c => {
-      // Borde del remache
-      ctx.fillStyle = "#b48324";
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, 4, 0, Math.PI * 2);
-      ctx.fill();
-      // Reflejo central brillante
-      ctx.fillStyle = "#fff8db";
-      ctx.beginPath();
-      ctx.arc(c.x - 1, c.y - 1, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    // 5. Título Institucional Grabado
-    const fontTitleSize = isMain ? (logicalWidth > 900 ? 34 : 38) : (logicalWidth > 900 ? 28 : 31);
-    ctx.font = isMain ? `bold ${fontTitleSize}px 'Cinzel', Georgia, serif` : `bold ${fontTitleSize}px 'Inter', Arial, sans-serif`;
-    ctx.fillStyle = color;
+    // 4. Tipografía: Título
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    const titleY = subtitle ? (paddingY + h * 0.35) : (logicalHeight / 2);
+    const titleY = subtitle ? (pad + h * 0.38) : (logicalHeight / 2);
+    ctx.font = `600 ${fontTitleSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+    ctx.fillStyle = color;
     ctx.fillText(title, logicalWidth / 2, titleY);
 
-    // 6. Línea divisoria de filigrana con rombo central y subtítulo
+    // 5. Tipografía: Subtítulo y fino separador minimalista
     if (subtitle) {
-      const lineY = paddingY + h * 0.56;
-      ctx.strokeStyle = "rgba(180, 131, 36, 0.35)";
+      // Línea divisoria sutil
+      const lineY = pad + h * 0.58;
+      ctx.strokeStyle = "rgba(15, 23, 42, 0.07)";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(logicalWidth / 2 - 85, lineY);
-      ctx.lineTo(logicalWidth / 2 - 12, lineY);
-      ctx.moveTo(logicalWidth / 2 + 12, lineY);
-      ctx.lineTo(logicalWidth / 2 + 85, lineY);
+      ctx.moveTo(pad + 24, lineY);
+      ctx.lineTo(pad + w - 24, lineY);
       ctx.stroke();
 
-      // Rombo de latón central
-      ctx.fillStyle = "#d4af37";
-      ctx.beginPath();
-      ctx.moveTo(logicalWidth / 2, lineY - 3.5);
-      ctx.lineTo(logicalWidth / 2 + 4, lineY);
-      ctx.lineTo(logicalWidth / 2, lineY + 3.5);
-      ctx.lineTo(logicalWidth / 2 - 4, lineY);
-      ctx.closePath();
-      ctx.fill();
-
       // Subtítulo
-      const fontSubSize = isMain ? 21 : 19;
-      ctx.font = `600 ${fontSubSize}px 'Inter', Arial, sans-serif`;
-      ctx.fillStyle = isMain ? "#996515" : "#475569";
-      ctx.fillText(subtitle, logicalWidth / 2, paddingY + h * 0.76);
+      ctx.font = `500 ${fontSubSize}px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+      ctx.fillStyle = opts?.subColor || "#64748b";
+      ctx.fillText(subtitle, logicalWidth / 2, pad + h * 0.78);
     }
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -265,13 +225,10 @@ window.Scene3DHelpers = {
     texture.magFilter = THREE.LinearFilter;
     texture.generateMipmaps = false;
 
-    // Desactivar depthTest por defecto en rótulos flotantes para erradicar el clipping con geometrías
-    const depthTestVal = opts?.depthTest !== undefined ? opts.depthTest : false;
-
     const spriteMat = new THREE.SpriteMaterial({
       map: texture,
       transparent: true,
-      depthTest: depthTestVal,
+      depthTest: false,
       depthWrite: false
     });
     const sprite = new THREE.Sprite(spriteMat);
@@ -279,10 +236,9 @@ window.Scene3DHelpers = {
 
     const aspect = logicalWidth / logicalHeight;
     if (customScale) {
-      const scaleMultiplier = 1.35;
-      sprite.scale.set(customScale.x * scaleMultiplier, (customScale.x * scaleMultiplier) / aspect, 1);
+      sprite.scale.set(customScale.x, customScale.x / aspect, 1);
     } else {
-      const targetWidth = isMain ? 1.55 : 1.15;
+      const targetWidth = isMain ? 1.45 : 1.05;
       sprite.scale.set(targetWidth, targetWidth / aspect, 1);
     }
 
