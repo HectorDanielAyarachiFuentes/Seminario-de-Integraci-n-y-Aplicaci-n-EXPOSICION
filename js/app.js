@@ -344,8 +344,26 @@ class PresentationApp {
       }
 
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        if (e.repeat) {
+          const now = performance.now();
+          if (now - (this.lastRepeatKeyTime || 0) < 180) {
+            e.preventDefault();
+            return;
+          }
+          this.lastRepeatKeyTime = now;
+        }
+        e.preventDefault();
         this.nextSlide();
       } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        if (e.repeat) {
+          const now = performance.now();
+          if (now - (this.lastRepeatKeyTime || 0) < 180) {
+            e.preventDefault();
+            return;
+          }
+          this.lastRepeatKeyTime = now;
+        }
+        e.preventDefault();
         this.prevSlide();
       } else if (e.key.toLowerCase() === "n") {
         this.toggleNotes();
@@ -487,11 +505,17 @@ class PresentationApp {
       return;
     }
 
-    // Transición fluida direccional de alta gama (estilo Apple Keynote / Pitch)
-    const outX = direction >= 0 ? -22 : 22;
-    const inX  = direction >= 0 ? 26 : -26;
+    // Detectar si el usuario está realizando una transición rápida (< 280ms)
+    const now = performance.now();
+    const isRapidNav = (now - (this.lastSlideRenderTime || 0)) < 280;
+    this.lastSlideRenderTime = now;
 
-    // Elementos a desvanecer en la salida (animando los items internos para no ocultar el contenedor)
+    // Cancelar cualquier línea temporal o animación de filmina previa para evitar colisiones
+    if (this.currentSlideTimeline) {
+      this.currentSlideTimeline.kill();
+      this.currentSlideTimeline = null;
+    }
+
     const bulletsBefore = this.bulletsElement.querySelectorAll("li, .slide-svg-action");
     const exitTargets = [
       this.badgeElement,
@@ -501,23 +525,62 @@ class PresentationApp {
       ...bulletsBefore,
       this.footerMetaElement
     ];
-
     gsap.killTweensOf(exitTargets);
 
-    // FASE 1: Salida suave y rápida (0.10s)
+    const outX = direction >= 0 ? -22 : 22;
+    const inX  = direction >= 0 ? 26 : -26;
+
+    if (isRapidNav) {
+      // MODO NAVEGACIÓN RÁPIDA: Inyección inmediata sin esperar la fase de salida
+      this.applySlideDOM(slide, index);
+      gsap.set(this.bulletsElement, { x: 0, opacity: 1, clearProps: "transform,opacity" });
+
+      const headerTargets = [
+        this.badgeElement,
+        this.bloqueBadgeElement,
+        this.titleElement,
+        this.subtitleElement,
+        this.footerMetaElement
+      ];
+      gsap.set(headerTargets, { x: inX * 0.5, opacity: 0 });
+
+      const rapidTl = gsap.timeline({ defaults: { ease: "power2.out" } });
+      this.currentSlideTimeline = rapidTl;
+
+      rapidTl.to(headerTargets, {
+        x: 0,
+        opacity: 1,
+        duration: 0.16,
+        stagger: 0.015
+      });
+
+      const bullets = this.bulletsElement.querySelectorAll("li");
+      if (bullets.length > 0) {
+        gsap.set(bullets, { x: inX * 0.4, opacity: 0 });
+        rapidTl.to(bullets, {
+          x: 0,
+          opacity: 1,
+          duration: 0.16,
+          stagger: 0.015
+        }, "-=0.08");
+      }
+
+      if (this.slideCounter) {
+        gsap.fromTo(this.slideCounter, { y: direction >= 0 ? -4 : 4, opacity: 0 }, { y: 0, opacity: 1, duration: 0.16 });
+      }
+      return;
+    }
+
+    // MODO NAVEGACIÓN ESTÁNDAR: Transición cinematográfica elegante
     gsap.to(exitTargets, {
       x: outX,
       opacity: 0,
-      duration: 0.10,
+      duration: 0.08,
       ease: "power2.in",
       onComplete: () => {
-        // FASE 2: Inyectar nuevo contenido DOM en el punto neutro
         this.applySlideDOM(slide, index);
-
-        // Asegurar que el contenedor <ul> permanezca siempre 100% visible
         gsap.set(this.bulletsElement, { x: 0, opacity: 1, clearProps: "transform,opacity" });
 
-        // FASE 3: Entrada sedosa y direccional escalonada (0.35s)
         const headerTargets = [
           this.badgeElement,
           this.bloqueBadgeElement,
@@ -528,23 +591,24 @@ class PresentationApp {
         gsap.set(headerTargets, { x: inX, opacity: 0 });
 
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        this.currentSlideTimeline = tl;
 
         tl.to([this.badgeElement, this.bloqueBadgeElement], {
           x: 0,
           opacity: 1,
-          duration: 0.3,
-          stagger: 0.04
+          duration: 0.25,
+          stagger: 0.03
         })
         .to(this.titleElement, {
           x: 0,
           opacity: 1,
-          duration: 0.35
-        }, "-=0.22")
+          duration: 0.28
+        }, "-=0.18")
         .to(this.subtitleElement, {
           x: 0,
           opacity: 0.85,
-          duration: 0.32
-        }, "-=0.25");
+          duration: 0.25
+        }, "-=0.20");
 
         const bullets = this.bulletsElement.querySelectorAll("li");
         if (bullets.length > 0) {
@@ -552,10 +616,10 @@ class PresentationApp {
           tl.to(bullets, {
             x: 0,
             opacity: 1,
-            duration: 0.32,
-            stagger: 0.045,
+            duration: 0.26,
+            stagger: 0.035,
             ease: "power2.out"
-          }, "-=0.18");
+          }, "-=0.15");
         }
 
         const svgBtn = this.bulletsElement.querySelector(".slide-svg-action");
@@ -564,20 +628,19 @@ class PresentationApp {
           tl.to(svgBtn, {
             scale: 1,
             opacity: 1,
-            duration: 0.28,
+            duration: 0.22,
             ease: "power2.out"
-          }, "-=0.1");
+          }, "-=0.08");
         }
 
         tl.to(this.footerMetaElement, {
           x: 0,
           opacity: 1,
-          duration: 0.25
-        }, "-=0.15");
+          duration: 0.20
+        }, "-=0.12");
 
-        // Contador superior animado
         if (this.slideCounter) {
-          gsap.fromTo(this.slideCounter, { y: direction >= 0 ? -6 : 6, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25 });
+          gsap.fromTo(this.slideCounter, { y: direction >= 0 ? -6 : 6, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22 });
         }
       }
     });

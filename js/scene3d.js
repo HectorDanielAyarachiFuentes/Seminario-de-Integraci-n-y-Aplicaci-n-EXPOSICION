@@ -73,7 +73,7 @@ class Presentation3D {
       powerPreference: "high-performance"
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
     this.renderer.setClearColor(0xf4f6f9, 1);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
@@ -113,9 +113,10 @@ class Presentation3D {
     const skylight = new THREE.DirectionalLight(0xfff8ee, 1.35);
     skylight.position.set(4.5, 9.0, 5.5);
     skylight.castShadow = true;
-    skylight.shadow.mapSize.width = 2048;
-    skylight.shadow.mapSize.height = 2048;
-    skylight.shadow.bias = -0.0001;
+    skylight.shadow.mapSize.width = 1024;
+    skylight.shadow.mapSize.height = 1024;
+    skylight.shadow.bias = -0.0002;
+    skylight.shadow.radius = 2.0;
     this.scene.add(skylight);
 
     // 3. Luz de Relleno Lateral Suave (Elimina sombras duras en el lado sombrío)
@@ -163,7 +164,7 @@ class Presentation3D {
     this.updateCameraViewOffset();
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   }
 
   updateCameraViewOffset() {
@@ -352,24 +353,55 @@ class Presentation3D {
 
     this.currentSceneId = targetId;
 
+    // Detectar si el usuario está realizando una transición rápida (< 280ms)
+    const now = performance.now();
+    const isRapid = (now - (this.lastSwitchTime || 0)) < 280;
+    this.lastSwitchTime = now;
+
+    // 1. CANCELAR TRANSICIONES PREVIAS Y GARANTIZAR ESTADO LIMPIO
+    if (window.gsap) {
+      gsap.killTweensOf(this.transitionState.exitOffset);
+      gsap.killTweensOf(this.transitionState.enterOffset);
+      gsap.killTweensOf(this.targetCamPos);
+      gsap.killTweensOf(this.targetLookAt);
+    }
+
+    // Ocultar cualquier grupo saliente previo interrumpido
+    if (this.transitionState.exitingGroup && this.transitionState.exitingGroup !== newGroup) {
+      this.transitionState.exitingGroup.visible = false;
+      this.transitionState.exitingGroup = null;
+    }
+
+    // REGLA CRÍTICA DE RECURSOS: Forzar que NINGUNA escena ajena quede visible en GPU
+    Object.keys(this.scenes).forEach((k) => {
+      if (k !== targetId && k !== oldId) {
+        this.scenes[k].visible = false;
+      }
+    });
+
     // Restablecer amortiguadamente las modificaciones de usuario
     this.resetUserControls();
 
-    // 1. Interpolación de Cámara Cinemática al nuevo ángulo canónico
+    // Duraciones reactivas según velocidad de navegación
+    const exitDuration  = isRapid ? 0.16 : 0.40;
+    const enterDuration = isRapid ? 0.22 : 0.55;
+    const camDuration   = isRapid ? 0.30 : 0.65;
+
+    // 2. Interpolación de Cámara Cinemática al nuevo ángulo canónico
     const camTarget = this.cameraTargets[targetId] || { pos: [2.3, 1.4, 6.8], lookAt: [1.4, 0.2, 0] };
     if (window.gsap) {
       gsap.to(this.targetCamPos, {
         x: camTarget.pos[0],
         y: camTarget.pos[1],
         z: camTarget.pos[2],
-        duration: 0.75,
+        duration: camDuration,
         ease: "power2.out"
       });
       gsap.to(this.targetLookAt, {
         x: camTarget.lookAt[0],
         y: camTarget.lookAt[1],
         z: camTarget.lookAt[2],
-        duration: 0.75,
+        duration: camDuration,
         ease: "power2.out"
       });
     } else {
@@ -381,50 +413,62 @@ class Presentation3D {
 
     if (!newGroup) return;
 
-    if (!window.gsap || !oldGroup) {
-      Object.keys(this.scenes).forEach((k) => {
-        this.scenes[k].visible = k === targetId;
-      });
-      return;
+    if (!window.gsap || !oldGroup || isRapid) {
+      // En navegación rápida, ocultar de inmediato el anterior para no duplicar carga en GPU
+      if (oldGroup) {
+        oldGroup.visible = false;
+      }
+      this.transitionState.exitingGroup = null;
     }
 
-    // 2. Transición cinemática de retroceso y avance sin solapamientos
+    // 3. Transición cinemática de retroceso y avance sin solapamientos
     newGroup.visible = true;
-    this.transitionState.exitingGroup = oldGroup;
 
     const lateralDir = direction >= 0 ? 1 : -1;
 
-    this.transitionState.exitOffset = { x: 0, y: 0, z: 0, scale: 1 };
-    gsap.to(this.transitionState.exitOffset, {
-      x: -1.2 * lateralDir,
-      y: -0.15,
-      z: -1.4,
-      scale: 0.82,
-      duration: 0.55,
-      ease: "power2.in",
-      onComplete: () => {
-        if (oldGroup) oldGroup.visible = false;
-        this.transitionState.exitingGroup = null;
-      }
-    });
+    if (oldGroup && !isRapid && window.gsap) {
+      this.transitionState.exitingGroup = oldGroup;
+      this.transitionState.exitOffset = { x: 0, y: 0, z: 0, scale: 1 };
+      gsap.to(this.transitionState.exitOffset, {
+        x: -1.0 * lateralDir,
+        y: -0.10,
+        z: -1.0,
+        scale: 0.88,
+        duration: exitDuration,
+        ease: "power2.in",
+        onComplete: () => {
+          if (oldGroup) oldGroup.visible = false;
+          if (this.transitionState.exitingGroup === oldGroup) {
+            this.transitionState.exitingGroup = null;
+          }
+        }
+      });
+    } else {
+      this.transitionState.exitingGroup = null;
+      if (oldGroup) oldGroup.visible = false;
+    }
 
     this.transitionState.enterOffset = {
-      x: 1.4 * lateralDir,
-      y: 0.15,
-      z: -1.2,
-      scale: 0.85,
-      rotY: 0.45 * lateralDir
+      x: (isRapid ? 0.5 : 1.1) * lateralDir,
+      y: 0.08,
+      z: isRapid ? -0.4 : -0.9,
+      scale: isRapid ? 0.94 : 0.88,
+      rotY: (isRapid ? 0.15 : 0.35) * lateralDir
     };
 
-    gsap.to(this.transitionState.enterOffset, {
-      x: 0,
-      y: 0,
-      z: 0,
-      scale: 1,
-      rotY: 0,
-      duration: 0.65,
-      ease: "power2.out"
-    });
+    if (window.gsap) {
+      gsap.to(this.transitionState.enterOffset, {
+        x: 0,
+        y: 0,
+        z: 0,
+        scale: 1,
+        rotY: 0,
+        duration: enterDuration,
+        ease: "power2.out"
+      });
+    } else {
+      this.transitionState.enterOffset = { x: 0, y: 0, z: 0, scale: 1, rotY: 0 };
+    }
   }
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -433,14 +477,22 @@ class Presentation3D {
   animate() {
     requestAnimationFrame(() => this.animate());
 
-    const t = this.clock.getElapsedTime();
+    // Suspender renderizado GPU si la pestaña está oculta o minimizada
+    if (document.hidden) return;
+
+    const dt = Math.min(this.clock.getDelta(), 0.05);
+    const t  = this.clock.getElapsedTime();
+
+    // Lerp adaptativo e independiente de la tasa de refresco (60Hz, 120Hz, 144Hz)
+    const smoothFactor = 1 - Math.exp(-14 * dt);
+    const userFactor   = 1 - Math.exp(-12 * dt);
 
     // 1. Amortiguación e interpolación suave (Lerp) de las órdenes del usuario
-    this.userRotation.x += (this.targetUserRotation.x - this.userRotation.x) * 0.08;
-    this.userRotation.y += (this.targetUserRotation.y - this.userRotation.y) * 0.08;
-    this.userZoom += (this.targetUserZoom - this.userZoom) * 0.08;
-    this.userPan.x += (this.targetUserPan.x - this.userPan.x) * 0.08;
-    this.userPan.y += (this.targetUserPan.y - this.userPan.y) * 0.08;
+    this.userRotation.x += (this.targetUserRotation.x - this.userRotation.x) * userFactor;
+    this.userRotation.y += (this.targetUserRotation.y - this.userRotation.y) * userFactor;
+    this.userZoom += (this.targetUserZoom - this.userZoom) * userFactor;
+    this.userPan.x += (this.targetUserPan.x - this.userPan.x) * userFactor;
+    this.userPan.y += (this.targetUserPan.y - this.userPan.y) * userFactor;
 
     // 2. Zoom Progresivo con Rueda: Dolly de la cámara respecto al objeto
     const camDir = new THREE.Vector3().subVectors(this.targetCamPos, this.targetLookAt).normalize();
@@ -458,8 +510,8 @@ class Presentation3D {
       .copy(this.targetLookAt)
       .add(new THREE.Vector3(this.userPan.x, this.userPan.y, 0));
 
-    this.currentCamPos.lerp(desiredCamPos, 0.095);
-    this.currentLookAt.lerp(desiredLookAt, 0.095);
+    this.currentCamPos.lerp(desiredCamPos, smoothFactor);
+    this.currentLookAt.lerp(desiredLookAt, smoothFactor);
     this.camera.position.copy(this.currentCamPos);
     this.camera.lookAt(this.currentLookAt);
 
@@ -482,7 +534,7 @@ class Presentation3D {
 
     // 4b. Escultura saliente en suave retroceso de galería
     const exitingGroup = this.transitionState?.exitingGroup;
-    if (exitingGroup) {
+    if (exitingGroup && exitingGroup !== activeGroup) {
       const exit = this.transitionState.exitOffset;
       exitingGroup.position.x = 1.6 + exit.x;
       exitingGroup.position.y = exit.y;

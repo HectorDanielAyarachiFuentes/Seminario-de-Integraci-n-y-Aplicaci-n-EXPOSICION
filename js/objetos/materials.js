@@ -148,20 +148,24 @@
       });
     },
 
-    /** Cristal óptico puro y vidrio arquitectónico de alta refracción y bisel */
+    /** Cristal óptico puro y vidrio arquitectónico de alta refracción, ultra liviano en GPU (sin render-target) */
     glassMat(color = 0xf8fafc, opts = {}) {
+      const cleanOpts = { ...opts };
+      delete cleanOpts.transmission;
+      delete cleanOpts.thickness;
+      delete cleanOpts.ior;
+
       return new THREE.MeshPhysicalMaterial({
         color,
-        roughness: 0.06,
-        transmission: 0.92,
-        thickness: 1.1,
-        ior: 1.54,
+        roughness: 0.08,
+        metalness: 0.12,
         transparent: true,
-        opacity: 0.85,
+        opacity: opts.opacity !== undefined ? opts.opacity : 0.65,
         clearcoat: 1.0,
         clearcoatRoughness: 0.04,
-        reflectivity: 0.65,
-        ...opts
+        reflectivity: 0.75,
+        ...cleanOpts,
+        transmission: 0
       });
     }
   };
