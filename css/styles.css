@@ -31,7 +31,7 @@
   --font-title: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 * {
@@ -82,6 +82,9 @@ body {
   opacity: 0.85;
   transition: opacity 0.5s ease;
   touch-action: none;
+  transform: translateZ(0);
+  will-change: transform;
+  contain: strict;
 }
 
 #webgl-canvas.dimmed {
@@ -197,6 +200,8 @@ body {
   justify-content: space-between;
   pointer-events: none;
   overflow: hidden;
+  isolation: isolate;
+  contain: layout style;
 }
 
 /* ─── BARRA SUPERIOR (HEADER INSTITUCIONAL CLÁSICO) ──────────────────────── */
@@ -375,6 +380,8 @@ body {
   flex-direction: column;
   overflow: hidden;
   transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  contain: content;
+  transform: translateZ(0);
 }
 
 .slide-header-tags {
@@ -911,7 +918,7 @@ body {
   padding: 1.1rem 1.4rem;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .svg-modal.open {
@@ -985,7 +992,7 @@ body {
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1098,7 +1105,7 @@ body {
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
 }
 
 .btn-floating-card-toggle.visible {
@@ -1159,7 +1166,7 @@ body {
   padding: 1.5rem 1.8rem;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .shortcuts-modal.open {
@@ -1244,7 +1251,7 @@ body {
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.18s ease-out;
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
     box-shadow: 0 6px 18px rgba(15, 23, 42, 0.15);
     z-index: 100;
   }

@@ -51,6 +51,11 @@ class Presentation3D {
     this.currentLookAt  = new THREE.Vector3(...initialCam.lookAt);
     this.targetLookAt   = new THREE.Vector3(...initialCam.lookAt);
 
+    // Buffers vectoriales reutilizables para el bucle de render (Zero Garbage Collection)
+    this._tmpCamDir = new THREE.Vector3();
+    this._tmpDesiredCamPos = new THREE.Vector3();
+    this._tmpDesiredLookAt = new THREE.Vector3();
+
     this.init();
   }
 
@@ -494,24 +499,25 @@ class Presentation3D {
     this.userPan.x += (this.targetUserPan.x - this.userPan.x) * userFactor;
     this.userPan.y += (this.targetUserPan.y - this.userPan.y) * userFactor;
 
-    // 2. Zoom Progresivo con Rueda: Dolly de la cámara respecto al objeto
-    const camDir = new THREE.Vector3().subVectors(this.targetCamPos, this.targetLookAt).normalize();
+    // 2. Zoom Progresivo con Rueda: Dolly de la cámara respecto al objeto (Zero GC)
+    this._tmpCamDir.subVectors(this.targetCamPos, this.targetLookAt).normalize();
     const baseDist = this.targetCamPos.distanceTo(this.targetLookAt);
     const effectiveDist = Math.max(2.2, Math.min(12.5, baseDist + this.userZoom));
 
-    const desiredCamPos = new THREE.Vector3()
+    this._tmpDesiredCamPos
       .copy(this.targetLookAt)
-      .addScaledVector(camDir, effectiveDist);
+      .addScaledVector(this._tmpCamDir, effectiveDist);
 
-    desiredCamPos.x += this.userPan.x;
-    desiredCamPos.y += this.userPan.y;
+    this._tmpDesiredCamPos.x += this.userPan.x;
+    this._tmpDesiredCamPos.y += this.userPan.y;
 
-    const desiredLookAt = new THREE.Vector3()
-      .copy(this.targetLookAt)
-      .add(new THREE.Vector3(this.userPan.x, this.userPan.y, 0));
+    this._tmpDesiredLookAt
+      .copy(this.targetLookAt);
+    this._tmpDesiredLookAt.x += this.userPan.x;
+    this._tmpDesiredLookAt.y += this.userPan.y;
 
-    this.currentCamPos.lerp(desiredCamPos, smoothFactor);
-    this.currentLookAt.lerp(desiredLookAt, smoothFactor);
+    this.currentCamPos.lerp(this._tmpDesiredCamPos, smoothFactor);
+    this.currentLookAt.lerp(this._tmpDesiredLookAt, smoothFactor);
     this.camera.position.copy(this.currentCamPos);
     this.camera.lookAt(this.currentLookAt);
 
