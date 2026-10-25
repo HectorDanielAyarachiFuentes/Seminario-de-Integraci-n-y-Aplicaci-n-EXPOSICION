@@ -40,41 +40,45 @@ Presentacion/
 
 Los diagramas pueden observarse de forma interactiva en pantalla completa mediante el botón que aparece en la tarjeta o con la tecla **`V`**:
 
-1. **`assets/Sistemas-longo.svg` (Filmina 11):** *Subsistemas de la Gestión de Recursos Humanos (Francisco Longo, 2006)*. Modela la alineación estratégica, la planificación y la retroalimentación continua entre el Rendimiento y el Desarrollo Docente.
-2. **`assets/subsistemas_longo.svg`:** *Estrategia y Subsistemas de RRHH (Detalle Operativo)*. Diagrama analítico ampliado con flujos de compensación, empleo y relaciones laborales.
-3. **`assets/modelo_360.svg` (Filmina 14):** *Arquitectura Circular del Modelo 360° en CURZAS*. Triangulación formativa de 4 cuadrantes (Autoevaluación, Pares, Estudiantes, Dirección) con blindaje de anonimato criptográfico y desacoplamiento estatutario del Art. 75.
-4. **`assets/red_territorial.svg` (Filmina 5):** *Mapeo Territorial y Red de Nodos de Docencia Híbrida*. Distribución de la Sede Cabecera Viedma y los Nodos Territoriales de Sierra Grande, Valcheta, Los Menucos y Ramos Mexía bajo Res. CD-CURZA N° 196/2022.
+1. **`assets/red_territorial.svg` (Filmina 4):** *Mapeo Territorial y Red de Nodos de Docencia Híbrida*. Distribución de la Sede Cabecera Viedma y los Nodos Territoriales de Sierra Grande, Valcheta, Los Menucos y Ramos Mexía bajo Res. CD-CURZA N° 196/2022.
+2. **`assets/Sistemas-longo.svg` (Filmina 10):** *Subsistemas de la Gestión de Recursos Humanos (Francisco Longo, 2006)*. Modela la alineación estratégica, la planificación y la retroalimentación continua entre el Rendimiento y el Desarrollo Docente.
+3. **`assets/modelo_360.svg` (Filmina 12):** *Arquitectura Circular del Modelo 360° en CURZAS*. Triangulación formativa de 4 cuadrantes (Autoevaluación, Pares, Estudiantes, Dirección) con blindaje de anonimato criptográfico y anclaje exclusivo en el Art. 76 (Capacitación Continua).
+4. **`assets/subsistemas_longo.svg`:** *Estrategia y Subsistemas de RRHH (Detalle Operativo)*. Diagrama analítico ampliado con flujos de compensación, empleo y relaciones laborales.
 
 ---
 
-## 📋 Estructura de las 20 Filminas de la Exposición (30 Minutos)
+## 📋 Estructura Canónica de las 25 Filminas Oficiales (30 Minutos)
 
-* **Bloque I: Apertura y Encuadre Institucional (Filminas 1 a 3):**
-  1. Carátula Oficial y Presentación (UNCo - CURZAS - SIA).
-  2. Justificación y Línea Temática: Gestión de Personas y Valor Público.
-  3. Marco Normativo Oficial: Res. CD-CURZAS N° 266/23 y Docs-as-Code.
-* **Bloque II: Esquema N° 1 — El Problema y el Territorio (Filminas 4 a 7):**
-  4. El Escenario Territorial Situado: Sede Viedma y Diversidad Regional.
-  5. **[SVG]** Mapeo de la Red de Nodos y Docencia Híbrida (Res. 196/2022).
-  6. Desnaturalización del Problema: De la Rutina al Objeto Científico (Wainerman & Sautu).
-  7. La Tensión Estructural: Carrera Docente Sumativa (Art. 75) vs. Capacitación Continua (Art. 76).
-* **Bloque III: Preguntas y Objetivos (Filminas 8 y 9):**
-  8. Pregunta Central de Investigación y Preguntas Secundarias.
-  9. Matriz de Objetivos: Objetivo General y los 4 Objetivos Específicos.
-* **Bloque IV: Esquema N° 2 — Marco Teórico Sustantivo y Modelos (Filminas 10 a 14):**
-  10. Marco Teórico Central: El Enfoque Sistémico de Francisco Longo (2006).
-  11. **[SVG]** Arquitectura de Subsistemas de Recursos Humanos (Diagrama Oficial de Longo).
-  12. Articulación Operativa: Rendimiento, Trabajo, Desarrollo y Relaciones Humanas.
-  13. Marco Teórico II: El Dispositivo 360° y Mitigación de Sesgos Unilaterales.
-  14. **[SVG]** Arquitectura Circular del Modelo 360° en CURZAS y Blindajes Éticos.
-* **Bloque V: Gobernanza, Poder Compartido y Tecnología (Filminas 15 y 16):**
-  15. Carlos Matus (1993) y la PES: La Universidad como Arena de Poder Compartido.
-  16. Oscar Oszlak (2020) y Cao & Blutman (2023): Estado Plataforma y Poligobernanza.
-* **Bloque VI: Esquema N° 3 — Metodología, Factibilidad y Cierre (Filminas 17 a 20):**
-  17. Estrategia Metodológica Integral: Diseño Cualitativo, Muestra y Triangulación.
-  18. Las Cinco Dimensiones Analíticas de Factibilidad (Normativa, Técnica, Org., Cult., Gob.).
-  19. Vacancia Disciplinar Comprobada y Aportes a la Universidad Pública.
-  20. Conclusiones, Síntesis de Viabilidad y Apertura al Tribunal Evaluador.
+* **Sección 1: Apertura, Autor y Esquemas de la Cátedra SIA (Filminas 1 a 5):**
+  1. Carátula Oficial y Encuadre Académico (UNCo - CURZAS - SIA 2026).
+  2. Presentación Personal del Tesista: Héctor Daniel Ayarachi Fuentes (Trayectoria, perfil y vocación pública).
+  3. **Esquema SIA — TP N° 2 (Primera Parte):** Carátula, Tema de Investigación, Delimitación del Problema y Objetivos.
+  4. **Esquema SIA — Segunda Parte:** Marco Teórico Sustantivo (Apartado 5) y Antecedentes/Estado del Arte (Apartado 6).
+  5. **Esquema SIA — TP N° 4 (Tercera Parte Integral):** Metodología (7), Cronograma (8) y Viabilidad de Recursos (9).
+* **Sección 2: Tiempo 1 — Objeto Problema, Territorio y Objetivos (Filminas 6 a 11):**
+  6. El CURZAS en el Territorio: Sede Viedma y Despliegue en la Línea Sur y Costa Atlántica.
+  7. **[SVG]** Mapeo Territorial y Mediaciones Tecnológicas: Docencia Híbrida (Res. 196/2022).
+  8. Desnaturalización del Objeto de Investigación: De la Rutina al Objeto Científico (Wainerman & Sautu).
+  9. La Tensión Estructural: Carrera Docente Sumativa (Art. 75) vs. Capacitación Continua (Art. 76).
+  10. Pregunta General de Investigación y las Cinco Dimensiones Analíticas de Factibilidad.
+  11. Matriz de Objetivos del TFG: Objetivo General y los 4 Objetivos Específicos.
+* **Sección 3: Tiempo 2 — Marco Teórico Sustantivo y Estado del Arte (Filminas 12 a 17):**
+  12. Posicionamiento Epistemológico (De la Garza) y Modelo Sistémico de Francisco Longo (2006).
+  13. **[SVG]** Arquitectura de Subsistemas de Recursos Humanos (Diagrama Oficial de Longo).
+  14. El Dispositivo 360° en Educación Superior: Lógica Formativa vs. Sumativa y Mitigación de Sesgos.
+  15. **[SVG]** Arquitectura Circular del Modelo 360° en CURZAS y Blindaje Ético de Anonimato.
+  16. Poligobernanza, Poder Compartido y Capacidades Estatales (Matus, Cao/Blutman y Oszlak).
+  17. Estado del Arte (Internacional, Nacional, Regional) y Vacancia Disciplinar Comprobada.
+* **Sección 4: Tiempo 3 — Metodología, Operacionalización y Recursos (Filminas 18 a 23):**
+  18. Estrategia Metodológica y Diseño Mixto ($CUAL \rightarrow cuan$) en Estudio de Caso Situado (2027).
+  19. Población, Muestra (8 Entrevistas en Profundidad + 45 Cuestionarios) y Técnicas.
+  20. Matriz de Operacionalización en Cinco Dimensiones (Normativa, Técnica, Org., Cult., Gob.).
+  21. Procedimiento, Fases del Trabajo de Campo (6 Fases / 7 Meses en 2027) y Cronograma.
+  22. Viabilidad Integral del Proyecto: Recursos Humanos, Técnicos, Económicos y Avales (Apartado 9 del TP4).
+  23. Garantías Éticas, Protección de Datos (Ley N° 25.326) y Cláusula de No Afectación Laboral.
+* **Sección 5: Síntesis, Conclusiones y Despedida Formal (Filminas 24 y 25):**
+  24. Síntesis de Factibilidad, Conclusiones y Valor Público Universitario.
+  25. Despedida Formal, Reconocimiento al Equipo Docente del SIA y Apertura al Tribunal Evaluador.
 
 ---
 
