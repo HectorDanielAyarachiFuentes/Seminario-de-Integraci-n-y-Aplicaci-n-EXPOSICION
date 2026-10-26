@@ -29,6 +29,14 @@ window.Presentation3D_Objects["anim_06"] = {
     oceanPlate.position.y = -1.11;
     g.add(oceanPlate);
 
+    const oceanRim = new THREE.Mesh(
+      new THREE.TorusGeometry(1.92, 0.024, 16, 64),
+      engine.brassMat(0xd4af37)
+    );
+    oceanRim.rotation.x = Math.PI / 2;
+    oceanRim.position.y = -1.10;
+    g.add(oceanRim);
+
     const seaWater = new THREE.Mesh(
       new THREE.CylinderGeometry(1.88, 1.88, 0.02, 64),
       new THREE.MeshStandardMaterial({
@@ -41,6 +49,30 @@ window.Presentation3D_Objects["anim_06"] = {
     );
     seaWater.position.y = -1.08;
     g.add(seaWater);
+
+    // Cartela cartográfica técnica en latón grabado de alta definición
+    const cartouche = engine.createEngravedPlaque(
+      0.88,
+      0.36,
+      "PROVINCIA DE RÍO NEGRO",
+      "Sede Central Viedma + 10 Nodos Territoriales (Res. CD 135/22)",
+      ["CENTRO UNIVERSITARIO REGIONAL ZONA ATLÁNTICA", "CURZAS • UNCo"],
+      { theme: "dark" }
+    );
+    cartouche.position.set(-0.95, -0.68, 0.95);
+    cartouche.rotation.x = -Math.PI * 0.15;
+    g.add(cartouche);
+
+    // Rosa de los vientos / Dial de orientación geodésica
+    const compassRose = engine.createGraduatedDial(0.22, {
+      title: "N",
+      sub: "SUR",
+      divisions: 36,
+      theme: "dark"
+    });
+    compassRose.rotation.x = -Math.PI / 2;
+    compassRose.position.set(-1.18, -1.06, -0.70);
+    g.add(compassRose);
 
     // 1.B. Territorio Continental Argentino en Relieve Escultórico
     const argShape = new THREE.Shape();
@@ -305,16 +337,39 @@ window.Presentation3D_Objects["anim_07"] = {
     netGroup.position.set(0, -0.15, 0);
 
     // Servidor / Terminal Central Sede Viedma (Esbelta columna clásica y esfera Moodle)
-    // Parámetros correctos: height = 0.88, radius = 0.085
     const centralCol = engine.createClassicalColumn(0.88, 0.085, 0xd4af37, true);
     centralCol.position.set(0, -0.44, 0);
     netGroup.add(centralCol);
+
+    // Chapa técnica grabada en la base del servidor central
+    const plaqueNet = engine.createEngravedPlaque(
+      0.78,
+      0.26,
+      "RED DE AULAS HÍBRIDAS",
+      "Sede Central Viedma • 10 Nodos Conectados (Res. CD 196/22)",
+      ["TELECOMUNICACIONES CURZAS"],
+      { theme: "dark" }
+    );
+    plaqueNet.position.set(0, -0.88, 0.42);
+    g.add(plaqueNet);
 
     // Fino aro armilar orbital en el remate
     const centralRing = engine.createBrassArmillaryRing(0.24, 0.008);
     centralRing.position.set(0, 0.18, 0);
     netGroup.add(centralRing);
     engine.anim07_centralRing = centralRing;
+
+    // Dial de sincronismo y latencia de telecomunicaciones en el servidor
+    const syncDial = engine.createGraduatedDial(0.12, {
+      title: "SYNC",
+      sub: "100%",
+      divisions: 24,
+      isPercentage: true,
+      theme: "dark"
+    });
+    syncDial.position.set(0, 0.38, 0);
+    syncDial.rotation.x = Math.PI / 2;
+    netGroup.add(syncDial);
 
     // Núcleo holográfico luminoso del servidor Moodle / Videoconferencias
     const serverGlobe = new THREE.Mesh(
@@ -513,61 +568,141 @@ window.Presentation3D_Objects["anim_07"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_08"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.35);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
 
     const ruptureGroup = new THREE.Group();
     ruptureGroup.position.set(0, -0.1, 0);
 
+    // Banco de trabajo / Chasis maquinado en caoba y latón
+    const benchChassis = engine.createMachinedChassis(1.76, 0.12, 0.68, { color: 0x2e1204 });
+    benchChassis.position.y = -0.92;
+    ruptureGroup.add(benchChassis);
+
     // 1. Bloque de carbón / roca opaca izquierda (La rutina administrativa cotidiana)
-    const routineRock = new THREE.Mesh(
-      new THREE.DodecahedronGeometry(0.38, 1),
-      engine.graniteMat(0x1e293b, 0.85, 0.1) // Áspero y oscuro
+    const viseGroup = new THREE.Group();
+    viseGroup.position.set(-0.66, 0.05, 0);
+
+    const viseBase = new THREE.Mesh(
+      new THREE.BoxGeometry(0.48, 0.08, 0.44),
+      engine.graniteMat(0x0f172a)
     );
-    routineRock.position.set(-0.65, 0.05, 0);
-    ruptureGroup.add(routineRock);
+    viseBase.position.y = -0.32;
+    viseGroup.add(viseBase);
+
+    // Tornillo de banco de latón
+    const viseScrew = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.02, 0.02, 0.25, 16),
+      engine.brassMat(0xd4af37)
+    );
+    viseScrew.rotation.z = Math.PI / 2;
+    viseScrew.position.set(-0.24, -0.22, 0);
+    viseGroup.add(viseScrew);
+
+    const viseHandle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04, 0.04, 0.03, 24),
+      engine.goldMat(0xffd700)
+    );
+    viseHandle.rotation.z = Math.PI / 2;
+    viseHandle.position.set(-0.36, -0.22, 0);
+    viseGroup.add(viseHandle);
+
+    const routineRock = new THREE.Mesh(
+      new THREE.DodecahedronGeometry(0.36, 1),
+      engine.graniteMat(0x1e293b, 0.85, 0.1)
+    );
+    routineRock.castShadow = true;
+    viseGroup.add(routineRock);
 
     const labelLeft = engine.createLabelSprite("RUTINA COTIDIANA", "Encuesta de Papel Sumativa", "#475569", false);
-    labelLeft.position.set(-0.65, 0.65, 0);
-    ruptureGroup.add(labelLeft);
+    labelLeft.position.set(0, 0.62, 0);
+    viseGroup.add(labelLeft);
+    ruptureGroup.add(viseGroup);
 
     // 2. Haz de investigación que penetra hacia el centro
     const beamIn = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.015, 0.015, 0.45, 12),
+      new THREE.CylinderGeometry(0.015, 0.015, 0.42, 12),
       engine.brassMat(0xffd700)
     );
     beamIn.rotation.z = Math.PI / 2;
     beamIn.position.set(-0.25, 0.05, 0);
     ruptureGroup.add(beamIn);
 
-    // 3. Prisma de cristal óptico puro (Vigilancia Epistemológica)
+    // 3. Prisma de cristal óptico puro montado en soporte goniométrico de latón
+    const prismGroup = new THREE.Group();
+    prismGroup.position.set(0.08, 0.05, 0);
+
+    const prismStand = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.24, 0.28, 0.06, 24),
+      engine.brassMat(0xd4af37)
+    );
+    prismStand.position.y = -0.42;
+    prismGroup.add(prismStand);
+
     const prismMesh = new THREE.Mesh(
       new THREE.CylinderGeometry(0.28, 0.28, 0.75, 3),
       engine.glassMat(0xf8fafc, { transmission: 0.95, roughness: 0.05, ior: 1.65 })
     );
-    prismMesh.position.set(0.08, 0.05, 0);
-    ruptureGroup.add(prismMesh);
+    prismMesh.castShadow = true;
+    prismGroup.add(prismMesh);
+
+    // Cuadrante / Dial graduado en la base del prisma
+    const prismDial = engine.createGraduatedDial(0.12, {
+      title: "VIGILANCIA",
+      sub: "EPIST",
+      divisions: 24,
+      theme: "dark"
+    });
+    prismDial.position.set(0, -0.38, 0);
+    prismDial.rotation.x = Math.PI / 2;
+    prismGroup.add(prismDial);
+
+    ruptureGroup.add(prismGroup);
     engine.anim08_prism = prismMesh;
 
     const labelCenter = engine.createLabelSprite("VIGILANCIA EPISTEMOLÓGICA", "Ruptura Científica (Wainerman & Sautu)", "#0f2d59", false);
-    labelCenter.position.set(0.08, 0.75, 0);
+    labelCenter.position.set(0.08, 0.78, 0);
     ruptureGroup.add(labelCenter);
 
-    // 4. Objeto científico puro facetado emergiendo a la derecha
+    // 4. Objeto científico puro facetado emergiendo en pedestal dorado a la derecha
+    const gemGroup = new THREE.Group();
+    gemGroup.position.set(0.72, 0.05, 0);
+
+    const gemPedestal = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.24, 0.35, 24),
+      engine.brassMat(0xd4af37)
+    );
+    gemPedestal.position.y = -0.28;
+    gemGroup.add(gemPedestal);
+
     const scienceGem = new THREE.Mesh(
       new THREE.OctahedronGeometry(0.34, 0),
-      engine.glassMat(0x38bdf8, { roughness: 0.08, transmission: 0.92 })
+      engine.glassMat(0x38bdf8, { roughness: 0.06, opacity: 0.90 })
     );
-    scienceGem.position.set(0.72, 0.05, 0);
-    ruptureGroup.add(scienceGem);
+    scienceGem.position.y = 0.08;
+    gemGroup.add(scienceGem);
     engine.anim08_gem = scienceGem;
 
-    const lightGem = new THREE.PointLight(0x38bdf8, 1.2, 1.5);
-    lightGem.position.set(0.72, 0.05, 0);
-    ruptureGroup.add(lightGem);
+    const lightGem = new THREE.PointLight(0x38bdf8, 1.4, 1.6);
+    lightGem.position.y = 0.08;
+    gemGroup.add(lightGem);
 
     const labelRight = engine.createLabelSprite("OBJETO CIENTÍFICO", "Factibilidad Situada del 360°", "#0369a1", false);
-    labelRight.position.set(0.72, 0.65, 0);
-    ruptureGroup.add(labelRight);
+    labelRight.position.set(0, 0.65, 0);
+    gemGroup.add(labelRight);
+
+    ruptureGroup.add(gemGroup);
+
+    // Chapa grabada en el frente del chasis
+    const plaqueRupture = engine.createEngravedPlaque(
+      0.72,
+      0.22,
+      "RUPTURA EPISTEMOLÓGICA",
+      "De la Rutina al Objeto Científico (Wainerman & Sautu 2011)",
+      ["FACTIBILIDAD 360° SITUADA"],
+      { theme: "dark" }
+    );
+    plaqueRupture.position.set(0, -0.85, 0.36);
+    ruptureGroup.add(plaqueRupture);
 
     g.add(ruptureGroup);
   },
@@ -588,20 +723,32 @@ window.Presentation3D_Objects["anim_08"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_09"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.4);
+    engine.createMuseumPlinth(g, 1.50, 0.22, -1.22);
 
     const scaleGroup = new THREE.Group();
     scaleGroup.position.set(0, -0.15, 0);
 
-    // Fuste y pedestal central de mármol y latón
-    const shaft = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.08, 0.12, 1.35, 32),
-      engine.marbleMat(0xf8fafc)
-    );
-    shaft.position.y = -0.32;
-    scaleGroup.add(shaft);
+    // Chasis de caoba noble monumental
+    const scaleChassis = engine.createMachinedChassis(1.72, 0.12, 0.65, { color: 0x2e1204 });
+    scaleChassis.position.y = -0.95;
+    scaleGroup.add(scaleChassis);
 
-    // Barra oscilante de latón
+    // Fuste y pedestal central de columna clásica acanalada
+    const centralPillar = engine.createClassicalColumn(1.25, 0.11, 0xd4af37, true);
+    centralPillar.position.set(0, -0.35, 0);
+    scaleGroup.add(centralPillar);
+
+    // Cuadrante graduado de inclinación de la balanza en el fulcro
+    const balanceDial = engine.createGraduatedDial(0.14, {
+      title: "EQUILIBRIO",
+      sub: "ART. 75/76",
+      divisions: 30,
+      theme: "dark"
+    });
+    balanceDial.position.set(0, 0.38, 0.06);
+    scaleGroup.add(balanceDial);
+
+    // Barra oscilante de latón maquinado
     const beam = new THREE.Mesh(
       new THREE.CylinderGeometry(0.02, 0.02, 1.55, 16),
       engine.brassMat(0xd4af37)
@@ -611,7 +758,7 @@ window.Presentation3D_Objects["anim_09"] = {
     scaleGroup.add(beam);
     engine.anim09_beam = beam;
 
-    // Platillo Izquierdo: Art. 75 (Candado / Mazo punitivo de vacancia)
+    // Platillo Izquierdo: Art. 75 (Candado / Ponderación punitiva de vacancia)
     const leftPanGroup = new THREE.Group();
     leftPanGroup.position.set(-0.68, 0.15, 0);
 
@@ -623,7 +770,7 @@ window.Presentation3D_Objects["anim_09"] = {
 
     const lockBody = new THREE.Mesh(
       new THREE.BoxGeometry(0.18, 0.16, 0.08),
-      engine.graniteMat(0x475569) // Metálico oscuro punitivo
+      engine.graniteMat(0x475569)
     );
     lockBody.position.y = 0.10;
     leftPanGroup.add(lockBody);
@@ -636,7 +783,7 @@ window.Presentation3D_Objects["anim_09"] = {
     leftPanGroup.add(lockShackle);
 
     const labelLeft = engine.createLabelSprite("ART. 75 ESTATUTO", "Control Sumativo • Vacancia", "#b91c1c", false);
-    labelLeft.position.set(0, 0.42, 0);
+    labelLeft.position.set(0, 0.44, 0);
     leftPanGroup.add(labelLeft);
     scaleGroup.add(leftPanGroup);
     engine.anim09_left = leftPanGroup;
@@ -660,20 +807,32 @@ window.Presentation3D_Objects["anim_09"] = {
 
     const flame = new THREE.Mesh(
       new THREE.ConeGeometry(0.06, 0.16, 16),
-      engine.glassMat(0xf59e0b, { roughness: 0.1, transmission: 0.9 })
+      engine.glassMat(0xf59e0b, { roughness: 0.06, opacity: 0.90 })
     );
     flame.position.y = 0.28;
     rightPanGroup.add(flame);
 
-    const flameLight = new THREE.PointLight(0xf59e0b, 1.2, 1.2);
+    const flameLight = new THREE.PointLight(0xf59e0b, 1.4, 1.4);
     flameLight.position.y = 0.30;
     rightPanGroup.add(flameLight);
 
     const labelRight = engine.createLabelSprite("ART. 76 ESTATUTO", "Capacitación y Desarrollo Formativo", "#059669", false);
-    labelRight.position.set(0, 0.52, 0);
+    labelRight.position.set(0, 0.54, 0);
     rightPanGroup.add(labelRight);
     scaleGroup.add(rightPanGroup);
     engine.anim09_right = rightPanGroup;
+
+    // Chapa grabada en el frente del chasis de la balanza
+    const plaqueScale = engine.createEngravedPlaque(
+      0.78,
+      0.24,
+      "TENSIÓN ESTATUTARIA",
+      "Art. 75 Régimen Sumativo vs. Art. 76 Desarrollo Formativo",
+      ["ESTATUTO UNCo • CCT DOCENTE"],
+      { theme: "dark" }
+    );
+    plaqueScale.position.set(0, -0.88, 0.35);
+    scaleGroup.add(plaqueScale);
 
     g.add(scaleGroup);
   },
@@ -697,17 +856,26 @@ window.Presentation3D_Objects["anim_09"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_10"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.4);
+    engine.createMuseumPlinth(g, 1.50, 0.22, -1.22);
 
     const pentGroup = new THREE.Group();
     pentGroup.position.set(0, -0.05, 0);
 
-    // Núcleo central pulsante: La Pregunta General de TFG
+    // Chasis de caoba noble inferior con cantoneras
+    const baseChassis = engine.createMachinedChassis(1.20, 0.12, 1.20, { color: 0x2e1204 });
+    baseChassis.position.y = -0.95;
+    g.add(baseChassis);
+
+    // Núcleo central pulsante: La Pregunta General de TFG con Escudo Académico UNCo
     const coreMesh = new THREE.Mesh(
       new THREE.SphereGeometry(0.28, 32, 32),
       engine.marbleMat(0xfdfbf7)
     );
     pentGroup.add(coreMesh);
+
+    const sealCore = engine.createAcademicSeal(0.13);
+    sealCore.position.set(0, 0, 0.26);
+    pentGroup.add(sealCore);
 
     const coreRing = engine.createBrassArmillaryRing(0.38, 0.014);
     coreRing.rotation.x = Math.PI / 2;
@@ -717,7 +885,7 @@ window.Presentation3D_Objects["anim_10"] = {
     pentGroup.add(coreLight);
 
     const labelCore = engine.createLabelSprite("PREGUNTA CENTRAL", "¿Condiciones de Factibilidad 2027?", "#0f2d59", true);
-    labelCore.position.set(0, 0.65, 0);
+    labelCore.position.set(0, 0.70, 0);
     pentGroup.add(labelCore);
 
     // 5 Nodos Orbitales de las Cinco Dimensiones de Factibilidad
@@ -732,32 +900,44 @@ window.Presentation3D_Objects["anim_10"] = {
     engine.anim10_arms = [];
     dims.forEach((d) => {
       const armGroup = new THREE.Group();
-      const r = 0.88;
+      const r = 0.90;
       const x = Math.cos(d.angle) * r;
       const z = Math.sin(d.angle) * r;
 
-      // Brazo tensor de latón
-      const armGeo = new THREE.CylinderGeometry(0.008, 0.008, r, 12);
+      // Brazo tensor de latón maquinado con estrías
+      const armGeo = new THREE.CylinderGeometry(0.010, 0.010, r, 12);
       const armMesh = new THREE.Mesh(armGeo, engine.brassMat());
       armMesh.position.set(x / 2, 0, z / 2);
       armMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(x, 0, z).normalize());
       armGroup.add(armMesh);
 
-      // Sello esférico de dimensión
+      // Sello esférico / gema facetada de dimensión
       const sealMesh = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.12, 0),
-        engine.glassMat(d.col, { transmission: 0.85, roughness: 0.1 })
+        new THREE.OctahedronGeometry(0.13, 0),
+        engine.glassMat(d.col, { opacity: 0.88, roughness: 0.08 })
       );
       sealMesh.position.set(x, 0, z);
       armGroup.add(sealMesh);
 
       const labelDim = engine.createLabelSprite(d.name, d.sub, "#0f2d59", false);
-      labelDim.position.set(x, 0.28, z);
+      labelDim.position.set(x, 0.32, z);
       armGroup.add(labelDim);
 
       pentGroup.add(armGroup);
       engine.anim10_arms.push(sealMesh);
     });
+
+    // Chapa maestra de factibilidad en el frente
+    const plaquePent = engine.createEngravedPlaque(
+      0.84,
+      0.26,
+      "MATRIZ PENTAGONAL DE FACTIBILIDAD",
+      "Las 5 Dimensiones Empíricas del Modelo 360°",
+      ["CONDICIONES DE VIABILIDAD 2027"],
+      { theme: "dark" }
+    );
+    plaquePent.position.set(0, -0.86, 0.62);
+    g.add(plaquePent);
 
     g.add(pentGroup);
     engine.anim10_group = pentGroup;

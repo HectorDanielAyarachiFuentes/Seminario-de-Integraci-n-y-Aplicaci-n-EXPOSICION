@@ -18,27 +18,42 @@ window.Presentation3D_Objects = window.Presentation3D_Objects || {};
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_11"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.4);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
 
     const targetGroup = new THREE.Group();
     targetGroup.position.set(0, -0.05, 0);
 
-    // Núcleo Central: Objetivo General (Disco dorado en relieve)
-    const coreDisc = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.24, 0.24, 0.05, 32),
-      engine.brassMat(0xffd700)
-    );
-    coreDisc.rotation.x = Math.PI / 2;
-    targetGroup.add(coreDisc);
+    // Chasis inferior de caoba noble y cantoneras
+    const baseChassis = engine.createMachinedChassis(1.40, 0.10, 1.40, { color: 0x2e1204 });
+    baseChassis.position.y = -0.92;
+    g.add(baseChassis);
 
-    const coreLight = new THREE.PointLight(0xffd700, 1.2, 1.5);
+    // Núcleo Central: Dial de Precisión del Objetivo General
+    const coreDial = engine.createGraduatedDial(0.24, {
+      divisions: 40,
+      title: "OBJETIVO",
+      sub: "GENERAL",
+      theme: "dark"
+    });
+    coreDial.rotation.x = Math.PI / 2;
+    coreDial.position.set(0, 0.05, 0);
+    targetGroup.add(coreDial);
+
+    // Escudo Académico UNCo en el centro del dial
+    const seal = engine.createAcademicSeal(0.08);
+    seal.position.set(0, 0.08, 0);
+    seal.rotation.x = Math.PI / 2;
+    targetGroup.add(seal);
+
+    const coreLight = new THREE.PointLight(0xffd700, 1.4, 1.8);
+    coreLight.position.set(0, 0.12, 0);
     targetGroup.add(coreLight);
 
     const labelGeneral = engine.createLabelSprite("OBJETIVO GENERAL", "Factibilidad Integral del Modelo 360°", "#0f2d59", true);
-    labelGeneral.position.set(0, 0.72, 0);
+    labelGeneral.position.set(0, 0.82, 0);
     targetGroup.add(labelGeneral);
 
-    // 4 Anillos concéntricos de precisión graduados
+    // 4 Anillos concéntricos de precisión graduados en latón
     engine.anim11_rings = [];
     for (let i = 1; i <= 3; i++) {
       const ring = engine.createBrassArmillaryRing(0.32 + i * 0.18, 0.010);
@@ -56,21 +71,39 @@ window.Presentation3D_Objects["anim_11"] = {
     ];
 
     axes.forEach((ax) => {
-      const x = Math.cos(ax.angle) * 0.92;
-      const z = Math.sin(ax.angle) * 0.92;
+      const x = Math.cos(ax.angle) * 0.94;
+      const z = Math.sin(ax.angle) * 0.94;
 
-      // Marcador prismático cardinal
+      // Marcador prismático cardinal de cristal facetado
       const pin = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.10, 0),
-        engine.glassMat(ax.col, { transmission: 0.85 })
+        new THREE.OctahedronGeometry(0.12, 0),
+        engine.glassMat(ax.col, { opacity: 0.88, roughness: 0.08 })
       );
-      pin.position.set(x, 0, z);
+      pin.position.set(x, 0.04, z);
       targetGroup.add(pin);
 
+      // Micro-placa técnica en cada eje
+      const plaqueAx = engine.createEngravedPlaque(0.44, 0.16, ax.name, ax.sub, [], { theme: "dark" });
+      plaqueAx.position.set(x, -0.08, z);
+      plaqueAx.rotation.x = -Math.PI * 0.15;
+      targetGroup.add(plaqueAx);
+
       const labelAx = engine.createLabelSprite(ax.name, ax.sub, "#0f2d59", false);
-      labelAx.position.set(x, 0.28, z);
+      labelAx.position.set(x, 0.35, z);
       targetGroup.add(labelAx);
     });
+
+    // Chapa maestra de consistencia metodológica
+    const plaqueMaster = engine.createEngravedPlaque(
+      0.84,
+      0.24,
+      "DIANA DE COHERENCIA DE OBJETIVOS",
+      "Objetivo General + 4 Ejes Cardinales del TFG",
+      ["CONSISTENCIA METODOLÓGICA"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.72);
+    g.add(plaqueMaster);
 
     g.add(targetGroup);
     engine.anim11_group = targetGroup;
@@ -84,22 +117,39 @@ window.Presentation3D_Objects["anim_11"] = {
 };
 
 // ──────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
 // 12. LOS 7 SUBSISTEMAS DE RRHH: Estructura Arquitectónica Minimalista (Francisco Longo)
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_12"] = {
   build(engine, g) {
-    // Pedestal de museo elevado y centrado para visualización completa sin recortes inferiores
+    // Pedestal de museo elevado y centrado
     engine.createMuseumPlinth(g, 1.45, 0.18, -0.60);
 
+    // Chasis mecanizado de soporte con cantoneras de latón
+    const chassis = engine.createMachinedChassis(2.40, 0.08, 0.65, { color: 0x1e293b });
+    chassis.position.y = -0.74;
+    g.add(chassis);
+
+    // Placa maestra grabada con tornillos de fijación
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "7 SUBSISTEMAS DE RECURSOS HUMANOS",
+      "Francisco Longo (2006) • Marco Teórico de Empleo Público",
+      ["RENDIMIENTO 360°", "DESARROLLO ART. 76", "RELACIONES LABORALES"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.74, 0.38);
+    g.add(plaqueMaster);
+
     const longoGroup = new THREE.Group();
-    longoGroup.position.set(0, 0.38, 0); // Estructura elevada que descansa firmemente sobre el pedestal
+    longoGroup.position.set(0, 0.38, 0);
 
     const fullW = 2.34;
     const colY = 0.0;
     const colH = 0.82;
-    const panelDepth = 0.024; // Espesor ultra-delgado minimalista
+    const panelDepth = 0.024;
 
-    // Material de vidrio arquitectónico esmerilado translúcido
     const frostedGlass = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       roughness: 0.12,
@@ -114,7 +164,6 @@ window.Presentation3D_Objects["anim_12"] = {
       opacity: 0.45
     });
 
-    // Helper para crear paneles arquitectónicos limpios con aristas biseladas de latón
     const createArchPanel = (w, h, d, x, y, z = 0, mat = frostedGlass) => {
       const panelGroup = new THREE.Group();
       panelGroup.position.set(x, y, z);
@@ -123,7 +172,6 @@ window.Presentation3D_Objects["anim_12"] = {
       const mesh = new THREE.Mesh(geo, mat);
       panelGroup.add(mesh);
 
-      // Filete perimetral fino de latón
       const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeLineMat);
       panelGroup.add(edges);
 
@@ -132,7 +180,6 @@ window.Presentation3D_Objects["anim_12"] = {
 
     // ── 0. VARILLAS Y PEANAS DE MONTAJE DE LATÓN PULIDO AL PEDESTAL ELEVADO ──
     [-0.85, -0.28, 0.28, 0.85].forEach(sx => {
-      // Varilla esbelta vertical
       const pinRod = new THREE.Mesh(
         new THREE.CylinderGeometry(0.012, 0.012, 0.33, 16),
         engine.brassMat(0xd4af37)
@@ -140,7 +187,6 @@ window.Presentation3D_Objects["anim_12"] = {
       pinRod.position.set(sx, -0.715, 0);
       longoGroup.add(pinRod);
 
-      // Collar / anclaje de latón torneado sobre la meseta del pedestal
       const pinCollar = new THREE.Mesh(
         new THREE.CylinderGeometry(0.038, 0.048, 0.025, 16),
         engine.brassMat(0xffd700)
@@ -163,7 +209,6 @@ window.Presentation3D_Objects["anim_12"] = {
     );
     labelBase.position.set(0, baseY, panelDepth + 0.03);
     longoGroup.add(labelBase);
-
 
     // ── 2. CUERPO CENTRAL: 4 ZONAS DEL MODELO SISTÉMICO ──
     const colW = 0.48;
@@ -201,7 +246,16 @@ window.Presentation3D_Objects["anim_12"] = {
     const pRend = createArchPanel(colW, colH, panelDepth, colX[2], colY);
     longoGroup.add(pRend);
 
-    // Núcleo orbital 360° minimalista flotando en el corazón del panel
+    // Dial graduado de precisión en el corazón del subsistema de rendimiento
+    const dial360 = engine.createGraduatedDial(0.18, {
+      divisions: 36,
+      title: "RENDIMIENTO",
+      sub: "360°",
+      theme: "gold"
+    });
+    dial360.position.set(colX[2], colY + 0.16, panelDepth + 0.04);
+    longoGroup.add(dial360);
+
     const ring360 = engine.createBrassArmillaryRing(0.18, 0.005);
     ring360.position.set(colX[2], colY + 0.16, panelDepth + 0.06);
     longoGroup.add(ring360);
@@ -262,7 +316,6 @@ window.Presentation3D_Objects["anim_12"] = {
     labelDes.position.set(colX[3], colY - colH * 0.27, panelDepth + 0.03);
     longoGroup.add(labelDes);
 
-
     // ── 3. DINTEL SUPERIOR: PLANIFICACIÓN DE RECURSOS HUMANOS ──
     const dintelY = 0.52;
     const dintelPanel = createArchPanel(fullW, 0.14, panelDepth * 2, 0, dintelY, 0);
@@ -278,7 +331,6 @@ window.Presentation3D_Objects["anim_12"] = {
     labelPlan.position.set(0, dintelY, panelDepth + 0.03);
     longoGroup.add(labelPlan);
 
-
     // ── 4. CÚSPIDE: ESTRATEGIA INSTITUCIONAL Y CONECTOR MINIMALISTA ──
     const stratY = 0.88;
     const labelStrat = engine.createLabelSprite(
@@ -291,7 +343,6 @@ window.Presentation3D_Objects["anim_12"] = {
     labelStrat.position.set(0, stratY, panelDepth + 0.03);
     longoGroup.add(labelStrat);
 
-    // Conector minimalista: varilla delgada y discreta con flecha chevron
     const arrowLine = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(0, stratY - 0.09, panelDepth),
@@ -309,24 +360,16 @@ window.Presentation3D_Objects["anim_12"] = {
     chevron.position.set(0, dintelY + 0.09, panelDepth);
     longoGroup.add(chevron);
 
-
-    // ── 5. VECTORES DE FLUJO SISTÉMICO MINIMALISTAS (HILOS DE FIBRA ÓPTICA Y PULSOS) ──
+    // ── 5. VECTORES DE FLUJO SISTÉMICO ──
     const flows = [
-      // Planificación -> Columnas (Hacia abajo)
       { from: new THREE.Vector3(colX[0], dintelY - 0.07, panelDepth), to: new THREE.Vector3(colX[0], colY + colH / 2, panelDepth) },
       { from: new THREE.Vector3(colX[1], dintelY - 0.07, panelDepth), to: new THREE.Vector3(colX[1], colY + colH / 2, panelDepth) },
       { from: new THREE.Vector3(colX[2], dintelY - 0.07, panelDepth), to: new THREE.Vector3(colX[2], colY + colH / 2, panelDepth) },
       { from: new THREE.Vector3(colX[3], dintelY - 0.07, panelDepth), to: new THREE.Vector3(colX[3], colY + colH / 2, panelDepth) },
-
-      // Flujo horizontal: Org -> Empleo -> Rendimiento
       { from: new THREE.Vector3(colX[0] + colW / 2, colY, panelDepth), to: new THREE.Vector3(colX[1] - colW / 2, colY, panelDepth) },
       { from: new THREE.Vector3(colX[1] + colW / 2, colY, panelDepth), to: new THREE.Vector3(colX[2] - colW / 2, colY, panelDepth) },
-
-      // Flujo horizontal bidireccional: Rendimiento <-> Compensación / Desarrollo
       { from: new THREE.Vector3(colX[2] + colW / 2, colY + colH * 0.27, panelDepth), to: new THREE.Vector3(colX[3] - colW / 2, colY + colH * 0.27, panelDepth) },
       { from: new THREE.Vector3(colX[2] + colW / 2, colY - colH * 0.27, panelDepth), to: new THREE.Vector3(colX[3] - colW / 2, colY - colH * 0.27, panelDepth) },
-
-      // Relaciones Sociales (Base) -> Columnas (Hacia arriba)
       { from: new THREE.Vector3(colX[0], baseY + 0.07, panelDepth), to: new THREE.Vector3(colX[0], colY - colH / 2, panelDepth) },
       { from: new THREE.Vector3(colX[1], baseY + 0.07, panelDepth), to: new THREE.Vector3(colX[1], colY - colH / 2, panelDepth) },
       { from: new THREE.Vector3(colX[2], baseY + 0.07, panelDepth), to: new THREE.Vector3(colX[2], colY - colH / 2, panelDepth) },
@@ -340,7 +383,6 @@ window.Presentation3D_Objects["anim_12"] = {
       const line = new THREE.Line(lineGeo, lineMat);
       longoGroup.add(line);
 
-      // Micro-pulso luminoso viajero
       const pulse = new THREE.Mesh(
         new THREE.SphereGeometry(0.009, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
@@ -348,7 +390,6 @@ window.Presentation3D_Objects["anim_12"] = {
       longoGroup.add(pulse);
       engine.anim12_flowPulses.push({ pulse, from: fl.from, to: fl.to });
     });
-
 
     // ── 6. RÓTULO MAESTRO SUPERIOR MINIMALISTA ──
     const mainTitle = engine.createLabelSprite(
@@ -391,12 +432,16 @@ window.Presentation3D_Objects["anim_12"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_13"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.4);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis de caoba noble con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.30, { color: 0x2e1204 });
+    chassis.position.y = -0.92;
+    g.add(chassis);
 
     const gearGroup = new THREE.Group();
     gearGroup.position.set(0, -0.1, 0);
 
-    // Función auxiliar para modelar un engranaje dentado nítido
     const createGearMesh = (teeth, outerR, innerR, thickness, mat) => {
       const shape = new THREE.Shape();
       for (let i = 0; i < teeth; i++) {
@@ -418,7 +463,6 @@ window.Presentation3D_Objects["anim_13"] = {
       }
       shape.closePath();
 
-      // Orificio central
       const hole = new THREE.Path();
       hole.absarc(0, 0, innerR * 0.42, 0, Math.PI * 2, true);
       shape.holes.push(hole);
@@ -432,6 +476,11 @@ window.Presentation3D_Objects["anim_13"] = {
     gearGroup.add(gear1);
     engine.anim13_g1 = gear1;
 
+    // Dial indicador central en el engranaje 1
+    const dial1 = engine.createGraduatedDial(0.16, { divisions: 24, title: "RENDIMIENTO", sub: "360°", theme: "gold" });
+    dial1.position.set(-0.38, 0.35, 0.07);
+    gearGroup.add(dial1);
+
     const labelG1 = engine.createLabelSprite("1. RENDIMIENTO", "Evaluación Formativa", "#0f2d59", false);
     labelG1.position.set(-0.38, 0.88, 0);
     gearGroup.add(labelG1);
@@ -441,6 +490,11 @@ window.Presentation3D_Objects["anim_13"] = {
     gear2.position.set(0.42, -0.05, 0);
     gearGroup.add(gear2);
     engine.anim13_g2 = gear2;
+
+    // Dial indicador central en el engranaje 2
+    const dial2 = engine.createGraduatedDial(0.19, { divisions: 24, title: "DESARROLLO", sub: "ART. 76", theme: "gold" });
+    dial2.position.set(0.42, -0.05, 0.07);
+    gearGroup.add(dial2);
 
     const labelG2 = engine.createLabelSprite("2. DESARROLLO", "Capacitación Docente (Art. 76)", "#0f2d59", false);
     labelG2.position.set(0.42, 0.58, 0);
@@ -452,9 +506,26 @@ window.Presentation3D_Objects["anim_13"] = {
     gearGroup.add(gear3);
     engine.anim13_g3 = gear3;
 
+    // Dial indicador central en el engranaje 3
+    const dial3 = engine.createGraduatedDial(0.14, { divisions: 20, title: "RELACIONES", sub: "CCT 1246", theme: "dark" });
+    dial3.position.set(-0.38, -0.45, 0.07);
+    gearGroup.add(dial3);
+
     const labelG3 = engine.createLabelSprite("3. RELACIONES LABORALES", "Diálogo Gremial (CCT Dec. 1246/15)", "#0f2d59", false);
     labelG3.position.set(-0.38, -0.92, 0);
     gearGroup.add(labelG3);
+
+    // Placa maestra grabada en latón con cantoneras
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.05,
+      0.22,
+      "MECANISMO DE ENGRANAJES SISTÉMICOS",
+      "Interdependencia Operativa del Empleo Público",
+      ["RENDIMIENTO ↔ CAPACITACIÓN ↔ DIÁLOGO GREMIAL"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.68);
+    g.add(plaqueMaster);
 
     g.add(gearGroup);
   },
@@ -471,10 +542,26 @@ window.Presentation3D_Objects["anim_13"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_14"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis maquinado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.45, 0.10, 1.45, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
 
     const radarGroup = new THREE.Group();
     radarGroup.position.set(0, -0.1, 0);
+
+    // Plato azimutal graduado 360° de alta precisión en la base del radar
+    const azimuthDial = engine.createGraduatedDial(0.96, {
+      divisions: 72,
+      title: "AZIMUT",
+      sub: "360°",
+      theme: "dark"
+    });
+    azimuthDial.rotation.x = Math.PI / 2;
+    azimuthDial.position.y = -0.42;
+    radarGroup.add(azimuthDial);
 
     // Pedestal central: El Acto Pedagógico en el Aula Universitaria
     const centerCore = new THREE.Mesh(
@@ -484,15 +571,21 @@ window.Presentation3D_Objects["anim_14"] = {
     centerCore.position.y = -0.22;
     radarGroup.add(centerCore);
 
+    // Escudo institucional UNCo en la cima del núcleo central
+    const seal = engine.createAcademicSeal(0.09);
+    seal.rotation.x = Math.PI / 2;
+    seal.position.y = 0.01;
+    radarGroup.add(seal);
+
     const coreGem = new THREE.Mesh(
       new THREE.SphereGeometry(0.16, 24, 24),
       engine.glassMat(0xffd700, { transmission: 0.9 })
     );
-    coreGem.position.y = 0.12;
+    coreGem.position.y = 0.16;
     radarGroup.add(coreGem);
 
     const labelCenter = engine.createLabelSprite("ACTO EDUCATIVO", "Triangulación Objetiva", "#0f2d59", false);
-    labelCenter.position.set(0, 0.45, 0);
+    labelCenter.position.set(0, 0.48, 0);
     radarGroup.add(labelCenter);
 
     // Cuatro Focos Proyectores a 90° que eliminan ángulos muertos
@@ -508,7 +601,6 @@ window.Presentation3D_Objects["anim_14"] = {
       const x = Math.cos(act.angle) * 0.92;
       const z = Math.sin(act.angle) * 0.92;
 
-      // Cañón proyector de latón
       const spotGroup = new THREE.Group();
       spotGroup.position.set(x, 0.12, z);
       spotGroup.lookAt(0, 0.12, 0);
@@ -520,6 +612,14 @@ window.Presentation3D_Objects["anim_14"] = {
       barrel.rotation.x = Math.PI / 2;
       spotGroup.add(barrel);
 
+      // Micro-anillo de enfoque de orfebrería
+      const focusRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.082, 0.008, 12, 24),
+        engine.brassMat(0xffd700)
+      );
+      focusRing.position.z = 0.06;
+      spotGroup.add(focusRing);
+
       const spotLight = new THREE.PointLight(0x38bdf8, 0.8, 1.4);
       spotLight.position.set(0, 0, 0.12);
       spotGroup.add(spotLight);
@@ -527,7 +627,6 @@ window.Presentation3D_Objects["anim_14"] = {
 
       radarGroup.add(spotGroup);
 
-      // Cono de luz hacia el centro
       const coneCurve = new THREE.LineCurve3(new THREE.Vector3(x, 0.12, z), new THREE.Vector3(0, 0.12, 0));
       const ray = new THREE.Mesh(
         new THREE.TubeGeometry(coneCurve, 12, 0.008, 6, false),
@@ -539,6 +638,18 @@ window.Presentation3D_Objects["anim_14"] = {
       labelAct.position.set(x, 0.42, z);
       radarGroup.add(labelAct);
     });
+
+    // Placa técnica de orfebrería con tornillos en los vértices
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.05,
+      0.22,
+      "ESCÁNER RADAR CIRCULAR 360°",
+      "Mitigación de Sesgos por Triangulación de Perspectivas",
+      ["AUTOEVALUACIÓN • PARES • ESTUDIANTES • GESTIÓN"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.74);
+    g.add(plaqueMaster);
 
     g.add(radarGroup);
     engine.anim14_group = radarGroup;
@@ -556,7 +667,12 @@ window.Presentation3D_Objects["anim_14"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_15"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis inferior de caoba con cantoneras doradas
+    const chassis = engine.createMachinedChassis(1.45, 0.10, 1.45, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
 
     const domeGroup = new THREE.Group();
     domeGroup.position.set(0, -0.05, 0);
@@ -577,6 +693,26 @@ window.Presentation3D_Objects["anim_15"] = {
     const crossZ = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.02, 2.05), engine.brassMat());
     crossZ.position.y = -0.51;
     domeGroup.add(crossZ);
+
+    // Escudo académico UNCo grabado en el corazón del suelo de la cúpula
+    const seal = engine.createAcademicSeal(0.12);
+    seal.rotation.x = Math.PI / 2;
+    seal.position.y = -0.49;
+    domeGroup.add(seal);
+
+    // Micro-placas para los 4 cuadrantes institucionales
+    const quadrants = [
+      { name: "I. NORMATIVO", sub: "Estatuto • CCT", x: 0.52, z: 0.52 },
+      { name: "II. TÉCNICO", sub: "Moodle • Anonimato", x: -0.52, z: 0.52 },
+      { name: "III. CULTURAL", sub: "Confianza Docente", x: -0.52, z: -0.52 },
+      { name: "IV. FORMATIVO", sub: "Capacitación Art. 76", x: 0.52, z: -0.52 }
+    ];
+    quadrants.forEach(q => {
+      const qPlaque = engine.createEngravedPlaque(0.42, 0.14, q.name, q.sub, [], { theme: "dark" });
+      qPlaque.rotation.x = -Math.PI / 2;
+      qPlaque.position.set(q.x, -0.50, q.z);
+      domeGroup.add(qPlaque);
+    });
 
     // Cúpula geodésica protectora de cristal esmerilado (Blindaje de anonimato)
     const domeMesh = new THREE.Mesh(
@@ -603,6 +739,18 @@ window.Presentation3D_Objects["anim_15"] = {
     labelCore.position.set(0, 0.72, 0);
     domeGroup.add(labelCore);
 
+    // Placa maestra de blindaje ético
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.05,
+      0.22,
+      "CÚPULA INSTITUCIONAL DE 4 CUADRANTES",
+      "Blindaje Ético y Anonimato del Acto Evaluativo CURZAS",
+      ["ART. 76 CAPACITACIÓN", "DESACOPLE PUNITIVO TOTAL"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.74);
+    g.add(plaqueMaster);
+
     g.add(domeGroup);
   },
 
@@ -612,3 +760,4 @@ window.Presentation3D_Objects["anim_15"] = {
     }
   }
 };
+

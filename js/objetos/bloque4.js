@@ -14,11 +14,29 @@
 window.Presentation3D_Objects = window.Presentation3D_Objects || {};
 
 // ──────────────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────
 // 16. POLIGOBERNANZA Y CAPACIDADES: Mesa de Cogobierno y Servidor Criptográfico
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_16"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis mecanizado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.50, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa maestra grabada en latón
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "PODER COMPARTIDO Y POLIGOBERNANZA",
+      "Matus • Cao & Blutman • Oszlak (Estado Exponencial)",
+      ["ADUNC GREMIO", "DOCENTES", "ESTUDIANTES", "GESTIÓN"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.74);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
@@ -38,6 +56,12 @@ window.Presentation3D_Objects["anim_16"] = {
     tableRim.position.y = -0.3;
     tableRim.rotation.x = Math.PI / 2;
     group.add(tableRim);
+
+    // Escudo institucional UNCo sobre el tablero de cogobierno
+    const seal = engine.createAcademicSeal(0.18);
+    seal.rotation.x = Math.PI / 2;
+    seal.position.set(0, -0.25, 0.42);
+    group.add(seal);
 
     // Columna central de soporte de la mesa
     const tablePedestal = new THREE.Mesh(
@@ -59,7 +83,6 @@ window.Presentation3D_Objects["anim_16"] = {
       const sx = Math.cos(seat.angle) * 1.02;
       const sz = Math.sin(seat.angle) * 1.02;
 
-      // Asiento / estela de latón
       const chair = new THREE.Mesh(
         new THREE.CylinderGeometry(0.12, 0.14, 0.18, 24),
         engine.brassMat(seat.hex)
@@ -67,7 +90,6 @@ window.Presentation3D_Objects["anim_16"] = {
       chair.position.set(sx, -0.22, sz);
       group.add(chair);
 
-      // Respaldo de mármol
       const back = new THREE.Mesh(
         new THREE.BoxGeometry(0.18, 0.24, 0.04),
         engine.marbleMat(0xffffff)
@@ -76,7 +98,6 @@ window.Presentation3D_Objects["anim_16"] = {
       back.rotation.y = -seat.angle + Math.PI / 2;
       group.add(back);
 
-      // Cartela identificatoria
       const label = engine.createLabelSprite(seat.name, seat.sub, seat.col, false, { x: 0.58, y: 0.17 });
       label.position.set(sx * 1.25, 0.22, sz * 1.25);
       group.add(label);
@@ -90,7 +111,16 @@ window.Presentation3D_Objects["anim_16"] = {
     serverTower.position.y = 0.12;
     group.add(serverTower);
 
-    // Ranuras luminosas de servidores Moodle / SIU
+    // Dial de encriptación tokenizada SHA-256 en el servidor
+    const serverDial = engine.createGraduatedDial(0.18, {
+      divisions: 32,
+      title: "TOKEN",
+      sub: "SHA-256",
+      theme: "dark"
+    });
+    serverDial.position.set(0, 0.12, 0.32);
+    group.add(serverDial);
+
     for (let k = 0; k < 4; k++) {
       const slot = new THREE.Mesh(
         new THREE.BoxGeometry(0.38, 0.025, 0.38),
@@ -100,7 +130,6 @@ window.Presentation3D_Objects["anim_16"] = {
       group.add(slot);
     }
 
-    // Escudo criptográfico superior (candado cibernético de anonimato)
     const cryptoPadlock = new THREE.Mesh(
       new THREE.TorusGeometry(0.12, 0.03, 16, 32, Math.PI),
       engine.brassMat(0xffd700)
@@ -115,7 +144,6 @@ window.Presentation3D_Objects["anim_16"] = {
     cryptoBody.position.set(0, 0.48, 0);
     group.add(cryptoBody);
 
-    // Anillo giratorio de poligobernanza (Matus / Cao & Blutman)
     engine.anim16_polyRing = engine.createBrassArmillaryRing(0.75, 0.012);
     engine.anim16_polyRing.position.y = 0.12;
     engine.anim16_polyRing.rotation.x = Math.PI / 2;
@@ -141,13 +169,30 @@ window.Presentation3D_Objects["anim_16"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_17"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.55);
+    engine.createMuseumPlinth(g, 1.55, 0.22, -1.22);
+
+    // Chasis mecanizado con cantoneras
+    const chassis = engine.createMachinedChassis(1.55, 0.10, 1.55, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica maestra
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "ESTADO DEL ARTE Y VACANCIA REGIONAL",
+      "Inexistencia de Modelos 360° en Universidades Descentralizadas",
+      ["BRECHA METODOLÓGICA IDENTIFICADA"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.78);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
 
     // 1. Podio escalonado de 3 niveles concéntricos (Las 3 escalas de antecedentes)
-    // Nivel 1: Escala Internacional (Base amplia con moldura de latón)
+    // Nivel 1: Escala Internacional
     const base1 = new THREE.Mesh(
       new THREE.CylinderGeometry(1.28, 1.36, 0.22, 48),
       engine.graniteMat(0x1e293b)
@@ -163,11 +208,11 @@ window.Presentation3D_Objects["anim_17"] = {
     rim1.position.y = -0.84;
     group.add(rim1);
 
-    const labelInt = engine.createLabelSprite("1. ESCALA INTERNACIONAL", "México y Cuba (Sifuentes • Obando)", "#0369a1", false, { x: 0.62, y: 0.18 });
-    labelInt.position.set(0, -0.95, 1.48);
-    group.add(labelInt);
+    const plaque1 = engine.createEngravedPlaque(0.82, 0.15, "1. ESCALA INTERNACIONAL", "México y Cuba (Sifuentes • Obando)", [], { theme: "dark" });
+    plaque1.position.set(0, -0.95, 1.40);
+    group.add(plaque1);
 
-    // Nivel 2: Escala Nacional (Intermedia con moldura de latón)
+    // Nivel 2: Escala Nacional
     const base2 = new THREE.Mesh(
       new THREE.CylinderGeometry(0.96, 1.04, 0.22, 48),
       engine.marbleMat(0xf1f5f9)
@@ -183,11 +228,11 @@ window.Presentation3D_Objects["anim_17"] = {
     rim2.position.y = -0.62;
     group.add(rim2);
 
-    const labelNac = engine.createLabelSprite("2. ESCALA NACIONAL", "Carrera Docente (Marquina • Pérez)", "#1d4ed8", false, { x: 0.62, y: 0.18 });
-    labelNac.position.set(0, -0.73, 1.18);
-    group.add(labelNac);
+    const plaque2 = engine.createEngravedPlaque(0.74, 0.15, "2. ESCALA NACIONAL", "Carrera Docente (Marquina • Pérez)", [], { theme: "dark" });
+    plaque2.position.set(0, -0.73, 1.10);
+    group.add(plaque2);
 
-    // Nivel 3: Escala Regional UNCo (Superior con moldura de latón)
+    // Nivel 3: Escala Regional UNCo
     const base3 = new THREE.Mesh(
       new THREE.CylinderGeometry(0.68, 0.76, 0.22, 48),
       engine.brassMat(0xd4af37)
@@ -195,9 +240,20 @@ window.Presentation3D_Objects["anim_17"] = {
     base3.position.y = -0.51;
     group.add(base3);
 
-    const labelReg = engine.createLabelSprite("3. ESCALA REGIONAL UNCo", "Estatuto 2025 • Res. 196/2022", "#b45309", false, { x: 0.62, y: 0.18 });
-    labelReg.position.set(0, -0.51, 0.90);
-    group.add(labelReg);
+    const plaque3 = engine.createEngravedPlaque(0.66, 0.15, "3. ESCALA REGIONAL UNCo", "Estatuto 2025 • Res. 196/2022", [], { theme: "dark" });
+    plaque3.position.set(0, -0.51, 0.82);
+    group.add(plaque3);
+
+    // Dial cronológico de antecedentes en la meseta
+    const timeDial = engine.createGraduatedDial(0.22, {
+      divisions: 36,
+      title: "CRONOLOGÍA",
+      sub: "1995-2026",
+      theme: "gold"
+    });
+    timeDial.position.set(0, -0.38, 0.48);
+    timeDial.rotation.x = -Math.PI * 0.15;
+    group.add(timeDial);
 
     // 2. Pórtico de latón dorado en forma de arco triunfal con basas molduradas
     const archLeft = new THREE.Mesh(
@@ -214,7 +270,6 @@ window.Presentation3D_Objects["anim_17"] = {
     archRight.position.set(0.48, 0.1, 0);
     group.add(archRight);
 
-    // Basas y capiteles moldurados de orfebrería
     [-0.48, 0.48].forEach(x => {
       const colBase = new THREE.Mesh(
         new THREE.CylinderGeometry(0.07, 0.08, 0.06, 24),
@@ -246,7 +301,6 @@ window.Presentation3D_Objects["anim_17"] = {
     engine.anim17_diamond.position.set(0, 0.35, 0);
     group.add(engine.anim17_diamond);
 
-    // Engaste de orfebrería de 4 garras doradas
     for (let c = 0; c < 4; c++) {
       const clawAng = (c * Math.PI) / 2;
       const claw = new THREE.Mesh(
@@ -259,12 +313,10 @@ window.Presentation3D_Objects["anim_17"] = {
       group.add(claw);
     }
 
-    // Luz focalizada que emana del diamante de vacancia
     const gemLight = new THREE.PointLight(0x38bdf8, 2.2, 2.5);
     gemLight.position.set(0, 0.35, 0);
     group.add(gemLight);
 
-    // Anillos armilares concéntricos en contrarrotación
     engine.anim17_ring = engine.createBrassArmillaryRing(0.52, 0.014);
     engine.anim17_ring.position.set(0, 0.35, 0);
     group.add(engine.anim17_ring);
@@ -273,7 +325,6 @@ window.Presentation3D_Objects["anim_17"] = {
     engine.anim17_ring2.position.set(0, 0.35, 0);
     group.add(engine.anim17_ring2);
 
-    // Cartela principal: situada con holgura por encima del arco (sin clipping)
     const mainLabel = engine.createLabelSprite("VACANCIA DISCIPLINAR PATAGÓNICA", "Inexistencia de Estudios 360° en Universidades Descentralizadas", "#0f2d59", true);
     mainLabel.position.set(0, 1.40, 0.08);
     group.add(mainLabel);
@@ -303,12 +354,28 @@ window.Presentation3D_Objects["anim_17"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_18"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis de caoba noble de laboratorio con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.20, { color: 0x2e1204 });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa maestra de rigor metodológico
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "DISEÑO METODOLÓGICO MIXTO INTEGRADO",
+      "Estrategia Secuencial: CUALITATIVO → cuantitativo",
+      ["8 ENTREVISTAS EN PROFUNDIDAD", "45 CUESTIONARIOS LIKERT"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.68);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
 
-    // Soporte de laboratorio académico en caoba y latón
     const standBase = new THREE.Mesh(
       new THREE.BoxGeometry(1.5, 0.08, 0.6),
       engine.graniteMat(0x1e293b)
@@ -323,7 +390,17 @@ window.Presentation3D_Objects["anim_18"] = {
     standRod.position.set(0, 0.05, -0.15);
     group.add(standRod);
 
-    // 1. Probeta CUALITATIVA (Izquierda, predominante 70%, mayor volumen)
+    // Dial de calibración en el soporte vertical
+    const calibDial = engine.createGraduatedDial(0.18, {
+      divisions: 30,
+      title: "CALIBRACIÓN",
+      sub: "TRIANGULACIÓN",
+      theme: "gold"
+    });
+    calibDial.position.set(0, 0.28, -0.12);
+    group.add(calibDial);
+
+    // 1. Probeta CUALITATIVA (Izquierda, predominante 70%)
     const cualFlask = new THREE.Mesh(
       new THREE.CylinderGeometry(0.32, 0.38, 0.85, 32),
       engine.glassMat(0xffffff, { roughness: 0.1, transmission: 0.9, opacity: 0.6 })
@@ -331,7 +408,17 @@ window.Presentation3D_Objects["anim_18"] = {
     cualFlask.position.set(-0.45, -0.15, 0);
     group.add(cualFlask);
 
-    // Fluido azul CUALITATIVO (Sentidos, representaciones y acuerdos)
+    // Marcas graduadas en el tubo cualitativo
+    for (let k = 1; k <= 4; k++) {
+      const ringTick = new THREE.Mesh(
+        new THREE.TorusGeometry(0.31 + k * 0.015, 0.004, 8, 32),
+        engine.brassMat(0xd4af37)
+      );
+      ringTick.rotation.x = Math.PI / 2;
+      ringTick.position.set(-0.45, -0.45 + k * 0.14, 0);
+      group.add(ringTick);
+    }
+
     const cualLiquid = new THREE.Mesh(
       new THREE.CylinderGeometry(0.3, 0.36, 0.65, 32),
       engine.glassMat(0x1d4ed8, { roughness: 0.2, transmission: 0.7, opacity: 0.85 })
@@ -343,7 +430,7 @@ window.Presentation3D_Objects["anim_18"] = {
     labelCual.position.set(-0.55, 0.42, 0);
     group.add(labelCual);
 
-    // 2. Probeta CUANTITATIVA (Derecha, complementaria 30%, menor volumen graduado)
+    // 2. Probeta CUANTITATIVA (Derecha, complementaria 30%)
     const cuanFlask = new THREE.Mesh(
       new THREE.CylinderGeometry(0.2, 0.22, 0.65, 32),
       engine.glassMat(0xffffff, { roughness: 0.1, transmission: 0.9, opacity: 0.6 })
@@ -351,7 +438,17 @@ window.Presentation3D_Objects["anim_18"] = {
     cuanFlask.position.set(0.48, -0.25, 0);
     group.add(cuanFlask);
 
-    // Fluido verde esmeralda CUANTITATIVO (Likert, frecuencias)
+    // Marcas graduadas en el tubo cuantitativo
+    for (let k = 1; k <= 3; k++) {
+      const ringTick = new THREE.Mesh(
+        new THREE.TorusGeometry(0.19 + k * 0.007, 0.003, 8, 32),
+        engine.brassMat(0xd4af37)
+      );
+      ringTick.rotation.x = Math.PI / 2;
+      ringTick.position.set(0.48, -0.50 + k * 0.12, 0);
+      group.add(ringTick);
+    }
+
     const cuanLiquid = new THREE.Mesh(
       new THREE.CylinderGeometry(0.18, 0.2, 0.42, 32),
       engine.glassMat(0x10b981, { roughness: 0.2, transmission: 0.7, opacity: 0.85 })
@@ -363,7 +460,7 @@ window.Presentation3D_Objects["anim_18"] = {
     labelCuan.position.set(0.55, 0.3, 0);
     group.add(labelCuan);
 
-    // 3. Puente de conexión / Tubo de Triangulación Metodológica (CUAL -> cuan)
+    // 3. Puente de conexión / Tubo de Triangulación Metodológica
     const bridgeCurve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(-0.45, 0.28, 0),
       new THREE.Vector3(0.0, 0.58, 0),
@@ -375,7 +472,6 @@ window.Presentation3D_Objects["anim_18"] = {
     );
     group.add(bridgeTube);
 
-    // Esfera luminosa de transferencia que viaja por el tubo
     engine.anim18_flowDot = new THREE.Mesh(
       new THREE.SphereGeometry(0.06, 16, 16),
       new THREE.MeshBasicMaterial({ color: 0xffd700 })
@@ -383,7 +479,7 @@ window.Presentation3D_Objects["anim_18"] = {
     group.add(engine.anim18_flowDot);
     engine.anim18_curve = bridgeCurve;
 
-    // Bitácora abierta de caso situado al frente
+    // Bitácora abierta de caso situado al frente con chapa de latón
     const logBook = new THREE.Mesh(
       new THREE.BoxGeometry(0.48, 0.04, 0.34),
       engine.marbleMat(0xfdfbf7)
@@ -391,6 +487,11 @@ window.Presentation3D_Objects["anim_18"] = {
     logBook.position.set(0, -0.62, 0.22);
     logBook.rotation.x = 0.2;
     group.add(logBook);
+
+    const plaqueLog = engine.createEngravedPlaque(0.42, 0.13, "BITÁCORA DE CASO", "CURZAS - UNCo 2027", [], { theme: "dark" });
+    plaqueLog.position.set(0, -0.59, 0.24);
+    plaqueLog.rotation.x = 0.2;
+    group.add(plaqueLog);
 
     const titleSprite = engine.createLabelSprite("DISEÑO MIXTO: CUAL → cuan", "Estudio de Caso Situado • CURZAS 2027", "#0f2d59", true);
     titleSprite.position.set(0, 0.85, 0);
@@ -413,7 +514,24 @@ window.Presentation3D_Objects["anim_18"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_19"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.55);
+    engine.createMuseumPlinth(g, 1.55, 0.22, -1.22);
+
+    // Chasis maquinado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.55, 0.10, 1.55, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica de representatividad empírica
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "DISEÑO MUESTRAL Y TÉCNICAS EMPÍRICAS",
+      "Muestreo Intencional Riguroso y Factible",
+      ["SATURACIÓN CUALITATIVA", "45 CUESTIONARIOS LIKERT"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.78);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
@@ -433,7 +551,6 @@ window.Presentation3D_Objects["anim_19"] = {
     engine.anim19_busts = [];
     const radiusCual = 1.05;
     informants.forEach((inf, idx) => {
-      // Ángulo de -135° a +45°
       const angle = -Math.PI * 0.75 + (idx / 7) * Math.PI * 0.9;
       const x = Math.cos(angle) * radiusCual;
       const z = Math.sin(angle) * radiusCual;
@@ -441,14 +558,12 @@ window.Presentation3D_Objects["anim_19"] = {
       const bustGroup = new THREE.Group();
       bustGroup.position.set(x, -0.3, z);
 
-      // Pedestal del informante
       const ped = new THREE.Mesh(
         new THREE.CylinderGeometry(0.08, 0.09, 0.28, 16),
         engine.brassMat(inf.col)
       );
       bustGroup.add(ped);
 
-      // Busto / cabeza estilizada de mármol
       const head = new THREE.Mesh(
         new THREE.SphereGeometry(0.075, 16, 16),
         engine.marbleMat(0xf8fafc)
@@ -479,7 +594,7 @@ window.Presentation3D_Objects["anim_19"] = {
     labelCual.position.set(-0.2, 0.25, 0);
     group.add(labelCual);
 
-    // 2. Matriz de 45 esferas luminosas (Sondeo Cuantitativo: 15 docentes + 30 estudiantes)
+    // 2. Matriz de 45 esferas luminosas (Sondeo Cuantitativo)
     const matrixGroup = new THREE.Group();
     matrixGroup.position.set(0.65, -0.3, 0.45);
     engine.anim19_dots = [];
@@ -505,8 +620,18 @@ window.Presentation3D_Objects["anim_19"] = {
     }
     group.add(matrixGroup);
 
+    // Dial de representatividad muestral junto a la matriz
+    const sampleDial = engine.createGraduatedDial(0.22, {
+      divisions: 45,
+      title: "MUESTRA",
+      sub: "N = 53",
+      theme: "dark"
+    });
+    sampleDial.position.set(0.65, -0.05, 0.52);
+    group.add(sampleDial);
+
     const labelCuan = engine.createLabelSprite("45 CUESTIONARIOS LIKERT", "15 Docentes (Amarillo) + 30 Estudiantes (Verde)", "#059669", false, { x: 0.75, y: 0.2 });
-    labelCuan.position.set(0.65, 0.05, 0.45);
+    labelCuan.position.set(0.65, 0.20, 0.45);
     group.add(labelCuan);
 
     const mainTitle = engine.createLabelSprite("DISEÑO MUESTRAL Y TÉCNICAS", "Muestreo Intencional Riguroso y Factible", "#0f2d59", true);
@@ -530,14 +655,30 @@ window.Presentation3D_Objects["anim_19"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_20"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.65);
+    engine.createMuseumPlinth(g, 1.65, 0.22, -1.22);
+
+    // Chasis mecanizado de caoba con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.95, 0.10, 0.70, { color: 0x2e1204 });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa maestra de dimensiones empíricas
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.20,
+      0.22,
+      "MATRIZ DE OPERACIONALIZACIÓN",
+      "5 Dimensiones • Indicadores Empíricos • Fuentes y Técnicas",
+      ["NORMATIVA • TÉCNICA • ORGANIZACIONAL • CULTURAL • GOBERNANZA"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.40);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
 
     const abacusWidth = 1.95;
 
-    // 1. Zócalo y dintel de ábaco neoclásico en caoba y latón biselado
     const abacusBase = new THREE.Mesh(
       new THREE.BoxGeometry(abacusWidth, 0.12, 0.48),
       engine.graniteMat(0x1e293b)
@@ -545,7 +686,6 @@ window.Presentation3D_Objects["anim_20"] = {
     abacusBase.position.y = -0.75;
     group.add(abacusBase);
 
-    // Moldura dorada en la base
     const baseMolding = new THREE.Mesh(
       new THREE.BoxGeometry(abacusWidth * 1.02, 0.024, 0.50),
       engine.brassMat(0xd4af37)
@@ -553,7 +693,6 @@ window.Presentation3D_Objects["anim_20"] = {
     baseMolding.position.y = -0.69;
     group.add(baseMolding);
 
-    // Dintel superior monumental
     const abacusHeader = new THREE.Mesh(
       new THREE.BoxGeometry(abacusWidth, 0.14, 0.48),
       engine.graniteMat(0x1e293b)
@@ -561,7 +700,6 @@ window.Presentation3D_Objects["anim_20"] = {
     abacusHeader.position.y = 0.55;
     group.add(abacusHeader);
 
-    // Moldura dorada en el dintel
     const headerMolding = new THREE.Mesh(
       new THREE.BoxGeometry(abacusWidth * 1.02, 0.024, 0.50),
       engine.brassMat(0xd4af37)
@@ -569,7 +707,6 @@ window.Presentation3D_Objects["anim_20"] = {
     headerMolding.position.y = 0.48;
     group.add(headerMolding);
 
-    // 5 Columnas que representan las 5 Dimensiones de Factibilidad con separación ampliada (0.38)
     const dimensions = [
       { name: "1. NORMATIVA", sub: "Estatuto • CCT", col: "#1d4ed8", hex: 0x1d4ed8, x: -0.76 },
       { name: "2. TÉCNICA", sub: "Moodle • Anonimato", col: "#0284c7", hex: 0x0284c7, x: -0.38 },
@@ -580,7 +717,6 @@ window.Presentation3D_Objects["anim_20"] = {
 
     engine.anim20_discs = [];
     dimensions.forEach((dim, idx) => {
-      // Varilla vertical de latón pulido
       const rod = new THREE.Mesh(
         new THREE.CylinderGeometry(0.020, 0.020, 1.15, 16),
         engine.brassMat(dim.hex)
@@ -588,7 +724,6 @@ window.Presentation3D_Objects["anim_20"] = {
       rod.position.set(dim.x, -0.1, 0);
       group.add(rod);
 
-      // Remate esférico superior de latón
       const finial = new THREE.Mesh(
         new THREE.SphereGeometry(0.038, 16, 16),
         engine.brassMat(0xffd700)
@@ -596,7 +731,16 @@ window.Presentation3D_Objects["anim_20"] = {
       finial.position.set(dim.x, 0.64, 0);
       group.add(finial);
 
-      // 3 Cuentas de cálculo de mármol con anillo dorado central
+      // Micro-dial indicador en el dintel para cada dimensión
+      const mDial = engine.createGraduatedDial(0.11, {
+        divisions: 16,
+        title: `DIM ${idx + 1}`,
+        sub: "100%",
+        theme: "gold"
+      });
+      mDial.position.set(dim.x, 0.55, 0.25);
+      group.add(mDial);
+
       for (let k = 0; k < 3; k++) {
         const beadGroup = new THREE.Group();
         const disc = new THREE.Mesh(
@@ -617,14 +761,12 @@ window.Presentation3D_Objects["anim_20"] = {
         engine.anim20_discs.push({ group: beadGroup, basePosY: -0.46 + k * 0.28, speed: 0.8 + k * 0.4 });
       }
 
-      // Cartela de dimensión: proporcionada y alternada sutilmente en altura (evita colisiones horizontales)
       const isAlt = idx % 2 === 1;
       const labelY = isAlt ? 0.94 : 0.76;
       const label = engine.createLabelSprite(dim.name, dim.sub, dim.col, false, { x: 0.29, y: 0.14 });
       label.position.set(dim.x, labelY, 0.08);
       group.add(label);
 
-      // Conector sutil de latón entre el remate de la varilla y la cartela
       const connLine = new THREE.Mesh(
         new THREE.CylinderGeometry(0.004, 0.004, labelY - 0.64, 8),
         engine.brassMat(0xd4af37)
@@ -633,7 +775,6 @@ window.Presentation3D_Objects["anim_20"] = {
       group.add(connLine);
     });
 
-    // Título monumental de la Matriz: situado cómodamente a 1.38
     const mainTitle = engine.createLabelSprite("MATRIZ DE OPERACIONALIZACIÓN", "5 Dimensiones • Indicadores Empíricos • Fuentes", "#0f2d59", true);
     mainTitle.position.set(0, 1.38, 0.08);
     group.add(mainTitle);
@@ -650,3 +791,4 @@ window.Presentation3D_Objects["anim_20"] = {
     }
   }
 };
+

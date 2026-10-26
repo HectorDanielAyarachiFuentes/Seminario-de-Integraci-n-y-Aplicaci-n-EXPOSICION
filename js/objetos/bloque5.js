@@ -18,17 +18,37 @@ window.Presentation3D_Objects = window.Presentation3D_Objects || {};
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_21"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.45);
+    engine.createMuseumPlinth(g, 1.45, 0.22, -1.22);
+
+    // Chasis mecanizado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.50, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica de cronograma
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "CRONOGRAMA DE ACTIVIDADES 2027",
+      "Plan de Trabajo de 7 Meses Intensivos (Mayo - Noviembre)",
+      ["6 FASES SECUENCIALES", "DEFENSA ORAL 2027"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.74);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
 
-    // Reloj de sol astronómico en la base (Plato graduado con 12 marcas horarias)
-    const dialBase = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.15, 1.2, 0.08, 48),
-      engine.graniteMat(0x1e293b)
-    );
-    dialBase.position.y = -0.8;
+    // Reloj de sol astronómico graduado en la base (Plato de 12 meses / divisiones)
+    const dialBase = engine.createGraduatedDial(1.05, {
+      divisions: 12,
+      title: "AÑO 2027",
+      sub: "7 MESES",
+      theme: "dark"
+    });
+    dialBase.rotation.x = Math.PI / 2;
+    dialBase.position.y = -0.78;
     group.add(dialBase);
 
     // Eje central de latón
@@ -120,7 +140,24 @@ window.Presentation3D_Objects["anim_21"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_22"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.6);
+    engine.createMuseumPlinth(g, 1.6, 0.22, -1.22);
+
+    // Chasis triangular maquinado con cantoneras
+    const chassis = engine.createMachinedChassis(1.60, 0.10, 1.60, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica de viabilidad institucional
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "VIABILIDAD INTEGRAL DEL PROYECTO",
+      "Apartado 9 del TFG • Factibilidad Comprobada",
+      ["RECURSOS HUMANOS", "RECURSOS TÉCNICOS", "COSTO MARGINAL CERO"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.78);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
@@ -142,7 +179,6 @@ window.Presentation3D_Objects["anim_22"] = {
     triBaseTop.receiveShadow = true;
     group.add(triBaseTop);
 
-    // Reborde de latón triangular
     const triRim = new THREE.Mesh(
       new THREE.CylinderGeometry(1.24, 1.24, 0.02, 3),
       engine.brassMat(0xd4af37)
@@ -161,12 +197,16 @@ window.Presentation3D_Objects["anim_22"] = {
       const px = Math.cos(pil.angle) * 0.88;
       const pz = Math.sin(pil.angle) * 0.88;
 
-      // Columna clásica acanalada con capitel corintio/dórico y base ática
       const colMesh = engine.createClassicalColumn(1.08, 0.105, pil.hex, true);
       colMesh.position.set(px, -0.15, pz);
       group.add(colMesh);
 
-      // Cartela nítida de alta resolución sin recorte
+      // Placa técnica de orfebrería al pie de cada columna
+      const pPlaque = engine.createEngravedPlaque(0.68, 0.15, pil.name, pil.sub, [], { theme: "dark" });
+      pPlaque.position.set(px * 1.35, -0.72, pz * 1.35);
+      pPlaque.rotation.y = -pil.angle + Math.PI / 2;
+      group.add(pPlaque);
+
       const label = engine.createLabelSprite(pil.name, pil.sub, pil.col, false);
       label.position.set(px * 1.55, -0.12, pz * 1.55);
       group.add(label);
@@ -180,7 +220,6 @@ window.Presentation3D_Objects["anim_22"] = {
     glassRoof.position.y = 0.44;
     group.add(glassRoof);
 
-    // Abrazaderas de latón en los 3 vértices del cristal
     for (let i = 0; i < 3; i++) {
       const a = (i * 2 * Math.PI) / 3 - Math.PI / 6;
       const cx = Math.cos(a) * 0.98;
@@ -194,7 +233,7 @@ window.Presentation3D_Objects["anim_22"] = {
       group.add(clamp);
     }
 
-    // 4. Medallón oficial central en oro puro: Sello de Aval Departamental y Res. CD-CURZAS
+    // 4. Medallón oficial central en oro puro con Escudo Académico UNCo
     engine.anim22_seal = new THREE.Group();
     engine.anim22_seal.position.set(0, 0.52, 0);
 
@@ -203,6 +242,12 @@ window.Presentation3D_Objects["anim_22"] = {
       engine.goldMat(0xffd700)
     );
     engine.anim22_seal.add(sealDisc);
+
+    // Escudo institucional UNCo en el corazón del medallón
+    const sealUNCo = engine.createAcademicSeal(0.24);
+    sealUNCo.rotation.x = Math.PI / 2;
+    sealUNCo.position.y = 0.03;
+    engine.anim22_seal.add(sealUNCo);
 
     const sealWreath = new THREE.Mesh(
       new THREE.TorusGeometry(0.28, 0.02, 16, 48),
@@ -213,12 +258,10 @@ window.Presentation3D_Objects["anim_22"] = {
 
     group.add(engine.anim22_seal);
 
-    // Foco de luz dorada emanando del sello institucional
     const sealLight = new THREE.PointLight(0xffd700, 1.5, 2.2);
     sealLight.position.set(0, 0.65, 0);
     group.add(sealLight);
 
-    // Título monumental nítido superior
     const mainTitle = engine.createLabelSprite(
       "VIABILIDAD INTEGRAL DEL PROYECTO",
       "Apartado 9 del TFG • Costo Marginal Cero • Avales",
@@ -243,7 +286,24 @@ window.Presentation3D_Objects["anim_22"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_23"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.5);
+    engine.createMuseumPlinth(g, 1.5, 0.22, -1.22);
+
+    // Chasis de caoba noble acorazado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.20, { color: 0x2e1204 });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica de blindaje legal
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "BLINDAJE ÉTICO Y LEGAL INSTITUCIONAL",
+      "Ley 25.326 de Protección de Datos • CCT Dec. 1246/2015",
+      ["DISOCIACIÓN ESTRICTA", "INMUNIDAD LABORAL ART. 75"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.68);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
@@ -258,14 +318,22 @@ window.Presentation3D_Objects["anim_23"] = {
     );
     chestGroup.add(chestBody);
 
-    // Cantoneras de latón reforzadas
     const chestBands = new THREE.Mesh(
       new THREE.BoxGeometry(0.67, 0.47, 0.12),
       engine.brassMat(0xd4af37)
     );
     chestGroup.add(chestBands);
 
-    // Candado cibernético con luz cian en el cofre
+    // Dial de combinación numérica de precisión en el cofre
+    const lockDial = engine.createGraduatedDial(0.12, {
+      divisions: 40,
+      title: "LEY 25326",
+      sub: "ANÓNIMO",
+      theme: "gold"
+    });
+    lockDial.position.set(0, 0.05, 0.25);
+    chestGroup.add(lockDial);
+
     const lockRing = new THREE.Mesh(
       new THREE.TorusGeometry(0.08, 0.025, 16, 24, Math.PI),
       engine.brassMat(0xffd700)
@@ -298,7 +366,6 @@ window.Presentation3D_Objects["anim_23"] = {
     scrollPaper.rotation.z = -0.3;
     scrollGroup.add(scrollPaper);
 
-    // Sello lacrado en cera roja de no afectación laboral
     const waxSeal = new THREE.Mesh(
       new THREE.CylinderGeometry(0.08, 0.08, 0.03, 24),
       new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.4 })
@@ -307,13 +374,18 @@ window.Presentation3D_Objects["anim_23"] = {
     waxSeal.rotation.x = Math.PI / 2;
     scrollGroup.add(waxSeal);
 
+    // Placa técnica de inmunidad gremial
+    const scrollPlaque = engine.createEngravedPlaque(0.44, 0.13, "CCT DEC. 1246/15", "Garantía de No Afectación", [], { theme: "dark" });
+    scrollPlaque.position.set(0, -0.22, 0.25);
+    scrollGroup.add(scrollPlaque);
+
     group.add(scrollGroup);
 
     const labelPergamino = engine.createLabelSprite("GARANTÍA DE NO AFECTACIÓN", "Sin Injerencia en Permanencia (Art. 75)", "#dc2626", false, { x: 0.68, y: 0.19 });
     labelPergamino.position.set(0.48, 0.32, 0);
     group.add(labelPergamino);
 
-    // Balanza ética suspendida en el centro superior
+    // Balanza ética suspendida en el centro superior con dial de pivote
     engine.anim23_scale = new THREE.Group();
     engine.anim23_scale.position.set(0, 0.45, 0);
 
@@ -323,6 +395,15 @@ window.Presentation3D_Objects["anim_23"] = {
     );
     scaleBeam.rotation.z = Math.PI / 2;
     engine.anim23_scale.add(scaleBeam);
+
+    const balanceDial = engine.createGraduatedDial(0.12, {
+      divisions: 20,
+      title: "EQUIDAD",
+      sub: "ÉTICA",
+      theme: "gold"
+    });
+    balanceDial.position.set(0, 0, 0.04);
+    engine.anim23_scale.add(balanceDial);
 
     group.add(engine.anim23_scale);
 
@@ -345,10 +426,38 @@ window.Presentation3D_Objects["anim_23"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_24"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.5);
+    engine.createMuseumPlinth(g, 1.5, 0.22, -1.22);
+
+    // Chasis octogonal maquinado con cantoneras de latón
+    const chassis = engine.createMachinedChassis(1.50, 0.10, 1.50, { color: 0x1e293b });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa técnica de valor público
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.10,
+      0.22,
+      "VALOR PÚBLICO Y MODERNIZACIÓN",
+      "Hacia una Universidad Formativa, Situada y Democrática",
+      ["CURZAS • UNIVERSIDAD NACIONAL DEL COMAHUE"],
+      { theme: "dark" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.74);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
+
+    // Dial azimutal circular graduado en la base del faro
+    const baseDial = engine.createGraduatedDial(0.68, {
+      divisions: 36,
+      title: "RUMBO",
+      sub: "PATAGONIA",
+      theme: "dark"
+    });
+    baseDial.rotation.x = Math.PI / 2;
+    baseDial.position.y = -0.72;
+    group.add(baseDial);
 
     // Torre del faro de mármol blanco de base hexagonal y fuste cónico
     const towerShaft = new THREE.Mesh(
@@ -358,7 +467,11 @@ window.Presentation3D_Objects["anim_24"] = {
     towerShaft.position.y = -0.15;
     group.add(towerShaft);
 
-    // Moldura de balcón y barandilla de latón
+    // Escudo institucional UNCo sobre la puerta del faro
+    const seal = engine.createAcademicSeal(0.10);
+    seal.position.set(0, -0.38, 0.40);
+    group.add(seal);
+
     const balcony = new THREE.Mesh(
       new THREE.CylinderGeometry(0.38, 0.38, 0.06, 24),
       engine.brassMat(0xd4af37)
@@ -366,7 +479,6 @@ window.Presentation3D_Objects["anim_24"] = {
     balcony.position.y = 0.58;
     group.add(balcony);
 
-    // Linterna acristalada del faro
     const lantern = new THREE.Mesh(
       new THREE.CylinderGeometry(0.28, 0.28, 0.38, 16),
       engine.glassMat(0xffffff, { roughness: 0.1, transmission: 0.92, opacity: 0.5 })
@@ -374,7 +486,6 @@ window.Presentation3D_Objects["anim_24"] = {
     lantern.position.y = 0.78;
     group.add(lantern);
 
-    // Cúpula superior de bronce con aguja
     const dome = new THREE.Mesh(
       new THREE.SphereGeometry(0.3, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2),
       engine.brassMat(0xffd700)
@@ -382,7 +493,6 @@ window.Presentation3D_Objects["anim_24"] = {
     dome.position.y = 0.97;
     group.add(dome);
 
-    // Núcleo luminiscente del faro y doble haz cónico giratorio
     engine.anim24_beaconGroup = new THREE.Group();
     engine.anim24_beaconGroup.position.set(0, 0.78, 0);
 
@@ -395,7 +505,6 @@ window.Presentation3D_Objects["anim_24"] = {
     const beamLight = new THREE.PointLight(0xffd700, 2.5, 4.0);
     engine.anim24_beaconGroup.add(beamLight);
 
-    // Cono de haz de luz hacia el frente y posterior
     const beamCone1 = new THREE.Mesh(
       new THREE.ConeGeometry(0.55, 1.8, 24, 1, true),
       engine.glassMat(0xffd700, { roughness: 0.4, transmission: 0.85, opacity: 0.25 })
@@ -449,12 +558,28 @@ window.Presentation3D_Objects["anim_24"] = {
 // ──────────────────────────────────────────────────────────────────────────
 window.Presentation3D_Objects["anim_25"] = {
   build(engine, g) {
-    engine.createMuseumPlinth(g, 1.6);
+    engine.createMuseumPlinth(g, 1.6, 0.22, -1.22);
+
+    // Chasis ceremonial de caoba noble con cantoneras de oro
+    const chassis = engine.createMachinedChassis(1.60, 0.10, 1.60, { color: 0x2e1204 });
+    chassis.position.y = -0.92;
+    g.add(chassis);
+
+    // Placa de oro maestro conmemorativa
+    const plaqueMaster = engine.createEngravedPlaque(
+      1.20,
+      0.24,
+      "UNIVERSIDAD NACIONAL DEL COMAHUE",
+      "Centro Universitario Regional Zona Atlántica (CURZAS)",
+      ["DECRETO 1246/2015", "TESINA DE LICENCIATURA 2026-2027"],
+      { theme: "gold" }
+    );
+    plaqueMaster.position.set(0, -0.84, 0.82);
+    g.add(plaqueMaster);
 
     const group = new THREE.Group();
     group.position.set(0, -0.05, 0);
 
-    // Podio ceremonial escalonado de mármol negro y zócalo dorado
     const podBase = new THREE.Mesh(
       new THREE.CylinderGeometry(1.35, 1.45, 0.18, 48),
       engine.graniteMat(0x0f172a)
@@ -473,20 +598,17 @@ window.Presentation3D_Objects["anim_25"] = {
     medalDisc.rotation.x = Math.PI / 2;
     engine.anim25_medal.add(medalDisc);
 
-    // Corona de laureles entrelazada en bajorrelieve
+    // Gran Escudo Académico Institucional de la Universidad Nacional del Comahue en el centro
+    const seal = engine.createAcademicSeal(0.36);
+    seal.rotation.x = Math.PI / 2;
+    seal.position.set(0, 0.06, 0);
+    engine.anim25_medal.add(seal);
+
     const wreath = new THREE.Mesh(
       new THREE.TorusGeometry(0.78, 0.035, 16, 64),
       engine.brassMat(0xd4af37)
     );
     engine.anim25_medal.add(wreath);
-
-    // Blasón central de mármol marfil con estrella náutica
-    const medalCore = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.5, 0.5, 0.1, 32),
-      engine.marbleMat(0xfdfbf7)
-    );
-    medalCore.rotation.x = Math.PI / 2;
-    engine.anim25_medal.add(medalCore);
 
     group.add(engine.anim25_medal);
 
@@ -506,7 +628,6 @@ window.Presentation3D_Objects["anim_25"] = {
       urnBowl.position.set(posX, 0.08, -0.1);
       group.add(urnBowl);
 
-      // Llama votiva simbólica de cristal ámbar (Educación Pública)
       const flame = new THREE.Mesh(
         new THREE.ConeGeometry(0.09, 0.24, 16),
         new THREE.MeshStandardMaterial({
@@ -538,6 +659,29 @@ window.Presentation3D_Objects["anim_25"] = {
     lecternShelf.rotation.x = 0.35;
     lecternGroup.add(lecternShelf);
 
+    // Tomo de tesina ceremonial abierto sobre el atril (Compañero de la slide 1)
+    const bookDesk = new THREE.Group();
+    bookDesk.position.set(0, 0.38, 0.05);
+    bookDesk.rotation.x = 0.35;
+
+    const bookCover = new THREE.Mesh(
+      new THREE.BoxGeometry(0.50, 0.02, 0.36),
+      engine.graniteMat(0x4a0e17)
+    );
+    bookDesk.add(bookCover);
+
+    const bookPages = new THREE.Mesh(
+      new THREE.BoxGeometry(0.48, 0.035, 0.34),
+      engine.marbleMat(0xfdfbf7)
+    );
+    bookPages.position.y = 0.025;
+    bookDesk.add(bookPages);
+
+    const lecternPlaque = engine.createEngravedPlaque(0.42, 0.12, "DEFENSA DE TESINA", "Héctor Daniel Ayarachi Fuentes", [], { theme: "dark" });
+    lecternPlaque.position.set(0, 0.05, 0.12);
+    bookDesk.add(lecternPlaque);
+
+    lecternGroup.add(bookDesk);
     group.add(lecternGroup);
 
     // Cartelas de honor al Tribunal Evaluador y Despedida
@@ -569,3 +713,4 @@ window.Presentation3D_Objects["anim_25"] = {
     }
   }
 };
+
