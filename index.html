@@ -82,6 +82,31 @@
         <footer class="slide-footer-meta" id="slide-footer-meta"></footer>
       </article>
 
+      <!-- Panel Muestra de Anatomy-Kit para Filmina 1 (y comparativa en vivo) -->
+      <aside class="anatomy-widget-panel" id="anatomy-widget-panel" aria-label="Muestra Anatomy-Kit">
+        <div class="anatomy-widget-header">
+          <div class="anatomy-widget-title-group">
+            <span class="anatomy-pill-tag">📐 MUESTRA ANATOMY-KIT</span>
+            <span class="anatomy-pill-sub">SVG Isométrico 3D</span>
+          </div>
+          <div class="anatomy-widget-actions">
+            <button id="btn-anatomy-turntable" class="btn-anatomy-tool" title="Iniciar/Pausar Auto-Giro continuo en 360°">▶ Auto-Girar</button>
+            <button id="btn-anatomy-rot-left" class="btn-anatomy-tool" title="Girar 45° a la izquierda">⟲ 45°</button>
+            <button id="btn-anatomy-rot-right" class="btn-anatomy-tool" title="Girar 45° a la derecha">⟳ 45°</button>
+            <button id="btn-anatomy-reset" class="btn-anatomy-tool" title="Centrar y restablecer rotación/zoom">⌂ Centrar</button>
+            <button id="btn-toggle-anatomy-theme" class="btn-anatomy-tool" title="Alternar tema Claro / Oscuro">🌓 Tema</button>
+            <button id="btn-toggle-anatomy-mode" class="btn-anatomy-tool" title="Comparar con vista Three.js 3D">🔄 Ver 3D</button>
+            <a href="anatomy-kit/examples/tfg-lectern/tfg-lectern-light.html" target="_blank" class="btn-anatomy-tool" title="Abrir en pestaña completa">↗ Completo</a>
+          </div>
+        </div>
+        <div class="anatomy-iframe-wrapper">
+          <iframe id="anatomy-iframe" src="anatomy-kit/examples/tfg-lectern/embed.html" title="Atril de Tesina — Anatomy-Kit"></iframe>
+        </div>
+        <div class="anatomy-widget-footer">
+          <span>🖐️ <strong>Interacción 3D:</strong> Arrastra para <strong>rotar 360°</strong> e inclinar • Rueda para <strong>Zoom</strong> • Clic derecho para <strong>Mover</strong> • Clic en tomo para hojear</span>
+        </div>
+      </aside>
+
       <!-- Botón flotante para restaurar filmina en celulares cuando se explora el modelo 3D -->
       <button class="btn-floating-card-toggle" id="btn-floating-card-toggle" aria-label="Volver a la filmina">
         <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.35rem;">

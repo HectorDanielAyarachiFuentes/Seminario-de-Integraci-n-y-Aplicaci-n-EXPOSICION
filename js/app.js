@@ -136,13 +136,22 @@ class PresentationApp {
     this.btnSvgNewTab = document.getElementById("btn-svg-newtab");
 
     // Estado de Zoom y Desplazamiento (Pan) del SVG
-    this.svgZoom = 1.0;
-    this.svgPanX = 0;
-    this.svgPanY = 0;
     this.isSvgDragging = false;
     this.svgDragStartX = 0;
     this.svgDragStartY = 0;
     this.isSvgMaximized = false;
+
+    // Widget de Muestra Anatomy-Kit para Filmina 1
+    this.anatomyWidget = document.getElementById("anatomy-widget-panel");
+    this.anatomyIframe = document.getElementById("anatomy-iframe");
+    this.btnAnatomyTurntable = document.getElementById("btn-anatomy-turntable");
+    this.btnAnatomyRotLeft = document.getElementById("btn-anatomy-rot-left");
+    this.btnAnatomyRotRight = document.getElementById("btn-anatomy-rot-right");
+    this.btnAnatomyReset = document.getElementById("btn-anatomy-reset");
+    this.btnToggleAnatomyTheme = document.getElementById("btn-toggle-anatomy-theme");
+    this.btnToggleAnatomyMode = document.getElementById("btn-toggle-anatomy-mode");
+    this.anatomyTheme = "light";
+    this.showingAnatomySample = true;
   }
 
   bindEvents() {
@@ -395,7 +404,79 @@ class PresentationApp {
         this.toggleShortcuts(false);
       }
     });
+
+    // Controles de la Muestra Anatomy-Kit (Filmina 1)
+    if (this.btnAnatomyTurntable) {
+      this.btnAnatomyTurntable.addEventListener("click", () => {
+        if (this.anatomyIframe && this.anatomyIframe.contentWindow) {
+          this.anatomyIframe.contentWindow.postMessage({ type: "toggle-turntable" }, "*");
+        }
+      });
+    }
+
+    if (this.btnAnatomyRotLeft) {
+      this.btnAnatomyRotLeft.addEventListener("click", () => {
+        if (this.anatomyIframe && this.anatomyIframe.contentWindow) {
+          this.anatomyIframe.contentWindow.postMessage({ type: "rotate", delta: 45 }, "*");
+        }
+      });
+    }
+
+    if (this.btnAnatomyRotRight) {
+      this.btnAnatomyRotRight.addEventListener("click", () => {
+        if (this.anatomyIframe && this.anatomyIframe.contentWindow) {
+          this.anatomyIframe.contentWindow.postMessage({ type: "rotate", delta: -45 }, "*");
+        }
+      });
+    }
+
+    if (this.btnAnatomyReset) {
+      this.btnAnatomyReset.addEventListener("click", () => {
+        if (this.anatomyIframe && this.anatomyIframe.contentWindow) {
+          this.anatomyIframe.contentWindow.postMessage({ type: "reset" }, "*");
+        }
+      });
+    }
+
+    if (this.btnToggleAnatomyTheme) {
+      this.btnToggleAnatomyTheme.addEventListener("click", () => {
+        this.anatomyTheme = this.anatomyTheme === "light" ? "dark" : "light";
+        if (this.anatomyIframe && this.anatomyIframe.contentWindow) {
+          this.anatomyIframe.contentWindow.postMessage({ type: "set-theme", theme: this.anatomyTheme }, "*");
+        }
+      });
+    }
+
+    if (this.btnToggleAnatomyMode) {
+      this.btnToggleAnatomyMode.addEventListener("click", () => {
+        this.showingAnatomySample = !this.showingAnatomySample;
+        this.updateAnatomyWidgetState();
+      });
+    }
   }
+
+  updateAnatomyWidgetState() {
+    if (this.currentSlideIndex === 0 && this.showingAnatomySample) {
+      if (this.anatomyWidget) {
+        this.anatomyWidget.classList.add("visible");
+      }
+      document.body.classList.add("anatomy-active-slide");
+      if (this.btnToggleAnatomyMode) {
+        this.btnToggleAnatomyMode.textContent = "🔄 Ver 3D";
+        this.btnToggleAnatomyMode.classList.remove("active-mode");
+      }
+    } else {
+      if (this.anatomyWidget) {
+        this.anatomyWidget.classList.remove("visible");
+      }
+      document.body.classList.remove("anatomy-active-slide");
+      if (this.btnToggleAnatomyMode) {
+        this.btnToggleAnatomyMode.textContent = "🔄 Ver Anatomy-Kit";
+        this.btnToggleAnatomyMode.classList.add("active-mode");
+      }
+    }
+  }
+
 
   renderStationsIndicator() {
     this.stationsContainer.innerHTML = "";
@@ -466,6 +547,9 @@ class PresentationApp {
   renderSlide(index, direction = 1) {
     const slide = this.data.slides[index];
     if (!slide) return;
+
+    this.currentSlideIndex = index;
+    this.updateAnatomyWidgetState();
 
     // Actualizar visibilidad de HUD de red territorial (visible en mapa de territorio y red híbrida anim_06 / anim_07)
     const nodePill = document.getElementById("node-radar-pill");
