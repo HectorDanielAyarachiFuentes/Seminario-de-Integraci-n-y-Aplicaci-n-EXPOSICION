@@ -115,7 +115,14 @@ async function main() {
     console.error(`capture: ${problem}`);
     process.exit(1);
   }
-  const url = /^https?:|^file:/.test(options.target) ? options.target : pathToFileURL(resolve(options.target)).href;
+  let targetPath = options.target;
+  let targetQuery = "";
+  const qIdx = targetPath.indexOf("?");
+  if (qIdx !== -1) {
+    targetQuery = targetPath.slice(qIdx);
+    targetPath = targetPath.slice(0, qIdx);
+  }
+  const url = /^https?:|^file:/.test(targetPath) ? options.target : pathToFileURL(resolve(targetPath)).href + targetQuery;
   const out = resolve(options.out ?? "capture.png");
   const binary = chromePath();
   if (!binary) {

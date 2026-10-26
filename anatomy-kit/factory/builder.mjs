@@ -6,6 +6,7 @@
 import * as k from "../kit/iso-kit.mjs";
 import { kitScript } from "../scripts/inline-kit.mjs";
 import { FACTORY_CSS, PIECES_CLIENT_CODE } from "./pieces.mjs";
+import { SLIDE_ARTIFACTS_CLIENT_CODE } from "./slide-artifacts.mjs";
 
 export function ensamblarEscena({
   title = "Pieza Isométrica 3D",
@@ -199,6 +200,56 @@ function renderLocalBox(x0, x1, y0, y1, z0, z1, toWorldFn, P, view, light, optio
 }
 
 ${PIECES_CLIENT_CODE}
+${SLIDE_ARTIFACTS_CLIENT_CODE}
+
+let currentSlide = 1;
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  const slideVal = urlParams.get("slide");
+  if (slideVal !== null) {
+    const param = parseInt(slideVal, 10);
+    if (!isNaN(param) && param >= 1 && param <= 25) currentSlide = param;
+  }
+} catch (e) {}
+
+const SLIDE_TITLES = {
+  1: "Atril de Tesina · CURZAS UNCo",
+  2: "Perfil del Autor · Héctor Ayarachi",
+  3: "TP 2 · El Objeto Problema",
+  4: "TP 3 · Marco Teórico y Antecedentes",
+  5: "TP 4 · Metodología y Viabilidad",
+  6: "Sede Viedma y los 10 Nodos",
+  7: "Mediaciones Tecnológicas (Res. 196)",
+  8: "Desnaturalización del Objeto",
+  9: "Tensión: Permanencia vs Capacitación",
+  10: "Pregunta y 5 Ejes de Factibilidad",
+  11: "Matriz de Objetivos del TFG",
+  12: "Modelo de Francisco Longo",
+  13: "Subsistemas de Gestión de RRHH",
+  14: "Dispositivo de Retroalimentación 360°",
+  15: "Arquitectura Circular 360° CURZAS",
+  16: "Poligobernanza y Poder Compartido",
+  17: "Estado del Arte y Vacancia",
+  18: "Estrategia Mixta (CUAL-cuan)",
+  19: "Población y Muestreo Situado",
+  20: "Matriz de Operacionalización",
+  21: "Procedimiento y Cronograma 2027",
+  22: "Viabilidad Integral y Avales",
+  23: "Blindaje Ético y Confidencialidad",
+  24: "Síntesis y Valor Público",
+  25: "Agradecimientos y Cierre"
+};
+
+const figCorner = document.querySelector('[data-corner="fig"]');
+const titleCorner = document.querySelector('[data-corner="title"]');
+
+function updateSlideHeaders() {
+  if (figCorner) figCorner.textContent = "Fig " + currentSlide;
+  if (titleCorner && SLIDE_TITLES[currentSlide]) {
+    titleCorner.textContent = SLIDE_TITLES[currentSlide];
+  }
+}
+updateSlideHeaders();
 
 const renderBase = ${renderBaseFn ? `(${renderBaseFn.toString()})` : "() => ''"};
 const renderSupport = ${renderSupportFn ? `(${renderSupportFn.toString()})` : "() => ''"};
@@ -273,11 +324,18 @@ function renderFrame() {
     baseGroup.innerHTML = renderBase(P);
   }
   if (pedestalGroup) {
-    pedestalGroup.innerHTML = renderSupport(P, currentTilt);
+    pedestalGroup.innerHTML = (currentSlide === 1 && typeof renderSupport === "function")
+      ? renderSupport(P, currentTilt)
+      : "";
   }
   if (deskGroup) {
-    const deskHtml = renderDesk(currentTilt, P, view, light) || "";
-    const subjectHtml = renderSubject(currentTilt, pageFlip, P, view, light) || "";
+    const deskHtml = (currentSlide === 1 && typeof renderDesk === "function")
+      ? renderDesk(currentTilt, P, view, light)
+      : "";
+    const activeSubjectFn = (typeof SLIDE_ARTIFACTS !== "undefined" && SLIDE_ARTIFACTS[currentSlide])
+      ? SLIDE_ARTIFACTS[currentSlide]
+      : renderSubject;
+    const subjectHtml = activeSubjectFn ? (activeSubjectFn(currentTilt, pageFlip, P, view, light) || "") : "";
     deskGroup.innerHTML = deskHtml + subjectHtml;
   }
   updateReadout();
@@ -495,6 +553,14 @@ window.addEventListener("message", (e) => {
     wake();
     targetZoomScale = Math.max(0.65, Math.min(2.2, targetZoomScale * (e.data.delta > 0 ? 1.2 : 0.8)));
     run();
+  } else if (e.data.type === "set-slide") {
+    const num = Number(e.data.slideNumber || e.data.slideIndex || 1);
+    if (typeof SLIDE_ARTIFACTS !== "undefined" && SLIDE_ARTIFACTS[num]) {
+      currentSlide = num;
+      updateSlideHeaders();
+      wake();
+      run();
+    }
   }
 });
 `;
