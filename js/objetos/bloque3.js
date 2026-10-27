@@ -616,7 +616,8 @@ window.Presentation3D_Objects["anim_14"] = {
       ["AUTOEVALUACIÓN • PARES • ESTUDIANTES • GESTIÓN"],
       { theme: "dark" }
     );
-    plaqueMaster.position.set(0, -0.84, 0.74);
+    plaqueMaster.position.set(0, -0.72, 0.78);
+    plaqueMaster.rotation.x = -0.15;
     g.add(plaqueMaster);
 
     g.add(radarGroup);

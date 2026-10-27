@@ -68,6 +68,7 @@ class PresentationApp {
     this.renderStationsIndicator();
     this.renderSlide(0);
     this.populateDrawerContent();
+    this.renderSlidesIndex();
   }
 
   initDOMElements() {
@@ -80,6 +81,11 @@ class PresentationApp {
     this.footerMetaElement = document.getElementById("slide-footer-meta");
 
     this.slideCounter = document.getElementById("slide-counter");
+    this.slideCounterBadge = document.getElementById("slide-counter-badge");
+    this.slidesIndexPanel = document.getElementById("slides-index-panel");
+    this.slidesIndexBackdrop = document.getElementById("slides-index-backdrop");
+    this.slidesIndexBody = document.getElementById("slides-index-body");
+    this.btnCloseSlidesIndex = document.getElementById("btn-close-slides-index");
 
     this.timerDisplay = document.getElementById("timer-display");
     this.btnTimerToggle = document.getElementById("btn-timer-toggle");
@@ -183,6 +189,17 @@ class PresentationApp {
     }
     if (this.shortcutsBackdrop) {
       this.shortcutsBackdrop.addEventListener("click", () => this.toggleShortcuts(false));
+    }
+
+    // Modal Índice Canónico de los 3 Grandes Ejes
+    if (this.slideCounterBadge) {
+      this.slideCounterBadge.addEventListener("click", () => this.toggleSlidesIndex());
+    }
+    if (this.btnCloseSlidesIndex) {
+      this.btnCloseSlidesIndex.addEventListener("click", () => this.toggleSlidesIndex(false));
+    }
+    if (this.slidesIndexBackdrop) {
+      this.slidesIndexBackdrop.addEventListener("click", () => this.toggleSlidesIndex(false));
     }
 
     // Toggle de filmina / escultura 3D en dispositivos móviles y tablets
@@ -384,6 +401,8 @@ class PresentationApp {
         this.toggleTimer();
       } else if (e.key.toLowerCase() === "f") {
         this.toggleFullscreen();
+      } else if (e.key.toLowerCase() === "i") {
+        this.toggleSlidesIndex();
       } else if (e.key === "?" || (e.shiftKey && e.key === "/")) {
         this.toggleShortcuts();
       } else if (e.key === "Escape") {
@@ -391,23 +410,167 @@ class PresentationApp {
         this.toggleNotes(false);
         this.toggleDrawer(false);
         this.toggleShortcuts(false);
+        this.toggleSlidesIndex(false);
       }
     });
 
   }
 
 
+  getDefenseSections() {
+    return [
+      {
+        id: "apertura",
+        code: "APERTURA",
+        shortLabel: "Apertura",
+        title: "Apertura Institucional y Hoja de Ruta",
+        range: [0, 4], // filminas 1 a 5
+        isEje: false
+      },
+      {
+        id: "eje1",
+        code: "EJE I",
+        shortLabel: "Eje I: Objeto Problema",
+        title: "EJE I (Tiempo 1): El Objeto Problema, Territorio y Objetivos",
+        range: [5, 10], // filminas 6 a 11
+        isEje: true,
+        ejeNumber: 1
+      },
+      {
+        id: "eje2",
+        code: "EJE II",
+        shortLabel: "Eje II: Marco Teórico",
+        title: "EJE II (Tiempo 2): Marco Teórico Sustantivo y Modelo 360°",
+        range: [11, 16], // filminas 12 a 17
+        isEje: true,
+        ejeNumber: 2
+      },
+      {
+        id: "eje3",
+        code: "EJE III",
+        shortLabel: "Eje III: Metodología",
+        title: "EJE III (Tiempo 3): Metodología Mixta y Factibilidad",
+        range: [17, 22], // filminas 18 a 23
+        isEje: true,
+        ejeNumber: 3
+      },
+      {
+        id: "cierre",
+        code: "CIERRE",
+        shortLabel: "Cierre y Defensa",
+        title: "Cierre: Síntesis de Factibilidad y Tribunal Evaluador",
+        range: [23, 24], // filminas 24 y 25
+        isEje: false
+      }
+    ];
+  }
+
   renderStationsIndicator() {
+    if (!this.stationsContainer) return;
     this.stationsContainer.innerHTML = "";
-    for (let i = 0; i < this.totalSlides; i++) {
-      const dot = document.createElement("div");
-      dot.className = `station-dot ${i === 0 ? "active" : ""}`;
-      const tooltipText = `Filmina ${i + 1}: ${this.data.slides[i].esquema}`;
-      dot.setAttribute("data-tooltip", tooltipText);
-      dot.setAttribute("data-slide-index", i + 1);
-      dot.setAttribute("aria-label", `Ir a ${tooltipText}`);
-      dot.addEventListener("click", () => this.goToSlide(i));
-      this.stationsContainer.appendChild(dot);
+    const sections = this.getDefenseSections();
+
+    sections.forEach((sec, sIdx) => {
+      if (sIdx > 0) {
+        const divider = document.createElement("div");
+        divider.className = "station-group-divider";
+        divider.setAttribute("aria-hidden", "true");
+        this.stationsContainer.appendChild(divider);
+      }
+
+      const groupEl = document.createElement("div");
+      groupEl.className = `station-group ${sec.isEje ? "station-group-eje" : ""}`;
+      groupEl.setAttribute("data-section", sec.id);
+      groupEl.setAttribute("title", sec.title);
+
+      for (let i = sec.range[0]; i <= sec.range[1]; i++) {
+        const slide = this.data.slides[i];
+        const dot = document.createElement("button");
+        dot.className = `station-dot ${i === this.currentSlideIndex ? "active" : ""}`;
+        dot.setAttribute("data-slide-index", i + 1);
+        const tooltipText = `[${sec.code} • F${i + 1}] ${slide.esquema}`;
+        dot.setAttribute("data-tooltip", tooltipText);
+        dot.setAttribute("aria-label", `Ir a ${tooltipText}`);
+
+        dot.innerHTML = `
+          <span class="station-dot-hitbox" aria-hidden="true"></span>
+          <span class="station-dot-core" aria-hidden="true"></span>
+        `;
+
+        dot.addEventListener("click", () => this.goToSlide(i));
+        groupEl.appendChild(dot);
+      }
+
+      this.stationsContainer.appendChild(groupEl);
+    });
+  }
+
+  renderSlidesIndex() {
+    if (!this.slidesIndexBody) return;
+    this.slidesIndexBody.innerHTML = "";
+    const sections = this.getDefenseSections();
+
+    sections.forEach((sec) => {
+      const card = document.createElement("div");
+      const isEjeActive = this.currentSlideIndex >= sec.range[0] && this.currentSlideIndex <= sec.range[1];
+      card.className = `index-section-card ${sec.isEje ? "section-eje" : ""} ${isEjeActive ? "active-eje" : ""}`;
+
+      const count = sec.range[1] - sec.range[0] + 1;
+      card.innerHTML = `
+        <div class="index-section-header">
+          <span class="index-section-badge ${sec.isEje ? "badge-eje" : ""}">${sec.code}</span>
+          <h4 class="index-section-title">${sec.title}</h4>
+          <span class="index-section-count">${count} filmina${count > 1 ? "s" : ""}</span>
+        </div>
+      `;
+
+      const grid = document.createElement("div");
+      grid.className = "index-slide-grid";
+
+      for (let i = sec.range[0]; i <= sec.range[1]; i++) {
+        const slide = this.data.slides[i];
+        const isCurrent = i === this.currentSlideIndex;
+        const btn = document.createElement("button");
+        btn.className = `index-slide-btn ${isCurrent ? "active" : ""}`;
+        btn.setAttribute("data-slide-idx", i);
+        btn.innerHTML = `
+          <span class="index-slide-num">${i + 1 < 10 ? "0" + (i + 1) : i + 1}</span>
+          <span class="index-slide-content">
+            <strong class="index-slide-esquema">${slide.esquema}</strong>
+            <span class="index-slide-titulo">${slide.titulo}</span>
+          </span>
+          ${isCurrent ? '<span class="index-slide-current-pill">Actual</span>' : ""}
+        `;
+        btn.addEventListener("click", () => {
+          this.goToSlide(i);
+          this.toggleSlidesIndex(false);
+        });
+        grid.appendChild(btn);
+      }
+
+      card.appendChild(grid);
+      this.slidesIndexBody.appendChild(card);
+    });
+  }
+
+  toggleSlidesIndex(force) {
+    if (!this.slidesIndexPanel) return;
+    const isCurrentlyOpen = this.slidesIndexPanel.classList.contains("open");
+    const willOpen = force !== undefined ? force : !isCurrentlyOpen;
+
+    if (willOpen) {
+      this.slidesIndexPanel.classList.add("open");
+      this.slidesIndexBackdrop?.classList.add("open");
+      this.slideCounterBadge?.classList.add("active");
+      this.renderSlidesIndex();
+      setTimeout(() => {
+        const activeBtn = this.slidesIndexBody?.querySelector(".index-slide-btn.active");
+        if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }, 80);
+    } else {
+      this.slidesIndexPanel.classList.remove("open");
+      this.slidesIndexBackdrop?.classList.remove("open");
+      this.slideCounterBadge?.classList.remove("active");
     }
   }
 
@@ -479,15 +642,39 @@ class PresentationApp {
     this.btnPrev.disabled = index === 0;
     this.btnNext.disabled = index === this.totalSlides - 1;
 
-    // Sincronizar indicador de estaciones
+    // Sincronizar indicador de estaciones y grupos de Ejes
     const dots = this.stationsContainer.querySelectorAll(".station-dot");
-    dots.forEach((dot, idx) => {
-      const isActive = idx === index;
+    dots.forEach((dot) => {
+      const dotIdx = parseInt(dot.getAttribute("data-slide-index"), 10) - 1;
+      const isActive = dotIdx === index;
       dot.classList.toggle("active", isActive);
       if (isActive && window.gsap) {
-        gsap.fromTo(dot, { scale: 0.95 }, { scale: 1.35, duration: 0.35, ease: "back.out(2)" });
+        const core = dot.querySelector(".station-dot-core");
+        if (core) {
+          gsap.fromTo(core, { scale: 0.9 }, { scale: 1.5, duration: 0.35, ease: "back.out(2)" });
+        }
       }
     });
+
+    const sections = this.getDefenseSections();
+    const groups = this.stationsContainer.querySelectorAll(".station-group");
+    groups.forEach((group, sIdx) => {
+      const sec = sections[sIdx];
+      const isGroupActive = sec && index >= sec.range[0] && index <= sec.range[1];
+      group.classList.toggle("active-group", isGroupActive);
+    });
+
+    // Actualizar botones del modal índice si está en el DOM
+    if (this.slidesIndexBody) {
+      this.slidesIndexBody.querySelectorAll(".index-slide-btn").forEach((btn) => {
+        const bIdx = parseInt(btn.getAttribute("data-slide-idx"), 10);
+        btn.classList.toggle("active", bIdx === index);
+      });
+      this.slidesIndexBody.querySelectorAll(".index-section-card").forEach((card, sIdx) => {
+        const sec = sections[sIdx];
+        card.classList.toggle("active-eje", sec && index >= sec.range[0] && index <= sec.range[1]);
+      });
+    }
 
     // Notificar al motor 3D con la dirección exacta (1 = adelante, -1 = atrás)
     this.engine3D.switchScene(slide.escena3D, direction);

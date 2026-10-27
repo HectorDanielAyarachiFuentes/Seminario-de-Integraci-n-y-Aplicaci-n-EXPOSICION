@@ -152,7 +152,7 @@ window.Presentation3D_Objects["anim_22"] = {
     chassis.position.y = -0.92;
     g.add(chassis);
 
-    // Placa técnica de viabilidad institucional (Única placa de orfebrería, sin colisiones)
+    // Placa técnica de viabilidad institucional (Elevada sobre el pedestal, sin quedar enterrada)
     const plaqueMaster = engine.createEngravedPlaque(
       1.10,
       0.22,
@@ -161,7 +161,8 @@ window.Presentation3D_Objects["anim_22"] = {
       ["RECURSOS HUMANOS", "RECURSOS TÉCNICOS", "COSTO MARGINAL CERO"],
       { theme: "dark" }
     );
-    plaqueMaster.position.set(0, -0.84, 0.78);
+    plaqueMaster.position.set(0, -0.62, 1.02);
+    plaqueMaster.rotation.x = -0.20;
     g.add(plaqueMaster);
 
     const group = new THREE.Group();
@@ -594,16 +595,17 @@ window.Presentation3D_Objects["anim_25"] = {
     chassis.position.y = -0.92;
     g.add(chassis);
 
-    // Placa conmemorativa de oro maestro en el frente del chasis
+    // Placa conmemorativa de oro maestro elevada sobre el pedestal frontal (sin quedar enterrada)
     const plaqueMaster = engine.createEngravedPlaque(
-      1.22,
-      0.24,
+      1.18,
+      0.22,
       "UNIVERSIDAD NACIONAL DEL COMAHUE",
       "¡Muchas Gracias por su Atención! • CURZAS",
       ["DECRETO 1246/2015", "TESINA DE LICENCIATURA 2026-2027"],
       { theme: "gold" }
     );
-    plaqueMaster.position.set(0, -0.84, 0.82);
+    plaqueMaster.position.set(0, -0.50, 1.10);
+    plaqueMaster.rotation.x = -0.18;
     g.add(plaqueMaster);
 
     const group = new THREE.Group();

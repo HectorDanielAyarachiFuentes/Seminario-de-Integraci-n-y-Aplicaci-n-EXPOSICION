@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=3.5">
+  <link rel="stylesheet" href="css/styles.css?v=3.9">
   <link rel="icon" type="image/png" href="assets/CURZAS.png">
 </head>
 <body>
@@ -52,10 +52,14 @@
 
       <!-- Centro: Contador de Filminas y Estaciones Interactivas -->
       <div class="stations-wrapper">
-        <div class="slide-counter-badge" id="slide-counter-badge">
-          Filmina <span id="slide-counter">1 / 25</span>
-        </div>
-        <nav class="stations-indicator" id="stations-indicator" aria-label="Estaciones de la Defensa"></nav>
+        <button class="slide-counter-badge" id="slide-counter-badge" title="Índice Canónico de los 3 Ejes y 25 Filminas (Tecla I)" aria-label="Abrir Índice de Filminas por Ejes">
+          <span class="badge-index-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h9"/></svg>
+          </span>
+          <span class="slide-counter-text">Filmina <strong id="slide-counter">1 / 25</strong></span>
+          <svg class="counter-chevron" viewBox="0 0 20 20" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 7.5l5 5 5-5"/></svg>
+        </button>
+        <nav class="stations-indicator" id="stations-indicator" aria-label="Estaciones de la Defensa estructuradas en 3 Ejes"></nav>
       </div>
 
       <!-- Cronómetro Académico de 30 minutos (Defensa Oficial) -->
@@ -291,6 +295,7 @@
       <div class="shortcut-row"><kbd>F</kbd><span>Pantalla Completa</span></div>
       <div class="shortcut-row"><kbd>T</kbd><span>Iniciar / Pausar Cronómetro</span></div>
       <div class="shortcut-row"><kbd>N</kbd><span>Guion / Notas del Orador</span></div>
+      <div class="shortcut-row"><kbd>I</kbd><span>Índice Canónico (3 Ejes)</span></div>
       <div class="shortcut-row"><kbd>M</kbd><span>Respaldo Metodológico (Jurado)</span></div>
       <div class="shortcut-row"><kbd>V</kbd><span>Visor de Diagramas SVG</span></div>
       <div class="shortcut-row"><kbd>D</kbd><span>Enfoque Texto (Atenuar 3D)</span></div>
@@ -300,26 +305,49 @@
     </div>
   </aside>
 
+  <!-- Modal / Menú Desplegable: Índice Canónico de los 3 Grandes Ejes (Atajo: I) -->
+  <div class="slides-index-backdrop" id="slides-index-backdrop"></div>
+  <aside class="slides-index-panel" id="slides-index-panel" aria-label="Índice Canónico de Filminas y 3 Ejes">
+    <div class="slides-index-header">
+      <div class="slides-index-title-group">
+        <span class="slides-index-badge">SEMINARIO DE INTEGRACIÓN Y APLICACIÓN • CURZAS UNCo</span>
+        <h3 id="slides-index-title">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold-main); vertical-align: -2px; margin-right: 0.4rem;">
+            <path d="M3 4.5h14M3 9.5h14M3 14.5h8"/>
+          </svg>
+          Estructura de la Defensa • 3 Grandes Ejes
+        </h3>
+      </div>
+      <button class="btn-close" id="btn-close-slides-index" title="Cerrar índice (Esc)">✕</button>
+    </div>
+    <div class="slides-index-body" id="slides-index-body">
+      <!-- Se inyecta dinámicamente con los 3 Grandes Ejes, Apertura y Cierre -->
+    </div>
+    <div class="slides-index-footer">
+      <span>💡 Atajo: Tecla <strong>I</strong> abre/cierra • Clic en cualquier filmina para saltar directamente • <strong>Esc</strong> para salir</span>
+    </div>
+  </aside>
+
   <!-- Librerías Externas y Módulos de la Aplicación -->
   <!-- 1. Motor Gráfico Three.js (r128 CDN estable) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- 2. Motor de Animación Profesional GSAP (GreenSock Animation Platform) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <!-- 3. Base de Datos Externa de Metadatos (25 Filminas + Enlaces SVG) -->
-  <script src="data/presentacion_data.js?v=3.7"></script>
+  <script src="data/presentacion_data.js?v=3.9"></script>
   <!-- 4. Módulos de Esculturas 3D y Utilitarios -->
-  <script src="js/objetos/materials.js?v=3.7"></script>
-  <script src="js/objetos/helpers.js?v=3.7"></script>
-  <script src="js/objetos/camera_config.js?v=3.7"></script>
-  <script src="js/objetos/bloque1.js?v=3.7"></script>
-  <script src="js/objetos/bloque2.js?v=3.7"></script>
-  <script src="js/objetos/bloque3.js?v=3.7"></script>
-  <script src="js/objetos/bloque4.js?v=3.7"></script>
-  <script src="js/objetos/bloque5.js?v=3.7"></script>
+  <script src="js/objetos/materials.js?v=3.9"></script>
+  <script src="js/objetos/helpers.js?v=3.9"></script>
+  <script src="js/objetos/camera_config.js?v=3.9"></script>
+  <script src="js/objetos/bloque1.js?v=3.9"></script>
+  <script src="js/objetos/bloque2.js?v=3.9"></script>
+  <script src="js/objetos/bloque3.js?v=3.9"></script>
+  <script src="js/objetos/bloque4.js?v=3.9"></script>
+  <script src="js/objetos/bloque5.js?v=3.9"></script>
   <!-- 5. Motor Orquestador 3D (Three.js + GSAP) -->
-  <script src="js/scene3d.js?v=3.7"></script>
+  <script src="js/scene3d.js?v=3.9"></script>
   <!-- 6. Controlador de Navegación, Temporizador y Eventos -->
-  <script src="js/app.js?v=3.7"></script>
+  <script src="js/app.js?v=3.9"></script>
 
 </body>
 </html>

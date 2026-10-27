@@ -843,7 +843,8 @@ window.Presentation3D_Objects["anim_09"] = {
       ["ESTATUTO UNCo • CCT DOCENTE"],
       { theme: "dark" }
     );
-    plaqueScale.position.set(0, -0.88, 0.35);
+    plaqueScale.position.set(0, -0.72, 0.36);
+    plaqueScale.rotation.x = -0.12;
     scaleGroup.add(plaqueScale);
 
     g.add(scaleGroup);
