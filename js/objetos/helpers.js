@@ -568,11 +568,12 @@ window.Scene3DHelpers = {
     );
     sealGroup.add(base);
 
-    // Aro exterior de laurel
+    // Aro exterior de laurel plano sobre el disco
     const wreath = new THREE.Mesh(
       new THREE.TorusGeometry(radius * 0.96, radius * 0.12, 16, 48),
       this.goldMat(0xffd700)
     );
+    wreath.rotation.x = Math.PI / 2;
     wreath.position.y = 0.012;
     sealGroup.add(wreath);
 

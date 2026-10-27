@@ -192,7 +192,7 @@ window.Presentation3D_Objects["anim_22"] = {
         angle: -Math.PI / 6,
         col: "#1d4ed8",
         hex: 0x1d4ed8,
-        labelPos: [1.42, 0.48, -0.2]
+        labelPos: [1.42, 0.78, -0.2]
       },
       {
         name: "RECURSOS TÉCNICOS",
@@ -200,7 +200,7 @@ window.Presentation3D_Objects["anim_22"] = {
         angle: Math.PI / 2,
         col: "#0284c7",
         hex: 0x0284c7,
-        labelPos: [0, 0.66, 0.88]
+        labelPos: [0, 0.95, 0.88]
       },
       {
         name: "RECURSOS ECONÓMICOS",
@@ -208,7 +208,7 @@ window.Presentation3D_Objects["anim_22"] = {
         angle: (7 * Math.PI) / 6,
         col: "#15803d",
         hex: 0x16a34a,
-        labelPos: [-1.42, 0.48, -0.2]
+        labelPos: [-1.42, 0.78, -0.2]
       }
     ];
 
@@ -287,7 +287,7 @@ window.Presentation3D_Objects["anim_22"] = {
       "#0f2d59",
       true
     );
-    mainTitle.position.set(0, 1.25, 0);
+    mainTitle.position.set(0, 1.55, 0);
     group.add(mainTitle);
 
     g.add(group);
@@ -618,7 +618,7 @@ window.Presentation3D_Objects["anim_25"] = {
 
     // 1. Gran Medallón Laureado Central UNCo flotante
     engine.anim25_medal = new THREE.Group();
-    engine.anim25_medal.position.set(0, 0.32, -0.22);
+    engine.anim25_medal.position.set(0, 0.18, -0.22);
 
     const medalDisc = new THREE.Mesh(
       new THREE.CylinderGeometry(0.68, 0.68, 0.07, 48),
@@ -628,15 +628,16 @@ window.Presentation3D_Objects["anim_25"] = {
     engine.anim25_medal.add(medalDisc);
 
     // Gran Escudo Académico Institucional de la Universidad Nacional del Comahue
-    const seal = engine.createAcademicSeal(0.34);
+    const seal = engine.createAcademicSeal(0.38);
     seal.rotation.x = Math.PI / 2;
-    seal.position.set(0, 0.05, 0);
+    seal.position.set(0, 0, 0.045);
     engine.anim25_medal.add(seal);
 
     const wreath = new THREE.Mesh(
-      new THREE.TorusGeometry(0.74, 0.03, 16, 64),
+      new THREE.TorusGeometry(0.74, 0.035, 16, 64),
       engine.brassMat(0xd4af37)
     );
+    wreath.position.set(0, 0, 0.02);
     engine.anim25_medal.add(wreath);
 
     group.add(engine.anim25_medal);
@@ -721,9 +722,10 @@ window.Presentation3D_Objects["anim_25"] = {
       "ESPACIO DE INTERCAMBIO CON EL TRIBUNAL",
       "Dra. Deborah Noguera • Esp. Federico Abeiro • Esp. María Cecilia Aguirre",
       "#0f2d59",
-      true
+      true,
+      { x: 1.45, y: 0.28 }
     );
-    tribunalSprite.position.set(0, 1.30, 0);
+    tribunalSprite.position.set(0, 1.65, 0);
     group.add(tribunalSprite);
 
     g.add(group);

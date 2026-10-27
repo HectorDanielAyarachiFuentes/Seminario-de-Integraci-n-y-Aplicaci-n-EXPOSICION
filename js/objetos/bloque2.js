@@ -789,7 +789,7 @@ window.Presentation3D_Objects["anim_09"] = {
       false,
       { x: 0.64, y: 0.17 }
     );
-    labelLeft.position.set(0, 0.62, 0);
+    labelLeft.position.set(0, 0.78, 0);
     leftPanGroup.add(labelLeft);
     scaleGroup.add(leftPanGroup);
     engine.anim09_left = leftPanGroup;
@@ -829,7 +829,7 @@ window.Presentation3D_Objects["anim_09"] = {
       false,
       { x: 0.64, y: 0.17 }
     );
-    labelRight.position.set(0, 0.62, 0);
+    labelRight.position.set(0, 0.78, 0);
     rightPanGroup.add(labelRight);
     scaleGroup.add(rightPanGroup);
     engine.anim09_right = rightPanGroup;

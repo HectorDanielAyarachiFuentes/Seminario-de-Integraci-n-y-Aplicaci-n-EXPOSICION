@@ -556,7 +556,7 @@ window.Presentation3D_Objects["anim_14"] = {
       true,
       { x: 1.15, y: 0.25 }
     );
-    labelCenter.position.set(0, 1.15, 0);
+    labelCenter.position.set(0, 1.35, 0);
     g.add(labelCenter);
 
     // 4 Proyectores dispuestos a radio 1.15 (con holgura y separación del dial)
@@ -604,7 +604,7 @@ window.Presentation3D_Objects["anim_14"] = {
         false,
         { x: 0.52, y: 0.15 }
       );
-      labelAct.position.set(x * 1.25, 0.22, z * 1.25);
+      labelAct.position.set(x * 1.30, 0.52, z * 1.30);
       radarGroup.add(labelAct);
     });
 
