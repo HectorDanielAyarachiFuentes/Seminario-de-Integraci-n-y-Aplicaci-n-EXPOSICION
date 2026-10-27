@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Seminario-de-Integraci-n-y-Aplicaci-n-EXPOSICION** (136 symbols, 308 relationships, 10 execution flows).
+This project is indexed by GitNexus as **Seminario-de-Integracion-y-Aplicacion-EXPOSICION** (136 symbols, 308 relationships, 10 execution flows).
 
 > Index stale? Run `node .gitnexus/run.cjs analyze --index-only` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? Bootstrap with `npx`, `bunx`, or `pnpm dlx` — e.g. `bunx gitnexus@latest analyze` (npm 11 npx crash; #1939).
 
@@ -25,10 +25,10 @@ This project is indexed by GitNexus as **Seminario-de-Integraci-n-y-Aplicaci-n-E
 
 | Resource | Use for |
 | --- | --- |
-| `gitnexus://repo/Seminario-de-Integraci-n-y-Aplicaci-n-EXPOSICION/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/Seminario-de-Integraci-n-y-Aplicaci-n-EXPOSICION/clusters` | All functional areas |
-| `gitnexus://repo/Seminario-de-Integraci-n-y-Aplicaci-n-EXPOSICION/processes` | All execution flows |
-| `gitnexus://repo/Seminario-de-Integraci-n-y-Aplicaci-n-EXPOSICION/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/Seminario-de-Integracion-y-Aplicacion-EXPOSICION/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/Seminario-de-Integracion-y-Aplicacion-EXPOSICION/clusters` | All functional areas |
+| `gitnexus://repo/Seminario-de-Integracion-y-Aplicacion-EXPOSICION/processes` | All execution flows |
+| `gitnexus://repo/Seminario-de-Integracion-y-Aplicacion-EXPOSICION/process/{name}` | Step-by-step execution trace |
 
 ## CLI
 
