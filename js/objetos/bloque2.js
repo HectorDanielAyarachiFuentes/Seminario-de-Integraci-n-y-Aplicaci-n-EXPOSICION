@@ -782,8 +782,14 @@ window.Presentation3D_Objects["anim_09"] = {
     lockShackle.position.y = 0.18;
     leftPanGroup.add(lockShackle);
 
-    const labelLeft = engine.createLabelSprite("ART. 75 ESTATUTO", "Control Sumativo • Vacancia", "#b91c1c", false);
-    labelLeft.position.set(0, 0.44, 0);
+    const labelLeft = engine.createLabelSprite(
+      "ART. 75 ESTATUTO",
+      "Control Sumativo • Vacancia",
+      "#b91c1c",
+      false,
+      { x: 0.64, y: 0.17 }
+    );
+    labelLeft.position.set(0, 0.62, 0);
     leftPanGroup.add(labelLeft);
     scaleGroup.add(leftPanGroup);
     engine.anim09_left = leftPanGroup;
@@ -816,8 +822,14 @@ window.Presentation3D_Objects["anim_09"] = {
     flameLight.position.y = 0.30;
     rightPanGroup.add(flameLight);
 
-    const labelRight = engine.createLabelSprite("ART. 76 ESTATUTO", "Capacitación y Desarrollo Formativo", "#059669", false);
-    labelRight.position.set(0, 0.54, 0);
+    const labelRight = engine.createLabelSprite(
+      "ART. 76 ESTATUTO",
+      "Capacitación y Desarrollo Formativo",
+      "#059669",
+      false,
+      { x: 0.64, y: 0.17 }
+    );
+    labelRight.position.set(0, 0.62, 0);
     rightPanGroup.add(labelRight);
     scaleGroup.add(rightPanGroup);
     engine.anim09_right = rightPanGroup;

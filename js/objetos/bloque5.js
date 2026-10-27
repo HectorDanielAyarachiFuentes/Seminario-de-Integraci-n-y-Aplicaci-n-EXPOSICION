@@ -184,11 +184,32 @@ window.Presentation3D_Objects["anim_22"] = {
     triBaseTop.receiveShadow = true;
     group.add(triBaseTop);
 
-    // 2. Las 3 Columnas Clásicas Acanaladas (Limpio y minimalista, sin placas redundantes al pie)
+    // 2. Las 3 Columnas Clásicas Acanaladas (Distribución sin colisión de carteles)
     const pillars = [
-      { name: "RECURSOS HUMANOS", sub: "Tesista Tec. Sup. + Cátedra", angle: -Math.PI / 6, col: "#1d4ed8", hex: 0x1d4ed8 },
-      { name: "RECURSOS TÉCNICOS", sub: "Moodle • SIU • R / PSPP", angle: Math.PI / 2, col: "#0284c7", hex: 0x0284c7 },
-      { name: "RECURSOS ECONÓMICOS", sub: "Costo Marginal Cero", angle: (7 * Math.PI) / 6, col: "#15803d", hex: 0x16a34a }
+      {
+        name: "RECURSOS HUMANOS",
+        sub: "Tesista Tec. Sup. + Cátedra",
+        angle: -Math.PI / 6,
+        col: "#1d4ed8",
+        hex: 0x1d4ed8,
+        labelPos: [1.42, 0.48, -0.2]
+      },
+      {
+        name: "RECURSOS TÉCNICOS",
+        sub: "Moodle • SIU • R / PSPP",
+        angle: Math.PI / 2,
+        col: "#0284c7",
+        hex: 0x0284c7,
+        labelPos: [0, 0.66, 0.88]
+      },
+      {
+        name: "RECURSOS ECONÓMICOS",
+        sub: "Costo Marginal Cero",
+        angle: (7 * Math.PI) / 6,
+        col: "#15803d",
+        hex: 0x16a34a,
+        labelPos: [-1.42, 0.48, -0.2]
+      }
     ];
 
     pillars.forEach((pil) => {
@@ -199,8 +220,14 @@ window.Presentation3D_Objects["anim_22"] = {
       colMesh.position.set(px, -0.15, pz);
       group.add(colMesh);
 
-      const label = engine.createLabelSprite(pil.name, pil.sub, pil.col, false);
-      label.position.set(px * 1.45, -0.12, pz * 1.45);
+      const label = engine.createLabelSprite(
+        pil.name,
+        pil.sub,
+        pil.col,
+        false,
+        { x: 0.64, y: 0.17 }
+      );
+      label.position.set(...pil.labelPos);
       group.add(label);
     });
 
@@ -569,10 +596,10 @@ window.Presentation3D_Objects["anim_25"] = {
 
     // Placa conmemorativa de oro maestro en el frente del chasis
     const plaqueMaster = engine.createEngravedPlaque(
-      1.20,
+      1.22,
       0.24,
       "UNIVERSIDAD NACIONAL DEL COMAHUE",
-      "Centro Universitario Regional Zona Atlántica (CURZAS)",
+      "¡Muchas Gracias por su Atención! • CURZAS",
       ["DECRETO 1246/2015", "TESINA DE LICENCIATURA 2026-2027"],
       { theme: "gold" }
     );
@@ -689,26 +716,15 @@ window.Presentation3D_Objects["anim_25"] = {
     lecternGroup.add(bookDesk);
     group.add(lecternGroup);
 
-    // Cartela superior de honor al Tribunal Evaluador
+    // Cartela superior de honor al Tribunal Evaluador (elevada sobre el medallón)
     const tribunalSprite = engine.createLabelSprite(
       "ESPACIO DE INTERCAMBIO CON EL TRIBUNAL",
       "Dra. Deborah Noguera • Esp. Federico Abeiro • Esp. María Cecilia Aguirre",
       "#0f2d59",
       true
     );
-    tribunalSprite.position.set(0, 0.98, 0);
+    tribunalSprite.position.set(0, 1.30, 0);
     group.add(tribunalSprite);
-
-    // Agradecimiento formal situado limpiamente con buena separación
-    const thankYouSprite = engine.createLabelSprite(
-      "¡MUCHAS GRACIAS POR SU ATENCIÓN!",
-      "CURZAS — Universidad Nacional del Comahue",
-      "#b8860b",
-      false,
-      { x: 0.76, y: 0.20 }
-    );
-    thankYouSprite.position.set(0, -0.42, 0.78);
-    group.add(thankYouSprite);
 
     g.add(group);
   },

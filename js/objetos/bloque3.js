@@ -521,14 +521,14 @@ window.Presentation3D_Objects["anim_14"] = {
     const radarGroup = new THREE.Group();
     radarGroup.position.set(0, -0.1, 0);
 
-    // Plato azimutal graduado minimalista contenido dentro del radio central (R = 0.80)
+    // Plato azimutal graduado horizontal en la base del radar (R = 0.80)
     const azimuthDial = engine.createGraduatedDial(0.80, {
       divisions: 48,
       title: "AZIMUT",
       sub: "360°",
       theme: "dark"
     });
-    azimuthDial.rotation.x = Math.PI / 2;
+    azimuthDial.rotation.x = 0;
     azimuthDial.position.y = -0.42;
     radarGroup.add(azimuthDial);
 
@@ -548,9 +548,16 @@ window.Presentation3D_Objects["anim_14"] = {
     coreGem.position.y = 0.14;
     radarGroup.add(coreGem);
 
-    const labelCenter = engine.createLabelSprite("ACTO EDUCATIVO", "Triangulación Objetiva", "#0f2d59", false);
-    labelCenter.position.set(0, 0.48, 0);
-    radarGroup.add(labelCenter);
+    // Cartel principal superior elevado sin colisiones
+    const labelCenter = engine.createLabelSprite(
+      "ACTO EDUCATIVO",
+      "Triangulación Objetiva 360°",
+      "#0f2d59",
+      true,
+      { x: 1.15, y: 0.25 }
+    );
+    labelCenter.position.set(0, 1.15, 0);
+    g.add(labelCenter);
 
     // 4 Proyectores dispuestos a radio 1.15 (con holgura y separación del dial)
     const actors = [
@@ -590,8 +597,14 @@ window.Presentation3D_Objects["anim_14"] = {
       );
       radarGroup.add(ray);
 
-      const labelAct = engine.createLabelSprite(act.name, act.sub, "#0f2d59", false);
-      labelAct.position.set(x * 1.05, 0.42, z * 1.05);
+      const labelAct = engine.createLabelSprite(
+        act.name,
+        act.sub,
+        "#0f2d59",
+        false,
+        { x: 0.52, y: 0.15 }
+      );
+      labelAct.position.set(x * 1.25, 0.22, z * 1.25);
       radarGroup.add(labelAct);
     });
 
