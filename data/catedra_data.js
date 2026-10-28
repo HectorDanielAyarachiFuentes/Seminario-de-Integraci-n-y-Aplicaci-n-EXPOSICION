@@ -1145,6 +1145,10 @@ const CATEDRA_MATERIAL_DATA = [
   }
 ];
 
+if (typeof window !== 'undefined') {
+  window.CATEDRA_MATERIAL_DATA = CATEDRA_MATERIAL_DATA;
+}
+
 if (typeof module !== 'undefined') {
   module.exports = CATEDRA_MATERIAL_DATA;
 }

@@ -148,7 +148,7 @@ class PresentationApp {
     this.isSvgMaximized = false;
 
     // Catálogo y Visor de Material de Cátedra (95 Documentos)
-    this.catedraData = typeof CATEDRA_MATERIAL_DATA !== 'undefined' ? CATEDRA_MATERIAL_DATA : [];
+    this.catedraData = (typeof window !== 'undefined' && window.CATEDRA_MATERIAL_DATA) || (typeof CATEDRA_MATERIAL_DATA !== 'undefined' ? CATEDRA_MATERIAL_DATA : []);
     this.docModal = document.getElementById("doc-modal");
     this.docModalBackdrop = document.getElementById("doc-modal-backdrop");
     this.docModalFrame = document.getElementById("doc-modal-frame");
@@ -1201,6 +1201,10 @@ class PresentationApp {
 
   renderCatedraMaterialTab() {
     this.drawerContent.innerHTML = "";
+
+    if (!this.catedraData || this.catedraData.length === 0) {
+      this.catedraData = (typeof window !== 'undefined' && window.CATEDRA_MATERIAL_DATA) || (typeof CATEDRA_MATERIAL_DATA !== 'undefined' ? CATEDRA_MATERIAL_DATA : []);
+    }
 
     // 1. Encabezado con métricas
     const headerBox = document.createElement("div");
