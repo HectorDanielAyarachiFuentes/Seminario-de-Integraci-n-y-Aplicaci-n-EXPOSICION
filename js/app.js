@@ -1100,6 +1100,8 @@ class PresentationApp {
         });
         this.drawerContent.appendChild(card);
       });
+    } else if (tabType === "catedra") {
+      this.renderCatedraMaterialTab();
     }
   }
 
