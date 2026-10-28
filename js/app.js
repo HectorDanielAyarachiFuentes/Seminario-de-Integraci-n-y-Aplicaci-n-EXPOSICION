@@ -596,8 +596,14 @@ class PresentationApp {
       this.slideCounterBadge?.classList.add("active");
       this.renderSlidesIndex();
       setTimeout(() => {
-        const activeBtn = this.slidesIndexBody?.querySelector(".index-slide-btn.active");
-        if (activeBtn) activeBtn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        if (this.currentSlideIndex <= 4) {
+          if (this.slidesIndexBody) this.slidesIndexBody.scrollTop = 0;
+        } else {
+          const activeCard = this.slidesIndexBody?.querySelector(".index-section-card.active-eje");
+          if (activeCard) {
+            activeCard.scrollIntoView({ block: "start", behavior: "smooth" });
+          }
+        }
       }, 80);
     } else {
       this.slidesIndexPanel.classList.remove("open");
