@@ -56,6 +56,10 @@ class Presentation3D {
     this._tmpDesiredCamPos = new THREE.Vector3();
     this._tmpDesiredLookAt = new THREE.Vector3();
 
+    // Control dinámico de encuadre y prioridad: 'default' | 'object' | 'text'
+    this.focusMode = "default";
+    this.focusAnim = { centerXOffset: 0, scaleMultiplier: 1.0 };
+
     this.init();
   }
 
@@ -189,6 +193,10 @@ class Presentation3D {
   updateCameraViewOffset() {
     const w = window.innerWidth;
     const h = window.innerHeight;
+    if (this.focusMode === "object") {
+      this.camera.clearViewOffset();
+      return;
+    }
     if (w > 1024) {
       const offsetX = -w * 0.16;
       this.camera.setViewOffset(w, h, offsetX, 0, w, h);
@@ -197,6 +205,35 @@ class Presentation3D {
       this.camera.setViewOffset(w, h, offsetX, 0, w, h);
     } else {
       this.camera.clearViewOffset();
+    }
+  }
+
+  /**
+   * Cambia el modo de enfoque de la escultura 3D:
+   * - 'object': centra en pantalla (x: 0) y agranda (+48% escala) para máxima presencia
+   * - 'default' | 'text': regresa a la posición lateral canónica para convivir con la filmina
+   */
+  setFocusMode(mode) {
+    this.focusMode = mode;
+    this.updateCameraViewOffset();
+
+    if (!this.focusAnim) {
+      this.focusAnim = { centerXOffset: 0, scaleMultiplier: 1.0 };
+    }
+
+    const targetOffsetX = mode === "object" ? -1.6 : 0;
+    const targetScale = mode === "object" ? 1.48 : 1.0;
+
+    if (window.gsap) {
+      gsap.to(this.focusAnim, {
+        centerXOffset: targetOffsetX,
+        scaleMultiplier: targetScale,
+        duration: 0.65,
+        ease: "power2.out"
+      });
+    } else {
+      this.focusAnim.centerXOffset = targetOffsetX;
+      this.focusAnim.scaleMultiplier = targetScale;
     }
   }
 
@@ -547,22 +584,28 @@ class Presentation3D {
     const activeGroup = this.scenes[this.currentSceneId];
     if (activeGroup) {
       const enter = this.transitionState?.enterOffset || { x: 0, y: 0, z: 0, scale: 1, rotY: 0 };
-      activeGroup.position.x = 1.6 + this.userPan.x + enter.x;
+      const centerOffset = this.focusAnim?.centerXOffset || 0;
+      const scaleMult = this.focusAnim?.scaleMultiplier || 1.0;
+      activeGroup.position.x = 1.6 + centerOffset + this.userPan.x + enter.x;
       activeGroup.position.y = this.userPan.y + enter.y;
       activeGroup.position.z = enter.z;
       activeGroup.rotation.y = this.userRotation.y + enter.rotY;
       activeGroup.rotation.x = this.userRotation.x;
-      activeGroup.scale.setScalar(enter.scale !== undefined ? enter.scale : 1);
+      const baseScale = enter.scale !== undefined ? enter.scale : 1;
+      activeGroup.scale.setScalar(baseScale * scaleMult);
     }
 
     // 4b. Escultura saliente en suave retroceso de galería
     const exitingGroup = this.transitionState?.exitingGroup;
     if (exitingGroup && exitingGroup !== activeGroup) {
       const exit = this.transitionState.exitOffset;
-      exitingGroup.position.x = 1.6 + exit.x;
+      const centerOffset = this.focusAnim?.centerXOffset || 0;
+      const scaleMult = this.focusAnim?.scaleMultiplier || 1.0;
+      exitingGroup.position.x = 1.6 + centerOffset + exit.x;
       exitingGroup.position.y = exit.y;
       exitingGroup.position.z = exit.z;
-      exitingGroup.scale.setScalar(exit.scale !== undefined ? exit.scale : 1);
+      const baseScale = exit.scale !== undefined ? exit.scale : 1;
+      exitingGroup.scale.setScalar(baseScale * scaleMult);
     }
 
     // 5. Animación modular delegada a la escultura activa

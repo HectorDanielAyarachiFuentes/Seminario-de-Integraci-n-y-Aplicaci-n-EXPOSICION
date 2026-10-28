@@ -125,6 +125,9 @@ class PresentationApp {
     this.btnFloatingCardToggle = document.getElementById("btn-floating-card-toggle");
     this.mainStage = document.getElementById("main-stage");
     this.isCardMinimized = false;
+    this.currentViewMode = "default"; // "default" | "text" | "object"
+    this.btnViewText = document.getElementById("btn-view-text");
+    this.btnView3d = document.getElementById("btn-view-3d");
 
     // Modal Visor SVG Interactivo con Zoom y Pan
     this.svgModal = document.getElementById("svg-modal");
@@ -228,6 +231,13 @@ class PresentationApp {
     if (this.btnToggle3dView) {
       this.btnToggle3dView.addEventListener("click", () => this.toggleMobile3dView());
     }
+    if (this.btnViewText) {
+      this.btnViewText.addEventListener("click", () => this.setViewMode("text"));
+    }
+    if (this.btnView3d) {
+      this.btnView3d.addEventListener("click", () => this.setViewMode("object"));
+    }
+
     if (this.btnFloatingCardToggle) {
       this.btnFloatingCardToggle.addEventListener("click", () => this.toggleMobile3dView(false));
     }
@@ -971,6 +981,50 @@ class PresentationApp {
     this.drawerPanel.classList.toggle("open", newState);
     this.drawerBackdrop.classList.toggle("open", newState);
     this.btnToggleDrawer.classList.toggle("active", newState);
+  }
+
+  
+  /**
+   * Controlador Maestro de Enfoque y Prioridad Visual:
+   * - 'default': vista balanceada (texto a la izquierda 45vw, escultura a la derecha x:1.6)
+   * - 'text': texto expandido a lo ancho (86vw / 980px centrado, tipografía amplia, 3D atenuado)
+   * - 'object': solo objeto (texto oculto, escultura 3D centrada x:0 y ampliada +48%)
+   */
+  setViewMode(targetMode) {
+    const newMode = (this.currentViewMode === targetMode) ? "default" : targetMode;
+    this.currentViewMode = newMode;
+
+    // 1. Estados CSS en la tarjeta de filmina
+    if (this.cardElement) {
+      this.cardElement.classList.toggle("focus-text", newMode === "text");
+      this.cardElement.classList.toggle("focus-object", newMode === "object");
+      this.cardElement.classList.toggle("minimized", newMode === "object");
+    }
+
+    // 2. Atenuación atmosférica del lienzo 3D
+    if (this.canvas) {
+      this.canvas.classList.toggle("dimmed", newMode === "text");
+    }
+
+    // 3. Botón flotante para restaurar a filmina
+    if (this.btnFloatingCardToggle) {
+      this.btnFloatingCardToggle.classList.toggle("visible", newMode === "object");
+      const span = this.btnFloatingCardToggle.querySelector("span");
+      if (span) span.textContent = "Volver a la Filmina";
+    }
+
+    // 4. Estados activos de los botones
+    if (this.btnViewText) {
+      this.btnViewText.classList.toggle("active", newMode === "text");
+    }
+    if (this.btnView3d) {
+      this.btnView3d.classList.toggle("active", newMode === "object");
+    }
+
+    // 5. Animación fluida de la escultura 3D en WebGL
+    if (this.engine3D && typeof this.engine3D.setFocusMode === "function") {
+      this.engine3D.setFocusMode(newMode);
+    }
   }
 
   toggle3dDim() {
