@@ -248,7 +248,7 @@
   </aside>
 
   <!-- Modal Especial: Visor Interactivo de Documentos de Cátedra (PDF, Normativas, Resoluciones) -->
-  <div class="doc-modal-backdrop" id="doc-modal-backdrop"></div>
+  <div class="doc-modal-backdrop" id="doc-modal-backdrop" onclick="if(window.app)window.app.closeDocModal()"></div>
   <aside class="doc-modal" id="doc-modal" aria-label="Visor de Documentos de Cátedra">
     <div class="doc-modal-header">
       <div class="doc-modal-title-group">
@@ -256,10 +256,10 @@
         <h3 id="doc-modal-title">Título del Documento</h3>
       </div>
       <div class="doc-modal-toolbar">
-        <button class="btn-doc-tool" id="btn-doc-maximize" title="Maximizar / Restaurar (M)">⛶ Maximizar</button>
+        <button class="btn-doc-tool" id="btn-doc-maximize" title="Maximizar / Restaurar (M)" onclick="if(window.app)window.app.toggleDocMaximize()">⛶ Maximizar</button>
         <a class="btn-doc-tool btn-doc-link" id="btn-doc-newtab" href="#" target="_blank" title="Abrir en pestaña nueva">↗ Abrir pestaña</a>
         <a class="btn-doc-tool btn-doc-download" id="btn-doc-download" href="#" download title="Descargar archivo">⬇ Descargar</a>
-        <button class="btn-close" id="btn-close-doc" title="Cerrar visor (Esc)">✕</button>
+        <button class="btn-close" id="btn-close-doc" title="Cerrar visor (Esc)" onclick="if(window.app)window.app.closeDocModal()">✕</button>
       </div>
     </div>
     <div class="doc-modal-body" id="doc-modal-body">
