@@ -147,6 +147,28 @@ class PresentationApp {
     this.svgDragStartY = 0;
     this.isSvgMaximized = false;
 
+    // Catálogo y Visor de Material de Cátedra (95 Documentos)
+    this.catedraData = typeof CATEDRA_MATERIAL_DATA !== 'undefined' ? CATEDRA_MATERIAL_DATA : [];
+    this.docModal = document.getElementById("doc-modal");
+    this.docModalBackdrop = document.getElementById("doc-modal-backdrop");
+    this.docModalFrame = document.getElementById("doc-modal-frame");
+    this.docModalFallback = document.getElementById("doc-modal-fallback");
+    this.docFallbackTitle = document.getElementById("doc-fallback-title");
+    this.docFallbackDesc = document.getElementById("doc-fallback-desc");
+    this.btnDocFallbackDownload = document.getElementById("btn-doc-fallback-download");
+    this.btnDocFallbackOpen = document.getElementById("btn-doc-fallback-open");
+    this.docModalTitle = document.getElementById("doc-modal-title");
+    this.docModalBadge = document.getElementById("doc-modal-badge");
+    this.docModalBreadcrumb = document.getElementById("doc-modal-breadcrumb");
+    this.btnDocMaximize = document.getElementById("btn-doc-maximize");
+    this.btnDocNewtab = document.getElementById("btn-doc-newtab");
+    this.btnDocDownload = document.getElementById("btn-doc-download");
+    this.btnCloseDoc = document.getElementById("btn-close-doc");
+    this.btnToggleCatedra = document.getElementById("btn-toggle-catedra");
+    this.isDocMaximized = false;
+    this.currentCatedraFilter = "all";
+    this.currentCatedraSearch = "";
+
   }
 
   bindEvents() {
@@ -1165,7 +1187,284 @@ class PresentationApp {
       }
     }
   }
+
+  // ─── VISOR Y EXPLORADOR DE MATERIAL DE CÁTEDRA ──────────────────────────
+  openCatedraDrawer() {
+    this.toggleDrawer(true);
+    const catedraTabBtn = document.querySelector('.drawer-tab[data-tab="catedra"]');
+    if (catedraTabBtn) {
+      document.querySelectorAll(".drawer-tab").forEach((t) => t.classList.remove("active"));
+      catedraTabBtn.classList.add("active");
+      this.renderDrawerTab("catedra");
+    }
+  }
+
+  renderCatedraMaterialTab() {
+    this.drawerContent.innerHTML = "";
+
+    // 1. Encabezado con métricas
+    const headerBox = document.createElement("div");
+    headerBox.className = "catedra-header-box";
+    headerBox.innerHTML = `
+      <div class="catedra-header-title">
+        <span>📚 Repositorio Bibliográfico Oficial</span>
+        <span class="catedra-total-badge">${this.catedraData.length} Docs</span>
+      </div>
+      <p class="catedra-header-desc">
+        Compendio completo de textos metodológicos, resoluciones del TFG, ordenanzas del CURZA, reglamentos y guías APA para consulta inmediata del tribunal y tesistas.
+      </p>
+    `;
+    this.drawerContent.appendChild(headerBox);
+
+    // 2. Buscador en tiempo real
+    const searchWrapper = document.createElement("div");
+    searchWrapper.className = "catedra-search-wrapper";
+    searchWrapper.innerHTML = `
+      <svg class="catedra-search-icon" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="8.5" cy="8.5" r="5"/>
+        <path d="M17.5 17.5l-3.8-3.8"/>
+      </svg>
+      <input type="search" class="catedra-search-input" id="catedra-search-input" placeholder="Buscar por autor, tema, resolución (ej: Sampieri, Sautu, 266-23)..." value="${this.currentCatedraSearch}">
+      <button class="catedra-search-clear" id="catedra-search-clear" title="Borrar búsqueda">✕</button>
+    `;
+    this.drawerContent.appendChild(searchWrapper);
+
+    const searchInput = searchWrapper.querySelector("#catedra-search-input");
+    const searchClear = searchWrapper.querySelector("#catedra-search-clear");
+    if (this.currentCatedraSearch) {
+      searchClear.style.display = "block";
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      this.currentCatedraSearch = e.target.value.trim().toLowerCase();
+      searchClear.style.display = this.currentCatedraSearch ? "block" : "none";
+      this.updateCatedraList();
+    });
+
+    searchClear.addEventListener("click", () => {
+      searchInput.value = "";
+      this.currentCatedraSearch = "";
+      searchClear.style.display = "none";
+      this.updateCatedraList();
+      searchInput.focus();
+    });
+
+    // 3. Pastillas de filtrado por Unidad y Área
+    const categories = [
+      { id: "all", label: "Todos", count: this.catedraData.length },
+      { id: "u1", label: "Unidad I", count: this.catedraData.filter(d => d.categoriaSlug === 'u1').length },
+      { id: "u2", label: "Unidad II", count: this.catedraData.filter(d => d.categoriaSlug === 'u2').length },
+      { id: "u3", label: "Unidad III", count: this.catedraData.filter(d => d.categoriaSlug === 'u3').length },
+      { id: "u4", label: "Unidad IV", count: this.catedraData.filter(d => d.categoriaSlug === 'u4').length },
+      { id: "tfg", label: "Recursos TFG & Normas", count: this.catedraData.filter(d => d.categoriaSlug === 'tfg').length },
+      { id: "redaccion", label: "Redacción & Defensa", count: this.catedraData.filter(d => d.categoriaSlug === 'redaccion').length },
+      { id: "actividades", label: "Actividades", count: this.catedraData.filter(d => d.categoriaSlug === 'actividades').length },
+      { id: "general", label: "Programa", count: this.catedraData.filter(d => d.categoriaSlug === 'general').length }
+    ];
+
+    const pillsWrapper = document.createElement("div");
+    pillsWrapper.className = "catedra-filter-pills";
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = `catedra-pill ${this.currentCatedraFilter === cat.id ? "active" : ""}`;
+      btn.dataset.category = cat.id;
+      btn.innerHTML = `${cat.label} <span class="catedra-pill-count">(${cat.count})</span>`;
+      btn.addEventListener("click", () => {
+        pillsWrapper.querySelectorAll(".catedra-pill").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        this.currentCatedraFilter = cat.id;
+        this.updateCatedraList();
+      });
+      pillsWrapper.appendChild(btn);
+    });
+    this.drawerContent.appendChild(pillsWrapper);
+
+    // 4. Barra informativa de resultados
+    const resultsInfo = document.createElement("div");
+    resultsInfo.className = "catedra-results-info";
+    resultsInfo.id = "catedra-results-info";
+    this.drawerContent.appendChild(resultsInfo);
+
+    // 5. Contenedor de lista de tarjetas
+    const listContainer = document.createElement("div");
+    listContainer.className = "catedra-docs-list";
+    listContainer.id = "catedra-docs-list";
+    this.drawerContent.appendChild(listContainer);
+
+    this.updateCatedraList();
+  }
+
+  updateCatedraList() {
+    const listContainer = document.getElementById("catedra-docs-list");
+    const resultsInfo = document.getElementById("catedra-results-info");
+    if (!listContainer || !resultsInfo) return;
+
+    listContainer.innerHTML = "";
+
+    const filtered = this.catedraData.filter(doc => {
+      if (this.currentCatedraFilter !== "all" && doc.categoriaSlug !== this.currentCatedraFilter) {
+        return false;
+      }
+      if (this.currentCatedraSearch) {
+        const text = `${doc.titulo} ${doc.nombre} ${doc.seccion} ${doc.subseccion} ${doc.categoriaLabel}`.toLowerCase();
+        if (!text.includes(this.currentCatedraSearch)) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    resultsInfo.innerHTML = `
+      <span>Mostrando <strong>${filtered.length}</strong> de ${this.catedraData.length} documentos</span>
+      <span>${this.currentCatedraFilter !== "all" ? "Filtro activo" : "Catálogo general"}</span>
+    `;
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b; background: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e1;">
+          <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🔍</div>
+          <p style="font-size: 0.9rem; font-weight: 600; color: var(--oxford-blue); margin-bottom: 0.25rem;">No se encontraron documentos</p>
+          <p style="font-size: 0.78rem;">Probá buscando con otros términos o seleccionando otra categoría.</p>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(doc => {
+      const ext = doc.ext.replace('.', '').toLowerCase();
+      let icon = "📄";
+      if (ext === "pdf") icon = "📕";
+      else if (ext === "docx" || ext === "doc") icon = "📘";
+      else if (ext === "htm" || ext === "html") icon = "🌐";
+
+      const card = document.createElement("div");
+      card.className = `catedra-doc-card ${ext}`;
+      card.innerHTML = `
+        <div class="catedra-doc-header">
+          <div class="catedra-card-icon">${icon}</div>
+          <div class="catedra-card-main">
+            <h4 class="catedra-doc-title" title="${doc.nombre}">${doc.titulo}</h4>
+            <div class="catedra-doc-meta">
+              <span class="catedra-meta-tag cat">${doc.categoriaLabel}</span>
+              ${doc.subseccion ? `<span class="catedra-meta-tag sub" title="${doc.subseccion}">${doc.subseccion}</span>` : ''}
+              <span class="catedra-meta-tag size">${doc.tamano}</span>
+            </div>
+          </div>
+        </div>
+        <div class="catedra-doc-actions">
+          <button class="btn-catedra-read" title="Abrir en el visor interactivo de la defensa">
+            👁️ Ver Documento
+          </button>
+          <a class="btn-catedra-ext" href="${encodeURI(doc.ruta)}" target="_blank" title="Abrir en pestaña nueva">
+            ↗ Pestaña
+          </a>
+        </div>
+      `;
+
+      card.querySelector(".btn-catedra-read").addEventListener("click", () => {
+        this.openDocModal(doc);
+      });
+
+      listContainer.appendChild(card);
+    });
+  }
+
+  // ─── MODAL VISOR DE DOCUMENTO (PDF & OFFICE) ───────────────────────────
+  openDocModal(doc) {
+    if (!this.docModal) return;
+
+    const ext = doc.ext.replace('.', '').toLowerCase();
+    const safeUrl = encodeURI(doc.ruta);
+
+    // Titulo y badges
+    if (this.docModalTitle) {
+      this.docModalTitle.textContent = doc.titulo;
+      this.docModalTitle.title = doc.nombre;
+    }
+    if (this.docModalBadge) {
+      this.docModalBadge.textContent = ext.toUpperCase();
+      this.docModalBadge.className = `doc-modal-badge ${ext}`;
+    }
+    if (this.docModalBreadcrumb) {
+      const parts = doc.ruta.split('/');
+      this.docModalBreadcrumb.textContent = parts.join(' › ');
+    }
+
+    // Botones de acción directa
+    if (this.btnDocNewtab) {
+      this.btnDocNewtab.href = safeUrl;
+    }
+    if (this.btnDocDownload) {
+      this.btnDocDownload.href = safeUrl;
+      this.btnDocDownload.setAttribute('download', doc.nombre);
+    }
+
+    // Comportamiento según tipo de archivo
+    if (ext === "pdf" || ext === "htm" || ext === "html") {
+      if (this.docModalFrame) {
+        this.docModalFrame.style.display = "block";
+        this.docModalFrame.src = safeUrl;
+      }
+      if (this.docModalFallback) {
+        this.docModalFallback.style.display = "none";
+      }
+    } else {
+      // Documentos Word (.docx, .doc) u otros
+      if (this.docModalFrame) {
+        this.docModalFrame.style.display = "none";
+        this.docModalFrame.src = "";
+      }
+      if (this.docModalFallback) {
+        this.docModalFallback.style.display = "flex";
+      }
+      if (this.docFallbackTitle) {
+        this.docFallbackTitle.textContent = doc.titulo;
+      }
+      if (this.docFallbackDesc) {
+        this.docFallbackDesc.textContent = `Este archivo es un documento oficial de Microsoft Word (${doc.ext.toUpperCase()}, ${doc.tamano}). Podés descargarlo directamente para editarlo o revisarlo en tu aplicación de oficina.`;
+      }
+      if (this.btnDocFallbackDownload) {
+        this.btnDocFallbackDownload.href = safeUrl;
+        this.btnDocFallbackDownload.setAttribute('download', doc.nombre);
+      }
+      if (this.btnDocFallbackOpen) {
+        this.btnDocFallbackOpen.href = safeUrl;
+      }
+    }
+
+    this.docModal.classList.add("open");
+    if (this.docModalBackdrop) {
+      this.docModalBackdrop.classList.add("open");
+    }
+  }
+
+  closeDocModal() {
+    if (!this.docModal) return;
+    this.docModal.classList.remove("open", "maximized");
+    if (this.docModalBackdrop) {
+      this.docModalBackdrop.classList.remove("open");
+    }
+    this.isDocMaximized = false;
+    if (this.btnDocMaximize) {
+      this.btnDocMaximize.textContent = "⛶ Maximizar";
+    }
+    if (this.docModalFrame) {
+      this.docModalFrame.src = "";
+    }
+  }
+
+  toggleDocMaximize() {
+    this.isDocMaximized = !this.isDocMaximized;
+    if (this.docModal) {
+      this.docModal.classList.toggle("maximized", this.isDocMaximized);
+    }
+    if (this.btnDocMaximize) {
+      this.btnDocMaximize.textContent = this.isDocMaximized ? "🗗 Restaurar" : "⛶ Maximizar";
+    }
+  }
+
 }
+
 
 // Inicializar la aplicación al cargar el DOM
 window.addEventListener("DOMContentLoaded", () => {

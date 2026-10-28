@@ -166,6 +166,15 @@
           <span class="tool-text">Respaldo</span>
           <span class="shortcut-pill">M</span>
         </button>
+        <button class="btn-tool" id="btn-toggle-catedra" title="Material de Cátedra y Bibliografía (B)">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H16a1 1 0 0 1 1 1v13.5a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 0-2.5 2z"/>
+            <path d="M6 6h7M6 10h7M6 14h4"/>
+          </svg>
+          <span class="tool-text">Cátedra</span>
+          <span class="shortcut-pill">B</span>
+        </button>
+
         <!-- Mejoras Desktop y Auditorio: Pantalla Completa y Atajos -->
         <button class="btn-tool btn-tool-fullscreen" id="btn-toggle-fullscreen" title="Pantalla Completa (F)">
           <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -238,6 +247,39 @@
     </div>
   </aside>
 
+  <!-- Modal Especial: Visor Interactivo de Documentos de Cátedra (PDF, Normativas, Resoluciones) -->
+  <div class="doc-modal-backdrop" id="doc-modal-backdrop"></div>
+  <aside class="doc-modal" id="doc-modal" aria-label="Visor de Documentos de Cátedra">
+    <div class="doc-modal-header">
+      <div class="doc-modal-title-group">
+        <span class="doc-modal-badge" id="doc-modal-badge">PDF</span>
+        <h3 id="doc-modal-title">Título del Documento</h3>
+      </div>
+      <div class="doc-modal-toolbar">
+        <button class="btn-doc-tool" id="btn-doc-maximize" title="Maximizar / Restaurar (M)">⛶ Maximizar</button>
+        <a class="btn-doc-tool btn-doc-link" id="btn-doc-newtab" href="#" target="_blank" title="Abrir en pestaña nueva">↗ Abrir pestaña</a>
+        <a class="btn-doc-tool btn-doc-download" id="btn-doc-download" href="#" download title="Descargar archivo">⬇ Descargar</a>
+        <button class="btn-close" id="btn-close-doc" title="Cerrar visor (Esc)">✕</button>
+      </div>
+    </div>
+    <div class="doc-modal-body" id="doc-modal-body">
+      <iframe id="doc-modal-frame" src="" title="Visor de Documento" frameborder="0"></iframe>
+      <div class="doc-modal-fallback" id="doc-modal-fallback" style="display: none;">
+        <div class="doc-fallback-icon">📘</div>
+        <h4 class="doc-fallback-title" id="doc-fallback-title">Documento de Office</h4>
+        <p class="doc-fallback-desc" id="doc-fallback-desc">Este archivo es un documento editable (.docx/.doc). Podés descargarlo directamente a tu equipo o abrirlo con tu suite ofimática preferida.</p>
+        <div class="doc-fallback-actions">
+          <a class="btn-doc-action-main" id="btn-doc-fallback-download" href="#" download>⬇ Descargar Archivo</a>
+          <a class="btn-doc-action-sec" id="btn-doc-fallback-open" href="#" target="_blank">↗ Abrir en Nueva Pestaña</a>
+        </div>
+      </div>
+    </div>
+    <div class="doc-modal-footer">
+      <span id="doc-modal-breadcrumb">Material Catedra > Documento</span>
+      <span class="doc-modal-hint">💡 Atajo: Tecla <strong>Esc</strong> para cerrar • <strong>M</strong> para maximizar</span>
+    </div>
+  </aside>
+
   <!-- Panel Desplegable (Drawer): 7 Pestañas de Respaldo Metodológico para el Jurado -->
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <aside class="drawer-panel" id="drawer-panel" aria-label="Respaldo Metodológico Jurado">
@@ -263,6 +305,7 @@
       <button class="drawer-tab" data-tab="territorio">Red Territorial</button>
       <button class="drawer-tab" data-tab="faq">FAQ Jurado</button>
       <button class="drawer-tab" data-tab="svgs">Diagramas SVG</button>
+      <button class="drawer-tab" data-tab="catedra">Material Cátedra 📚</button>
     </div>
 
     <!-- Contenedor dinámico de fichas -->
@@ -297,6 +340,7 @@
       <div class="shortcut-row"><kbd>N</kbd><span>Guion / Notas del Orador</span></div>
       <div class="shortcut-row"><kbd>I</kbd><span>Índice Canónico (3 Ejes)</span></div>
       <div class="shortcut-row"><kbd>M</kbd><span>Respaldo Metodológico (Jurado)</span></div>
+      <div class="shortcut-row"><kbd>B</kbd><span>Material Cátedra (95 Docs)</span></div>
       <div class="shortcut-row"><kbd>V</kbd><span>Visor de Diagramas SVG</span></div>
       <div class="shortcut-row"><kbd>D</kbd><span>Enfoque Texto (Atenuar 3D)</span></div>
       <div class="shortcut-row"><kbd>R</kbd><span>Centrar Escultura 3D</span></div>
@@ -334,6 +378,7 @@
   <!-- 2. Motor de Animación Profesional GSAP (GreenSock Animation Platform) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <!-- 3. Base de Datos Externa de Metadatos (25 Filminas + Enlaces SVG) -->
+  <script src="data/catedra_data.js?v=3.9"></script>
   <script src="data/presentacion_data.js?v=3.9"></script>
   <!-- 4. Módulos de Esculturas 3D y Utilitarios -->
   <script src="js/objetos/materials.js?v=3.9"></script>

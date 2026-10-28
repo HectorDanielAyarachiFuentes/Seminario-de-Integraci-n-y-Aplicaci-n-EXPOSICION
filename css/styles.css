@@ -2362,3 +2362,602 @@ body {
   }
 }
 
+
+
+/* ==========================================================================
+   VISOR Y EXPLORADOR DE MATERIAL DE CÁTEDRA (95 DOCUMENTOS)
+   ========================================================================== */
+
+/* Botón directo en la barra inferior */
+#btn-toggle-catedra {
+  position: relative;
+}
+
+#btn-toggle-catedra:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold-main);
+}
+
+/* Modal Visor de Documentos de Cátedra */
+.doc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(14px);
+  z-index: 160;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.doc-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.doc-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  width: min(1280px, 95vw);
+  max-width: 1300px;
+  height: min(92vh, 880px);
+  max-height: 94vh;
+  background: #ffffff;
+  border: 1px solid var(--gold-main);
+  border-radius: 10px;
+  box-shadow: 0 30px 75px rgba(15, 23, 42, 0.32);
+  z-index: 161;
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.4rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.2s ease, height 0.2s ease;
+}
+
+.doc-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.doc-modal.maximized {
+  width: 99vw;
+  max-width: 99vw;
+  height: 98vh;
+  max-height: 98vh;
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+}
+
+.doc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--card-border-subtle);
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.doc-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 250px;
+}
+
+.doc-modal-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.doc-modal-badge.pdf {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+}
+
+.doc-modal-badge.docx,
+.doc-modal-badge.doc {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #38bdf8;
+}
+
+.doc-modal-badge.htm {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.doc-modal-header h3 {
+  font-family: var(--font-serif);
+  color: var(--oxford-blue);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 650px;
+}
+
+.doc-modal-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.btn-doc-tool {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: var(--oxford-blue);
+  border-radius: 5px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  text-decoration: none;
+  font-family: var(--font-sans);
+}
+
+.btn-doc-tool:hover {
+  background: #fef9c3;
+  border-color: var(--gold-main);
+  color: #78350f;
+  transform: translateY(-1px);
+}
+
+.btn-doc-tool.btn-doc-download {
+  background: var(--gold-dim);
+  border-color: var(--gold-main);
+  color: var(--oxford-blue);
+}
+
+.btn-doc-tool.btn-doc-download:hover {
+  background: var(--gold-main);
+  color: #ffffff;
+}
+
+.doc-modal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid var(--card-border-subtle);
+  position: relative;
+  min-height: 0;
+}
+
+#doc-modal-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #ffffff;
+}
+
+.doc-modal-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  text-align: center;
+  background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%);
+}
+
+.doc-fallback-icon {
+  font-size: 3.8rem;
+  margin-bottom: 1rem;
+}
+
+.doc-fallback-title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--oxford-blue);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  max-width: 600px;
+}
+
+.doc-fallback-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 1.8rem;
+}
+
+.doc-fallback-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-doc-action-main {
+  background: var(--oxford-blue);
+  color: #ffffff;
+  padding: 0.75rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+}
+
+.btn-doc-action-main:hover {
+  background: var(--gold-main);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(180, 131, 36, 0.25);
+}
+
+.btn-doc-action-sec {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: var(--oxford-blue);
+  padding: 0.75rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-doc-action-sec:hover {
+  border-color: var(--gold-main);
+  background: #fef9c3;
+  color: #78350f;
+}
+
+.doc-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.55rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  border-top: 1px solid var(--card-border-subtle);
+  margin-top: 0.55rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#doc-modal-breadcrumb {
+  font-family: monospace;
+  color: #475569;
+  font-size: 0.73rem;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Material Cátedra en el Drawer */
+.catedra-header-box {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 1.1rem 1.3rem;
+  border-radius: 8px;
+  margin-bottom: 1.1rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+}
+
+.catedra-header-title {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.catedra-total-badge {
+  background: var(--gold-main);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+}
+
+.catedra-header-desc {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.catedra-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.catedra-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.catedra-search-input {
+  width: 100%;
+  padding: 0.65rem 2.2rem 0.65rem 2.4rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--oxford-blue);
+  font-family: var(--font-sans);
+  transition: all 0.2s ease;
+}
+
+.catedra-search-input:focus {
+  outline: none;
+  border-color: var(--gold-main);
+  box-shadow: 0 0 0 3px rgba(180, 131, 36, 0.15);
+}
+
+.catedra-search-clear {
+  position: absolute;
+  right: 0.7rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  display: none;
+}
+
+.catedra-search-clear:hover {
+  color: var(--oxford-blue);
+}
+
+.catedra-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+
+.catedra-pill {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.35rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.catedra-pill:hover {
+  background: #e2e8f0;
+  color: var(--oxford-blue);
+}
+
+.catedra-pill.active {
+  background: var(--oxford-blue);
+  border-color: var(--oxford-blue);
+  color: #ffffff;
+}
+
+.catedra-pill-count {
+  font-size: 0.68rem;
+  opacity: 0.85;
+}
+
+.catedra-results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  padding: 0 0.2rem;
+}
+
+.catedra-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.catedra-doc-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.95rem 1.1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.catedra-doc-card:hover {
+  border-color: var(--gold-main);
+  border-left-color: var(--gold-main);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.catedra-doc-card.pdf {
+  border-left-color: #ef4444;
+}
+
+.catedra-doc-card.docx,
+.catedra-doc-card.doc {
+  border-left-color: #0284c7;
+}
+
+.catedra-doc-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.catedra-card-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.catedra-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.catedra-doc-title {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--oxford-blue);
+  line-height: 1.35;
+  margin: 0 0 0.35rem 0;
+  word-break: break-word;
+}
+
+.catedra-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.catedra-meta-tag {
+  font-size: 0.68rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 3px;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+}
+
+.catedra-meta-tag.cat {
+  background: rgba(180, 131, 36, 0.1);
+  color: #854d0e;
+  border: 1px solid rgba(180, 131, 36, 0.3);
+}
+
+.catedra-meta-tag.sub {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.catedra-meta-tag.size {
+  background: #f8fafc;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.catedra-doc-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.btn-catedra-read {
+  flex: 1;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-main);
+  color: #78350f;
+  padding: 0.45rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.btn-catedra-read:hover {
+  background: var(--gold-main);
+  color: #ffffff;
+}
+
+.btn-catedra-ext {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: var(--oxford-blue);
+  padding: 0.45rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.15s ease;
+}
+
+.btn-catedra-ext:hover {
+  background: #f1f5f9;
+  border-color: var(--gold-main);
+  color: var(--gold-main);
+}
+
+@media (max-width: 768px) {
+  .doc-modal {
+    width: 96vw;
+    height: 94vh;
+    padding: 0.8rem;
+  }
+  .doc-modal-header h3 {
+    max-width: 200px;
+    font-size: 0.95rem;
+  }
+  .doc-modal-toolbar {
+    gap: 0.25rem;
+  }
+  .btn-doc-tool {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.72rem;
+  }
+  #doc-modal-breadcrumb {
+    max-width: 100%;
+  }
+}
