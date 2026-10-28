@@ -680,10 +680,11 @@ class PresentationApp {
       const dotIdx = parseInt(dot.getAttribute("data-slide-index"), 10) - 1;
       const isActive = dotIdx === index;
       dot.classList.toggle("active", isActive);
+      dot.classList.toggle("passed", dotIdx < index);
       if (isActive && window.gsap) {
         const core = dot.querySelector(".station-dot-core");
         if (core) {
-          gsap.fromTo(core, { scale: 0.9 }, { scale: 1.5, duration: 0.35, ease: "back.out(2)" });
+          gsap.fromTo(core, { scale: 0.85 }, { scale: 1.35, duration: 0.32, ease: "back.out(2)" });
         }
       }
     });
