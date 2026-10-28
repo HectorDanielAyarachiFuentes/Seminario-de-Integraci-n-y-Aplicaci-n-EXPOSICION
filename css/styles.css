@@ -2961,3 +2961,105 @@ body {
     max-width: 100%;
   }
 }
+
+/* ─── BARRA DE HERRAMIENTAS INFERIOR PULIDA Y ELEGANTE ─────────────────── */
+.side-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.tools-divider {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: rgba(180, 131, 36, 0.28);
+  margin: 0 0.15rem;
+  flex-shrink: 0;
+}
+
+.btn-tool {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(180, 131, 36, 0.25);
+  color: var(--oxford-blue);
+  padding: 0.38rem 0.65rem;
+  border-radius: 6px;
+  font-family: var(--font-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  white-space: nowrap;
+}
+
+.btn-tool:hover {
+  background: #ffffff;
+  color: var(--gold-main);
+  border-color: var(--gold-main);
+  box-shadow: 0 3px 10px rgba(180, 131, 36, 0.16);
+  transform: translateY(-1px);
+}
+
+.btn-tool.active {
+  background: var(--gold-dim);
+  border-color: var(--gold-main);
+  color: var(--gold-main);
+}
+
+.btn-tool-accent {
+  background: linear-gradient(135deg, rgba(254, 249, 195, 0.7) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: var(--gold-main);
+  color: #78350f;
+}
+
+.btn-tool-accent:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold-main);
+  color: #78350f;
+}
+
+.btn-tool-icon-only {
+  width: 33px;
+  height: 33px;
+  padding: 0 !important;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  color: #475569;
+}
+
+.btn-tool-icon-only:hover {
+  color: var(--gold-main);
+}
+
+.tool-key {
+  font-family: monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #94a3b8;
+  opacity: 0.85;
+  margin-left: 2px;
+  transition: color 0.15s ease;
+}
+
+.btn-tool:hover .tool-key {
+  color: var(--gold-main);
+  opacity: 1;
+}
+
+@media (max-width: 960px) {
+  .tools-divider {
+    display: none;
+  }
+}
